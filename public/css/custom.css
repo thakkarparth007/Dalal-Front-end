@@ -1,0 +1,241 @@
+#wrapper {
+    width: 100%;
+}
+#page-wrapper {
+    /*--padding: 0 15px;--*/
+    min-height: 568px;
+    
+}
+
+@media(min-width:768px) {
+    #page-wrapper {
+        position: inherit;
+        margin: 0 0 0 250px;
+    }
+}
+
+.navbar-top-links {
+    margin-right: 0;
+}
+
+.navbar-top-links li {
+    display: inline-block;
+}
+
+.navbar-top-links li:last-child {
+    margin-right: 15px;
+}
+
+.navbar-top-links li a {
+    padding: 15px;
+  
+}
+
+.navbar-top-links .dropdown-menu li {
+    display: block;
+}
+
+.navbar-top-links .dropdown-menu li:last-child {
+    margin-right: 0;
+}
+
+.navbar-top-links .dropdown-menu li a {
+    padding: 3px 20px;
+    min-height: 0;
+}
+
+.navbar-top-links .dropdown-menu li a div {
+    white-space: normal;
+}
+
+.navbar-top-links .dropdown-messages,
+.navbar-top-links .dropdown-tasks,
+.navbar-top-links .dropdown-alerts {
+    width: 310px;
+    min-width: 0;
+}
+.navbar-top-links .dropdown-messages {
+    margin-left: 5px;
+}
+.navbar-top-links .dropdown-tasks {
+    margin-left: -59px;
+}
+
+.navbar-top-links .dropdown-alerts {
+    margin-left: -123px;
+}
+
+.navbar-top-links .dropdown-user {
+    right: 0;
+    left: auto;
+}
+
+.sidebar .sidebar-nav.navbar-collapse {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.sidebar .sidebar-search {
+    padding: 15px;
+}
+.sidebar .arrow {
+    float: right;
+}
+
+.sidebar .fa.arrow:before {
+    content: "\f104";
+}
+
+.sidebar .active>a>.fa.arrow:before {
+    content: "\f107";
+}
+
+.sidebar .nav-second-level li,
+.sidebar .nav-third-level li {
+    border-bottom: 0!important;
+}
+
+
+.sidebar .nav-third-level li a {
+    padding-left: 52px;
+}
+
+@media(min-width:768px) {
+    .sidebar {
+        z-index: 1;
+        position: absolute;
+        width: 250px;
+        
+    }
+
+    .navbar-top-links .dropdown-messages,
+    .navbar-top-links .dropdown-tasks,
+    .navbar-top-links .dropdown-alerts {
+        margin-left: auto;
+    }
+}
+
+/*new styles*/
+
+/*for the newsfeed*/
+a{
+    text-decoration: none !important;
+}
+.stocks-list{
+    padding:30px 0px 30px 0px;
+    margin: 10px;
+}
+.stock-item{
+    padding: 5px 10px 5px 10px;
+    font-family: 'Oswald-Regular';
+}
+.fa-sort-desc{
+        color: #b71c1c;
+        padding: 5px;        
+}
+.fa-sort-asc{
+    color: #66bb6a;
+    padding: 5px;      
+}
+.stock-state{
+    font-size: 10px;
+    margin: 0 auto;
+    color: #424242;
+    text-decoration: none;
+}
+.stock-cost{
+    padding: 5px;
+    color: #424242;
+    text-decoration: none;
+}
+
+/*dashboard styles*/
+.dash-head{
+    margin: 10px;
+    font-family: 'Montserrat-Regular'
+}
+.box-1{
+    background-color: #0288d1  ;
+    border: 1px solid #fff;
+    border-radius: 4px;
+}
+.box-2{
+    background-color: #43a047 ;
+}
+.box-3{
+    background-color: #ef6c00 ;
+}
+
+.box-1 label, .box-2 label, .box-3 label{
+    color: white;
+}
+
+.table-bordered thead{
+  border: 1px solid black !important;
+}
+
+/*company panel*/
+.companyPanel,.morgagePanel{
+    padding: 20px;
+    border: 1px solid #f3f3f3;
+    font-family: 'Montserrat-Regular';
+}
+.companyPanel h3{
+    margin: 0px;
+    padding: 10px 20px 10px 20px;
+}
+.company-details{
+    padding: 10px;
+    vertical-align: all;
+}
+.detail-1,.newsContainer,.detail-2{
+    padding: 20px;
+}
+
+.newsContainer{
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.detail-1,.detail-2{
+    background-color: #f7f7f7;
+
+}
+.detail-1 .price{
+    margin: 5px;
+}
+.statisticsHead{
+    padding: 20px;
+    color: rgba(0,0,0,0.3);
+}
+/*morgage panel*/
+.morgagePanel{
+    margin:10px 0px 10px 0px;
+}
+.morgageText{
+    font-weight: 300;
+    font-family: Muli-Regular;
+    text-align: center;
+    padding: 20px;
+}
+
+/*stock exchange*/
+.stock-exchange{
+    padding: 20px;
+    border: 1px solid #f3f3f3;
+    font-family: 'Montserrat-Regular';
+}
+.table-exchange{
+    width: 80%;
+    margin: 20px ;
+}
+
+.red{
+    color: red !important;
+}
+.green{
+    color: green !important;
+}
+.buy-sell-container{
+    padding: 20px;
+    border: 1px solid #f3f3f3;    
+}
