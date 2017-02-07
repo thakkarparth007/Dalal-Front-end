@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 var CompanyPanel = require('./companyPanel.js');
-var MorgagePanel = require('./morgagePanel.js');
+var MortgagePanel = require('./mortgagePanel.js');
 // items required from user
 // market Events
 // net cash
@@ -170,24 +170,20 @@ const DashboardNav = () => {
 			    <div>
 			       <div className="content-main">			 			  		
 					    <div className="banner">					   
-							<h2>
-							<a href="index.html">Home</a>
-							<i className="fa fa-angle-right"></i>
-							<span>Dashboard</span>
-							</h2>
+							<StocksList stocks={stocks} />	
 					    </div>
 					</div>
 
 					<div className="content-top">
 										
-						<StocksList stocks={stocks} />
-						<h3 className="dash-head">User Statistics</h3>
+						
+						<h3 className="dash-head">Your Profile</h3>
 						<div className="row">
 							<div className="col-md-10 ">
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-1 col-xs-6 col-xs-offset-3">
 									
 									<label>{marketEvents}</label>
-									<p>Total</p>
+									<p>Total Cash</p>
 									
 																
 								 <div className="clearfix"> </div>
@@ -196,7 +192,7 @@ const DashboardNav = () => {
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-2 col-xs-6 col-xs-offset-3">
 									
 									<label>{netCash}</label>
-									<p>Total Cash</p>
+									<p>Stock Worth</p>
 									
 																
 								 <div className="clearfix"> </div>
@@ -205,7 +201,7 @@ const DashboardNav = () => {
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 <col-xs-offset-3></col-xs-offset-3>">
 									
 									<label>{wealth}</label>
-									<p>Wealth</p>
+									<p>Net Worth</p>
 									
 																
 								 <div className="clearfix"> </div>
@@ -231,7 +227,7 @@ class Dashboard extends React.Component{
 				<div className="content-top">
 						<TransactionPanel userStocks = {userStocks} />
 						<CompanyPanel stocksList={stockTemp} />
-						<MorgagePanel />
+						<MortgagePanel stocksList={stockTemp} />
 				</div>
 			</div>
 			</div>

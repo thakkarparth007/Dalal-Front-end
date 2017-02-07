@@ -110,7 +110,7 @@ class Navbar extends React.Component{
 			<nav className="navbar-default navbar-static-top" role="navigation">
 				<NavbarHeader />
 				<NotificationContainer />
-			</nav>
+			</nav>			
 			)
 	}
 }

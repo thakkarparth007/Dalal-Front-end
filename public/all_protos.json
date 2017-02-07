@@ -1,0 +1,1529 @@
+{
+  "nested": {
+    "dalalstreet": {
+      "nested": {
+        "socketapi": {
+          "nested": {
+            "RequestWrapper": {
+              "oneofs": {
+                "request": {
+                  "oneof": [
+                    "buyStocksFromExchangeRequest",
+                    "cancelAskOrderRequest",
+                    "cancelBidOrderRequest",
+                    "loginRequest",
+                    "logoutRequest",
+                    "mortgageStocksRequest",
+                    "placeAskOrderRequest",
+                    "placeBidOrderRequest",
+                    "retrieveMortgageStocksRequest",
+                    "subscribeRequest",
+                    "unsubscribeRequest",
+                    "getCompanyProfileRequest",
+                    "getMarketEventsRequest",
+                    "getMyAsksRequest",
+                    "getMyBidsRequest",
+                    "getNotificationsRequest",
+                    "getTransactionsRequest",
+                    "getMortgageDetailsRequest",
+                    "getLeaderboardRequest"
+                  ]
+                }
+              },
+              "fields": {
+                "requestId": {
+                  "type": "string",
+                  "id": 1
+                },
+                "sessionId": {
+                  "type": "string",
+                  "id": 2
+                },
+                "buyStocksFromExchangeRequest": {
+                  "type": "actions.BuyStocksFromExchangeRequest",
+                  "id": 3
+                },
+                "cancelAskOrderRequest": {
+                  "type": "actions.CancelAskOrderRequest",
+                  "id": 4
+                },
+                "cancelBidOrderRequest": {
+                  "type": "actions.CancelBidOrderRequest",
+                  "id": 5
+                },
+                "loginRequest": {
+                  "type": "actions.LoginRequest",
+                  "id": 6
+                },
+                "logoutRequest": {
+                  "type": "actions.LogoutRequest",
+                  "id": 7
+                },
+                "mortgageStocksRequest": {
+                  "type": "actions.MortgageStocksRequest",
+                  "id": 8
+                },
+                "placeAskOrderRequest": {
+                  "type": "actions.PlaceAskOrderRequest",
+                  "id": 9
+                },
+                "placeBidOrderRequest": {
+                  "type": "actions.PlaceBidOrderRequest",
+                  "id": 10
+                },
+                "retrieveMortgageStocksRequest": {
+                  "type": "actions.RetrieveMortgageStocksRequest",
+                  "id": 11
+                },
+                "subscribeRequest": {
+                  "type": "actions.SubscribeRequest",
+                  "id": 12
+                },
+                "unsubscribeRequest": {
+                  "type": "actions.UnsubscribeRequest",
+                  "id": 13
+                },
+                "getCompanyProfileRequest": {
+                  "type": "actions.GetCompanyProfileRequest",
+                  "id": 14
+                },
+                "getMarketEventsRequest": {
+                  "type": "actions.GetMarketEventsRequest",
+                  "id": 15
+                },
+                "getMyAsksRequest": {
+                  "type": "actions.GetMyAsksRequest",
+                  "id": 16
+                },
+                "getMyBidsRequest": {
+                  "type": "actions.GetMyBidsRequest",
+                  "id": 17
+                },
+                "getNotificationsRequest": {
+                  "type": "actions.GetNotificationsRequest",
+                  "id": 18
+                },
+                "getTransactionsRequest": {
+                  "type": "actions.GetTransactionsRequest",
+                  "id": 19
+                },
+                "getMortgageDetailsRequest": {
+                  "type": "actions.GetMortgageDetailsRequest",
+                  "id": 20
+                },
+                "getLeaderboardRequest": {
+                  "type": "actions.GetLeaderboardRequest",
+                  "id": 21
+                }
+              }
+            },
+            "ResponseWrapper": {
+              "oneofs": {
+                "response": {
+                  "oneof": [
+                    "buyStocksFromExchangeResponse",
+                    "cancelAskOrderResponse",
+                    "cancelBidOrderResponse",
+                    "loginResponse",
+                    "logoutResponse",
+                    "mortgageStocksResponse",
+                    "placeAskOrderResponse",
+                    "placeBidOrderResponse",
+                    "retrieveMortgageStocksResponse",
+                    "subscribeResponse",
+                    "unsubscribeResponse",
+                    "getCompanyProfileResponse",
+                    "getMarketEventsResponse",
+                    "getMyAsksResponse",
+                    "getMyBidsResponse",
+                    "getNotificationsResponse",
+                    "getTransactionsResponse",
+                    "getMortgageDetailsResponse",
+                    "getLeaderboardResponse"
+                  ]
+                }
+              },
+              "fields": {
+                "requestId": {
+                  "type": "string",
+                  "id": 1
+                },
+                "buyStocksFromExchangeResponse": {
+                  "type": "actions.BuyStocksFromExchangeResponse",
+                  "id": 3
+                },
+                "cancelAskOrderResponse": {
+                  "type": "actions.CancelAskOrderResponse",
+                  "id": 4
+                },
+                "cancelBidOrderResponse": {
+                  "type": "actions.CancelBidOrderResponse",
+                  "id": 5
+                },
+                "loginResponse": {
+                  "type": "actions.LoginResponse",
+                  "id": 6
+                },
+                "logoutResponse": {
+                  "type": "actions.LogoutResponse",
+                  "id": 7
+                },
+                "mortgageStocksResponse": {
+                  "type": "actions.MortgageStocksResponse",
+                  "id": 8
+                },
+                "placeAskOrderResponse": {
+                  "type": "actions.PlaceAskOrderResponse",
+                  "id": 9
+                },
+                "placeBidOrderResponse": {
+                  "type": "actions.PlaceBidOrderResponse",
+                  "id": 10
+                },
+                "retrieveMortgageStocksResponse": {
+                  "type": "actions.RetrieveMortgageStocksResponse",
+                  "id": 11
+                },
+                "subscribeResponse": {
+                  "type": "actions.SubscribeResponse",
+                  "id": 12
+                },
+                "unsubscribeResponse": {
+                  "type": "actions.UnsubscribeResponse",
+                  "id": 13
+                },
+                "getCompanyProfileResponse": {
+                  "type": "actions.GetCompanyProfileResponse",
+                  "id": 14
+                },
+                "getMarketEventsResponse": {
+                  "type": "actions.GetMarketEventsResponse",
+                  "id": 15
+                },
+                "getMyAsksResponse": {
+                  "type": "actions.GetMyAsksResponse",
+                  "id": 16
+                },
+                "getMyBidsResponse": {
+                  "type": "actions.GetMyBidsResponse",
+                  "id": 17
+                },
+                "getNotificationsResponse": {
+                  "type": "actions.GetNotificationsResponse",
+                  "id": 18
+                },
+                "getTransactionsResponse": {
+                  "type": "actions.GetTransactionsResponse",
+                  "id": 19
+                },
+                "getMortgageDetailsResponse": {
+                  "type": "actions.GetMortgageDetailsResponse",
+                  "id": 20
+                },
+                "getLeaderboardResponse": {
+                  "type": "actions.GetLeaderboardResponse",
+                  "id": 21
+                }
+              }
+            },
+            "DataStreamUpdateWrapper": {
+              "oneofs": {
+                "update": {
+                  "oneof": [
+                    "marketDepthUpdate",
+                    "transactionUpdate",
+                    "notificationUpdate",
+                    "stockPricesUpdate",
+                    "marketEventsUpdate",
+                    "stockExchangeUpdate"
+                  ]
+                }
+              },
+              "fields": {
+                "dataStreamType": {
+                  "type": "datastreams.DataStreamType",
+                  "id": 1
+                },
+                "dataStreamId": {
+                  "type": "string",
+                  "id": 2
+                },
+                "marketDepthUpdate": {
+                  "type": "datastreams.MarketDepthUpdate",
+                  "id": 3
+                },
+                "transactionUpdate": {
+                  "type": "datastreams.TransactionUpdate",
+                  "id": 4
+                },
+                "notificationUpdate": {
+                  "type": "datastreams.NotificationUpdate",
+                  "id": 5
+                },
+                "stockPricesUpdate": {
+                  "type": "datastreams.StockPricesUpdate",
+                  "id": 6
+                },
+                "marketEventsUpdate": {
+                  "type": "datastreams.MarketEventUpdate",
+                  "id": 7
+                },
+                "stockExchangeUpdate": {
+                  "type": "datastreams.StockExchangeUpdate",
+                  "id": 8
+                }
+              }
+            },
+            "DalalMessage": {
+              "oneofs": {
+                "messageType": {
+                  "oneof": [
+                    "requestWrapper",
+                    "responseWrapper",
+                    "dataStreamUpdateWrapper"
+                  ]
+                }
+              },
+              "fields": {
+                "requestWrapper": {
+                  "type": "RequestWrapper",
+                  "id": 1
+                },
+                "responseWrapper": {
+                  "type": "ResponseWrapper",
+                  "id": 2
+                },
+                "dataStreamUpdateWrapper": {
+                  "type": "DataStreamUpdateWrapper",
+                  "id": 3
+                }
+              }
+            },
+            "actions": {
+              "nested": {
+                "BuyStocksFromExchangeRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "stockQuantity": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "BuyStocksFromExchangeResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "notEnoughCashError",
+                        "buyLimitExceededError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "BuyStocksFromExchangeSuccessResponse",
+                      "id": 1
+                    },
+                    "notEnoughCashError": {
+                      "type": "NotEnoughCashError",
+                      "id": 2
+                    },
+                    "buyLimitExceededError": {
+                      "type": "BuyLimitExceededError",
+                      "id": 3
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 4
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 5
+                    }
+                  },
+                  "nested": {
+                    "BuyStocksFromExchangeSuccessResponse": {
+                      "fields": {
+                        "tradingPrice": {
+                          "type": "uint32",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "NotEnoughCashError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "BuyLimitExceededError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "CancelAskOrderRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "askId": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "CancelAskOrderResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "invalidAskIdError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "CancelAskOrderSuccessResponse",
+                      "id": 1
+                    },
+                    "invalidAskIdError": {
+                      "type": "InvalidAskIdError",
+                      "id": 2
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 3
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 4
+                    }
+                  },
+                  "nested": {
+                    "CancelAskOrderSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "InvalidAskIdError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "CancelBidOrderRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "bidId": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "CancelBidOrderResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "invalidBidIdError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "CancelBidOrderSuccessResponse",
+                      "id": 1
+                    },
+                    "invalidBidIdError": {
+                      "type": "InvalidBidIdError",
+                      "id": 2
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 3
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 4
+                    }
+                  },
+                  "nested": {
+                    "CancelBidOrderSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "InvalidBidIdError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "LoginRequest": {
+                  "fields": {
+                    "email": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "password": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "LoginResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "invalidCredentialsError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "LoginSuccessResponse",
+                      "id": 1
+                    },
+                    "invalidCredentialsError": {
+                      "type": "InvalidCredentialsError",
+                      "id": 2
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 3
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 4
+                    }
+                  },
+                  "nested": {
+                    "LoginSuccessResponse": {
+                      "fields": {
+                        "sessionId": {
+                          "type": "string",
+                          "id": 1
+                        },
+                        "user": {
+                          "type": "models.User",
+                          "id": 2
+                        },
+                        "stocksOwned": {
+                          "keyType": "uint32",
+                          "type": "int32",
+                          "id": 3
+                        },
+                        "stockList": {
+                          "keyType": "uint32",
+                          "type": "models.Stock",
+                          "id": 4
+                        }
+                      }
+                    },
+                    "InvalidCredentialsError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "LogoutRequest": {
+                  "fields": {
+                    "requestId": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "sessionId": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "LogoutResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "LogoutSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "LogoutSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "MortgageStocksRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "stockQuantity": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "MortgageStocksResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "notEnoughStocksError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "MortgageStocksSuccessResponse",
+                      "id": 1
+                    },
+                    "notEnoughStocksError": {
+                      "type": "NotEnoughStocksError",
+                      "id": 2
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 3
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 4
+                    }
+                  },
+                  "nested": {
+                    "MortgageStocksSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "tradingPrice": {
+                          "type": "uint32",
+                          "id": 2
+                        }
+                      }
+                    },
+                    "NotEnoughStocksError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "PlaceAskOrderRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "orderType": {
+                      "type": "models.OrderType",
+                      "id": 2
+                    },
+                    "price": {
+                      "type": "uint32",
+                      "id": 3
+                    },
+                    "stockQuantity": {
+                      "type": "uint32",
+                      "id": 4
+                    }
+                  }
+                },
+                "PlaceAskOrderResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "askLimitExceededError",
+                        "notEnoughStocksError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "PlaceAskOrderSuccessResponse",
+                      "id": 1
+                    },
+                    "askLimitExceededError": {
+                      "type": "AskLimitExceededError",
+                      "id": 2
+                    },
+                    "notEnoughStocksError": {
+                      "type": "NotEnoughStocksError",
+                      "id": 3
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 4
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 5
+                    }
+                  },
+                  "nested": {
+                    "PlaceAskOrderSuccessResponse": {
+                      "fields": {
+                        "askId": {
+                          "type": "uint32",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "AskLimitExceededError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "NotEnoughStocksError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "PlaceBidOrderRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "orderType": {
+                      "type": "models.OrderType",
+                      "id": 2
+                    },
+                    "price": {
+                      "type": "uint32",
+                      "id": 3
+                    },
+                    "stockQuantity": {
+                      "type": "uint32",
+                      "id": 4
+                    }
+                  }
+                },
+                "PlaceBidOrderResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "bidLimitExceededError",
+                        "notEnoughCashError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "PlaceBidOrderSuccessResponse",
+                      "id": 1
+                    },
+                    "bidLimitExceededError": {
+                      "type": "BidLimitExceededError",
+                      "id": 2
+                    },
+                    "notEnoughCashError": {
+                      "type": "NotEnoughCashError",
+                      "id": 3
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 4
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 5
+                    }
+                  },
+                  "nested": {
+                    "PlaceBidOrderSuccessResponse": {
+                      "fields": {
+                        "bidId": {
+                          "type": "uint32",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "BidLimitExceededError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "NotEnoughCashError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "RetrieveMortgageStocksRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "stockQuantity": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "RetrieveMortgageStocksResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "notEnoughStocksError",
+                        "notEnoughCashError",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "RetrieveMortgageStocksSuccessResponse",
+                      "id": 1
+                    },
+                    "notEnoughStocksError": {
+                      "type": "NotEnoughStocksError",
+                      "id": 2
+                    },
+                    "notEnoughCashError": {
+                      "type": "NotEnoughCashError",
+                      "id": 3
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 4
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 5
+                    }
+                  },
+                  "nested": {
+                    "RetrieveMortgageStocksSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "tradingPrice": {
+                          "type": "uint32",
+                          "id": 2
+                        }
+                      }
+                    },
+                    "NotEnoughStocksError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "NotEnoughCashError": {
+                      "fields": {
+                        "reason": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "SubscribeRequest": {
+                  "fields": {
+                    "dataStreamType": {
+                      "type": "datastreams.DataStreamType",
+                      "id": 1
+                    },
+                    "dataStreamId": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "SubscribeResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "SubscribeSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "SubscribeSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "UnsubscribeRequest": {
+                  "fields": {
+                    "dataStreamType": {
+                      "type": "datastreams.DataStreamType",
+                      "id": 1
+                    },
+                    "dataStreamId": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "UnsubscribeResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "UnsubscribeSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "UnsubscribeSuccessResponse": {
+                      "fields": {
+                        "success": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetCompanyProfileRequest": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    }
+                  }
+                },
+                "GetCompanyProfileResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetCompanyProfileSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetCompanyProfileSuccessResponse": {
+                      "fields": {
+                        "stockDetails": {
+                          "type": "models.Stock",
+                          "id": 1
+                        },
+                        "stockHistoryMap": {
+                          "keyType": "string",
+                          "type": "models.StockHistory",
+                          "id": 2
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetMarketEventsRequest": {
+                  "fields": {
+                    "lastEventId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "count": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetMarketEventsResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetMarketEventsSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetMarketEventsSuccessResponse": {
+                      "fields": {
+                        "moreExists": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "marketEvents": {
+                          "keyType": "uint32",
+                          "type": "models.MarketEvent",
+                          "id": 2
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetMyAsksRequest": {
+                  "fields": {
+                    "lastAskId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "count": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetMyAsksResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetMyAsksSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetMyAsksSuccessResponse": {
+                      "fields": {
+                        "moreExists": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "askOrders": {
+                          "keyType": "uint32",
+                          "type": "models.Ask",
+                          "id": 2
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetMyBidsRequest": {
+                  "fields": {
+                    "lastBidId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "count": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetMyBidsResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetMyBidsSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetMyBidsSuccessResponse": {
+                      "fields": {
+                        "moreExists": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "bidOrders": {
+                          "keyType": "uint32",
+                          "type": "models.Bid",
+                          "id": 2
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetNotificationsRequest": {
+                  "fields": {
+                    "lastNotificationId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "count": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetNotificationsResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetNotificationsSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetNotificationsSuccessResponse": {
+                      "fields": {
+                        "moreExists": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "notifications": {
+                          "keyType": "uint32",
+                          "type": "models.Notification",
+                          "id": 2
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetTransactionsRequest": {
+                  "fields": {
+                    "lastTransactionId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "count": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetTransactionsResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetTransactionsSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetTransactionsSuccessResponse": {
+                      "fields": {
+                        "transactionsMap": {
+                          "keyType": "uint32",
+                          "type": "models.Transaction",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetMortgageDetailsRequest": {
+                  "fields": {}
+                },
+                "GetMortgageDetailsResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetMortgageDetailsSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetMortgageDetailsSuccessResponse": {
+                      "fields": {
+                        "mortgageMap": {
+                          "keyType": "uint32",
+                          "type": "MortgageDetails",
+                          "id": 1
+                        }
+                      },
+                      "nested": {
+                        "MortgageDetails": {
+                          "fields": {
+                            "stockId": {
+                              "type": "uint32",
+                              "id": 1
+                            },
+                            "numStocksInBank": {
+                              "type": "uint32",
+                              "id": 2
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "GetLeaderboardRequest": {
+                  "fields": {
+                    "page": {
+                      "type": "uint32",
+                      "id": 1
+                    }
+                  }
+                },
+                "GetLeaderboardResponse": {
+                  "oneofs": {
+                    "response": {
+                      "oneof": [
+                        "result",
+                        "badRequestError",
+                        "internalServerError"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "result": {
+                      "type": "GetLeaderboardSuccessResponse",
+                      "id": 1
+                    },
+                    "badRequestError": {
+                      "type": "errors.BadRequestError",
+                      "id": 2
+                    },
+                    "internalServerError": {
+                      "type": "errors.InternalServerError",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "GetLeaderboardSuccessResponse": {
+                      "fields": {
+                        "myRank": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "totalUsers": {
+                          "type": "uint32",
+                          "id": 2
+                        },
+                        "totalPages": {
+                          "type": "uint32",
+                          "id": 3
+                        },
+                        "rankList": {
+                          "keyType": "uint32",
+                          "type": "models.LeaderboardRow",
+                          "id": 4
+                        },
+                        "updatedBefore": {
+                          "type": "uint32",
+                          "id": 5
+                        },
+                        "nextUpdateAfter": {
+                          "type": "uint32",
+                          "id": 6
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "datastreams": {
+              "nested": {
+                "DataStreamType": {
+                  "values": {
+                    "MARKET_DEPTH": 0,
+                    "TRANSACTIONS": 1,
+                    "NOTIFICATIONS": 2,
+                    "STOCK_PRICES": 3,
+                    "STOCK_EXCHANGE": 4,
+                    "MARKET_EVENTS": 5
+                  }
+                },
+                "MarketDepthUpdate": {
+                  "fields": {
+                    "stockId": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "askDepth": {
+                      "keyType": "uint32",
+                      "type": "uint32",
+                      "id": 2
+                    },
+                    "bidDepth": {
+                      "keyType": "uint32",
+                      "type": "uint32",
+                      "id": 3
+                    }
+                  }
+                },
+                "TransactionUpdate": {
+                  "fields": {
+                    "transaction": {
+                      "type": "models.Transaction",
+                      "id": 1
+                    }
+                  }
+                },
+                "NotificationUpdate": {
+                  "fields": {
+                    "notification": {
+                      "type": "models.Notification",
+                      "id": 1
+                    }
+                  }
+                },
+                "StockPricesUpdate": {
+                  "fields": {
+                    "prices": {
+                      "keyType": "uint32",
+                      "type": "uint32",
+                      "id": 1
+                    }
+                  }
+                },
+                "StockExchangeDataPoint": {
+                  "fields": {
+                    "price": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "stockCount": {
+                      "type": "uint32",
+                      "id": 2
+                    }
+                  }
+                },
+                "StockExchangeUpdate": {
+                  "fields": {
+                    "stocksInExchange": {
+                      "keyType": "uint32",
+                      "type": "StockExchangeDataPoint",
+                      "id": 1
+                    }
+                  }
+                },
+                "MarketEventUpdate": {
+                  "fields": {
+                    "marketEvent": {
+                      "type": "models.MarketEvent",
+                      "id": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

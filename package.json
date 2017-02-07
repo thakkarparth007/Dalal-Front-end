@@ -25,9 +25,11 @@
   },
   "dependencies": {
     "chart.js": "^1.1.1",
+    "protobufjs": "^6.6.3",
     "react": "^15.4.2",
     "react-chartjs": "^0.8.0",
     "react-dom": "^15.4.2",
-    "react-router": "^3.0.2"
+    "react-router": "^3.0.2",
+    "react-websocket": "^1.1.6"
   }
 }

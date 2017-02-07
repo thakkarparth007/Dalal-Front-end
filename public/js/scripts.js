@@ -14,6 +14,23 @@
         $(".scrollbar1").getNiceScroll().hide();
     }
 
+
+    //mortgage transfer
+    $('.btn-2').click(function(e){        
+        $('.btn-1').removeClass('active-btn');
+        $('.btn-1').addClass('passive-btn');
+        $('.btn-2').removeClass('passive-btn');
+        $('.btn-2').addClass('active-btn');
+    });
+
+    $('.btn-1').click(function(e){        
+        $('.btn-2').removeClass('active-btn');
+        $('.btn-2').addClass('passive-btn');
+        $('.btn-1').removeClass('passive-btn');
+        $('.btn-1').addClass('active-btn');
+    });
+
+
 })(jQuery);
 
                      

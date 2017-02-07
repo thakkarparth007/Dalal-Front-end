@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {Router, Route} from 'react-router';
 import { browserHistory } from 'react-router';
 
+var testing = require('./main.js');
 var Navbar = require('./navbar.js');
 var LeaderBoard = require('./leaderboard.js');
 var StockExchange = require('./stockExchange.js');
@@ -12,36 +13,142 @@ var CompanyPanel = require('./dashboard.js').companyPanel;
 var stocksList = require('./dashboard.js').stocksList;
 var TransactionHistory = require('./transactionHistory.js');
 var BuyAndSell = require('./buyAndSell.js');
+var News = require('./news.js');
 
+console.log(testing, "bhai bhai");
 // var currentView = <Dashboard />;
-var currentView = <DashboardNav />;
 
-class MainBody extends React.Component{
-	render(){
-		console.log('heyss');
-		console.log(Navbar);
+class Home extends React.Component{
+	constructor(props){
+		super(props);
+	}
+	handleData(data){
+		let result = JSON.parse(data);
+		//get the result from websocket		
+
+	}
+	render(){		
 		return (
-			<div>
-				<Navbar />
-				<Dashboard />
+			<div>				
+				<Dashboard />				
 			</div>
 			)
 		
 	}
 }
 
-class Lol extends React.Component{
-	render(){
-		console.log('heyss');
-		console.log(Navbar);
+class LeaderBoardContainer extends React.Component{
+	render(){	
 		return (
 			<div>
-				<Navbar />
-				<div id="page-wrapper" className="gray-bg dashbard-1">
-										
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
 													<LeaderBoard />
-												</div>
-								
+											</div>								
+				</div>
+			)
+		
+	}
+}
+
+class CompanyProfileContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav />
+					<CompanyPanel stocksList={stocksList} />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
+class StockExchangeContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav />
+					<StockExchange />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
+class NewsContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">									
+					<News stocksList={stocksList} />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
+class BuyAndSellContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav />
+					<BuyAndSell stocksList={stocksList} />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
+class MortgageContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav />
+					<Mortgage stocksList={stocksList} />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
+class OrdersContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav />
+					<MyOrders />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
+class TransactionsContainer extends React.Component{
+	render(){	
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav />
+					<TransactionHistory stocksList={stocksList} />														
+				</div>								
 			</div>
 			)
 		
@@ -64,11 +171,18 @@ buy sell stock option
 </div>
 */
 
-
+ReactDOM.render(<Navbar />, document.getElementById('wrapper'));
 
 ReactDOM.render(
 	<Router  history={browserHistory}>	
-	        <Route path="/" component={MainBody}  />
-	        <Route path="/cars" component={Lol}/>
-	    </Router>
-	,document.getElementById('wrapper'));
+	        <Route path="/" component={Home}  />
+	        <Route path="/stockExchange" component={StockExchangeContainer}/>
+	        <Route path="/companyProfile" component={CompanyProfileContainer}/>
+	        <Route path="/news" component={NewsContainer}/>
+	        <Route path="/buyAndSell" component={BuyAndSellContainer}/>
+	        <Route path="/mortgage" component={MortgageContainer}/>
+	        <Route path="/myOrders" component={OrdersContainer}/>
+	        <Route path="/transactions" component={TransactionsContainer}/>
+	        <Route path="/leaderboard" component={LeaderBoardContainer}/>
+	</Router>
+	,document.getElementById('inner-content'));

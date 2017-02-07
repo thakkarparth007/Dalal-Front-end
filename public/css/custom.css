@@ -117,12 +117,27 @@
 
 /*new styles*/
 
+#wrapper{
+    background: #fff;
+}
+
+#inner-content{
+    background: #F8F8FF;
+}
+
+.sidebar-icon{
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    margin: 10px 15px 10px 15px;
+}
+
 /*for the newsfeed*/
 a{
     text-decoration: none !important;
 }
 .stocks-list{
-    padding:30px 0px 30px 0px;
+    
     margin: 10px;
 }
 .stock-item{
@@ -175,7 +190,7 @@ a{
 }
 
 /*company panel*/
-.companyPanel,.morgagePanel{
+.companyPanel,.mortgagePanel{
     padding: 20px;
     border: 1px solid #f3f3f3;
     font-family: 'Montserrat-Regular';
@@ -207,11 +222,11 @@ a{
     padding: 20px;
     color: rgba(0,0,0,0.3);
 }
-/*morgage panel*/
-.morgagePanel{
+/*mortgage panel*/
+.mortgagePanel{
     margin:10px 0px 10px 0px;
 }
-.morgageText{
+.mortgageText{
     font-weight: 300;
     font-family: Muli-Regular;
     text-align: center;
@@ -238,4 +253,91 @@ a{
 .buy-sell-container{
     padding: 20px;
     border: 1px solid #f3f3f3;    
+}
+
+.active-btn{
+    font-size: 14px;
+    background-color: #66bb6a;
+    padding: 0px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 2px 2px 1px #888888;
+    cursor: pointer;
+       -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+.active-btn:hover{
+    font-size: 14px;
+    background-color: #4caf50;
+    padding: 0px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 2px 2px 1px #888888;
+    cursor: pointer;
+    -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+.passive-btn{
+    font-size: 14px;    
+    padding: 0px;
+    background-color: #e8f5e9;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 0px 1px 1px #888888;   
+    cursor: pointer;
+      -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+.passive-btn:hover{
+    font-size: 14px;    
+    padding: 0px;
+    background-color: #c8e6c9 ;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 0px 1px 1px #888888;   
+    cursor: pointer;
+      -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.newsRow{
+    
+    font-family: 'Muli-Regular' ;
+    
+    margin: 10px;
+}
+
+.newsRow .col-md-8{
+    padding: 20px;
+    border: 1px solid #f3f3f3;
+}
+
+.company-heading{
+    font-size: 24px;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.company-text{
+    font-style: italic;
+}
+
+.orange{
+    color: #d84315 !important;
+}
+
+.green{
+    color: #7cb342 !important;
+}
+
+.blue{
+    color: #0277bd !important;
 }

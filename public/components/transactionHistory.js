@@ -59,18 +59,32 @@ class TransactionHistory extends React.Component{
 						</thead>
 						<tbody>
 							{(this.state.history).map((x)=>{
-								let t;
+								let t,convert,cname;								
 								(this.state.stocks).map((y)=>{
 									if(y.id == x.id){
 										t = y.shortName;										
 									}
 								})
-
+								if(x.type=='orderFill'){
+									convert = 'Order Fill';
+									cname = 'orange';
+								}
+								else if(x.type=='buyFromExchange'){
+									convert = 'Buy From Exchange';
+									cname = 'green';
+								}
+								else if(x.type=='mortgage'){
+									convert = 'Mortgage';
+								}
+								else if(x.type=='dividend'){
+									convert = 'Dividend';
+									cname = "blue";
+								}
 								return(
 									<tr>
 										<td>{x.id}</td>
 										<td>{t}</td>
-										<td>{x.type}</td>
+										<td className={cname}>{convert}</td>
 										<td>{x.stockQuantity}</td>
 										<td>{x.price}</td>
 										<td>{x.createdAt}</td>

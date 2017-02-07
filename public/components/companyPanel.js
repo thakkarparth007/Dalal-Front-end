@@ -2,6 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 var LineChart = require("react-chartjs").Line;
 
+var marketDepth = [
+	{
+		stockId: 1,
+		quantity: [120,10,200,240,100,50,90],
+		stockPrice: [200,250,232,245,280,195,265]
+	},
+	{
+		stockId: 2,
+		quantity: [20,110,500,240,200,50,10],
+		stockPrice: [200,250,232,245,280,195,265],
+	}
+];
+
 var companyStatistics = [
 	{
 		stockId: 1,
@@ -32,6 +45,8 @@ var marketEvents = [
 	}
 ]
 	
+
+
 const Chart = ({statistics}) =>{
 	console.log(statistics.createdAt);
 	var temp = '';
@@ -59,7 +74,7 @@ const Chart = ({statistics}) =>{
 	    };
 
 	    	if(statistics.createdAt){
-	    		temp = <LineChart data={chartData} options={chartOptions} width="1000%" height="200%"/>;
+	    		temp = <LineChart data={chartData} options={chartOptions} width="500%" height="200%"/>;
 	    	}
 	    	else{
 	    		temp = <h4 className="text-center statisticsHead">- Select Company -</h4>;
@@ -84,6 +99,7 @@ class CompanyPanel extends React.Component{
 			currentCompanyNews: '-',
 			currentCompanyStocks: '-',
 			currentCompanyStatistics: '',
+			currentMarketDepth: '',
 			stocksList: this.props
 		}
 		this.handleChange = this.handleChange.bind(this);
@@ -109,6 +125,12 @@ class CompanyPanel extends React.Component{
 			if(e.stockId == stockId){
 				this.setState({currentCompanyStatistics: e})
 			}
+		})
+
+		marketDepth.map((e)=>{
+			if(e.stockId == stockId){
+				this.setState({currentMarketDepth: e})
+			}	
 		})
 
 		if(stockId == -1){
@@ -150,11 +172,16 @@ class CompanyPanel extends React.Component{
 						<div className="row text-center detail-2">
 							<div className="col-md-10 col-md-offset-1">
 								<label>Stocks owned in Company : <span>{this.state.currentCompanyStocks}</span></label>
-							</div>
+							</div>							
+						</div>
 
-							<div className="col-md-12 chart">
-								
-							</div>
+						<div className="col-md-12 chart">
+							<Chart statistics = {this.state.currentCompanyStatistics} />
+						</div>
+
+						<div className="col-md-12 marketDepth">
+							<h4>Market Depth:</h4>
+							<Chart statistics = {this.state.currentMarketDepth} />
 						</div>
 					</div>
 					<div className="col-md-4 col-md-offset-1 newsContainer">	
@@ -165,7 +192,8 @@ class CompanyPanel extends React.Component{
 					</div>
 					
 				</div>
-				<Chart statistics = {this.state.currentCompanyStatistics} />
+				
+				
 			</div>
 			)
 	}
