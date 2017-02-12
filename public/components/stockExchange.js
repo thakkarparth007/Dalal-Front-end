@@ -1,45 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var stocks = [
-		{
-			id: 1,
-			shortName: 'Pragyan',
-			fullName: 'Pragyan',
-			currentPrice: 100,
-			dayHigh: 109,
-			dayLow: 90,
-			allTimeHigh: 120,
-			allTimeLow: 76,
-			stocksInExchange: 10,
-			stocksInMarket: 150,
-			upOrDown: true,
-			createdAt: '11-22-63',
-			updatedAt: '13-22-44'
-		},
-		{
-			id: 2,
-			shortName: 'Festember',
-			fullName: 'Festember',
-			currentPrice: 320,
-			dayHigh: 339,
-			dayLow: 300,
-			allTimeHigh: 400,
-			allTimeLow: 290,
-			stocksInExchange: 50,
-			stocksInMarket: 200,
-			upOrDown: false,
-			createdAt: '11-22-63',
-			updatedAt: '13-22-44'
-		}
-	];
+var NetworkService = require("./main.js")[0];
+
+var key = 0;
 
 class StockExchange extends React.Component{
 	constructor(props){
 		super(props);
+
 		this.state = {
-			stocksList: stocks
+			stocksList: this.props.stocksList
 		}
+		console.log(this.state, 'yeh mera hai');
+	}
+	BuyStocksFromExchange(e){		
+		console.log('hey',e);
+		console.log(this);		
+
+		var type = $("tr[value="+e+"] td select option:selected").val();
+		var stock = {};
+		stock.stockId = $("tr[value="+e+"]").attr('data-stockId');
+		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
+		
+		console.log('stock obj is ', stock);
+		NetworkService.BuyStocksFromExchange(stock, function(response){
+			console.log("ritul mahan", response);
+		})
+		
 	}
 	render(){
 		return (
@@ -59,7 +47,9 @@ class StockExchange extends React.Component{
 						</tr>
 					</thead>
 					<tbody>
-						{(this.state.stocksList).map((x)=>{
+						{Object.keys(this.state.stocksList).map((t)=>{
+							let x = (this.state.stocksList)[t];
+
 							let icon;
 							let color;
 							if(x.upOrDown){
@@ -71,11 +61,11 @@ class StockExchange extends React.Component{
 								color="red";
 							}
 							return (
-									<tr className="text-center">
+									<tr className="text-center" key={key++} value={key} data-stockId={x.id}>
 										<td>{x.shortName}</td>
 										<td>{x.dayLow}</td>
 										<td>{x.dayHigh}</td>
-										<td className = {color}>
+										<td className = {color} data-price={x.currentPrice}>
 											{icon}
 											{x.currentPrice}											
 										</td>
@@ -85,7 +75,7 @@ class StockExchange extends React.Component{
 											<input type="number" name="trade-stock" className="form-control"  step="1" required="required" title="trade-stock" min="0" max="99999" />
 										</td>
 										<td>
-											<button type="button" className="btn btn-success">Trade</button>
+											<button type="button" className="btn btn-success" onClick={this.BuyStocksFromExchange.bind(this, key)}>Trade</button>
 										</td>
 									</tr>
 								);

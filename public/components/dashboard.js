@@ -8,11 +8,6 @@ var MortgagePanel = require('./mortgagePanel.js');
 // stock
 // wealth
 
-var marketEvents = 1000;
-var netCash = 200;
-var stock = 10;
-var wealth = 10000;
-
 //this is the complete list of stocks present in market.
 var stocks = [
 		{
@@ -79,9 +74,12 @@ userStocks.map((e)=>{
 })
 
 const StocksList = ({stocks}) => {
+	console.log(stocks,'uououo');
 	return (
 			<marquee className="stocks-list">
-			{stocks.map((stock)=>{
+			{	Object.keys(stocks).map((x)=>{
+				let stock = stocks[x];
+
 				let icon;
 				if(stock.upOrDown){
 					icon = <i className="fa fa-sort-asc" aria-hidden="true"></i>;
@@ -108,7 +106,10 @@ const StocksList = ({stocks}) => {
 		);
 }
 
-const TransactionPanel = ({userStocks}) =>{
+const TransactionPanel = ({userStocks,stocksList}) =>{	
+	console.log(userStocks['1'],'test');
+	let counter = 1;
+	userStocks.keys
 	return (	
 		<div className="table-responsive">          
 		  <table className="table table-hover">
@@ -127,17 +128,20 @@ const TransactionPanel = ({userStocks}) =>{
 		      </tr>
 		    </thead>
 		    <tbody>
-		    {userStocks.map((stock)=>{
-		    	console.log(stock);		    
+		    {Object.keys(userStocks).map(stockId => {
+		    	let stock = userStocks[stockId];		    	
+		    	console.log(stock,'yeh hai stock',stocksList);		    
 		    	let temp;		    	
-		    	stocks.map((x=>{
-		    		console.log(x);
-		    		if(x.id==stock.stockId){
-		    			temp = x;		    			
-		    		}
-		    	}));
+		    	Object.keys(stocksList).map(uStockId => {
+		    		let x = stocksList[uStockId];
 
-		    	console.log(temp);
+		    		console.log(x,'lolll', stock.id);
+		    		if(x.id==stock.id){
+		    			temp = x;	  			
+		    		}
+		    	});
+
+		    	console.log(temp,'yehi hu mai');
 		    	if(temp!=0)
 		    		return (
 		    			<tr>
@@ -147,7 +151,7 @@ const TransactionPanel = ({userStocks}) =>{
 		    			  <td>{temp.allTimeHigh}</td>
 		    			  <td>{temp.dayLow}</td>
 		    			  <td>{temp.dayHigh}</td>
-		    			  <td>{stock.price}</td>
+		    			  <td>{temp.currentPrice}</td>
 		    			  <td>{temp.stocksInMarket}</td>
 		    			  <td>{stock.stockQuantity}</td>		    			  
 		    			  <td></td>
@@ -163,14 +167,14 @@ const TransactionPanel = ({userStocks}) =>{
 		)
 }
 
-const DashboardNav = () => {
+const DashboardNav = ({AllStocksList,userDetails}) => {
 	let stocksList;
-
+	console.log(AllStocksList,'yahi hu ,oa');
 	return (
 			    <div>
 			       <div className="content-main">			 			  		
 					    <div className="banner">					   
-							<StocksList stocks={stocks} />	
+							<StocksList stocks={AllStocksList} />	
 					    </div>
 					</div>
 
@@ -182,7 +186,7 @@ const DashboardNav = () => {
 							<div className="col-md-10 ">
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-1 col-xs-6 col-xs-offset-3">
 									
-									<label>{marketEvents}</label>
+									<label>{userDetails.cash}</label>
 									<p>Total Cash</p>
 									
 																
@@ -191,7 +195,7 @@ const DashboardNav = () => {
 
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-2 col-xs-6 col-xs-offset-3">
 									
-									<label>{netCash}</label>
+									<label>{userDetails.stockWorth}</label>
 									<p>Stock Worth</p>
 									
 																
@@ -200,7 +204,7 @@ const DashboardNav = () => {
 
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 <col-xs-offset-3></col-xs-offset-3>">
 									
-									<label>{wealth}</label>
+									<label>{userDetails.total}</label>
 									<p>Net Worth</p>
 									
 																
@@ -219,15 +223,25 @@ const DashboardNav = () => {
 }
 
 class Dashboard extends React.Component{
+	constructor(props){
+		super(props);
+		console.log(props['state']);
+		this.state = {
+			userStocks : this.props.state.UserStockById,
+			stocksList : this.props.state.AllStockById,
+			userDetails : this.props.state.User,
+		}
+		console.log(this.state);
+	}
 	render(){
 		return (
 			<div>
 			<div id="page-wrapper" className="gray-bg dashbard-1">
-				<DashboardNav />
+				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} />
 				<div className="content-top">
-						<TransactionPanel userStocks = {userStocks} />
-						<CompanyPanel stocksList={stockTemp} />
-						<MortgagePanel stocksList={stockTemp} />
+						<TransactionPanel userStocks = {this.state.userStocks} stocksList={this.state.stocksList} />
+						<CompanyPanel stocksList={this.state.stocksList} />
+						<MortgagePanel stocksList={this.state.stocksList} />
 				</div>
 			</div>
 			</div>
@@ -238,7 +252,6 @@ class Dashboard extends React.Component{
 module.exports = {
 	dashboardNav: DashboardNav,	
 	dashboard:Dashboard,
-	companyPanel: CompanyPanel,
-	stocksList: stockTemp
+	companyPanel: CompanyPanel,	
 };
 exports.stocksList = stockTemp;

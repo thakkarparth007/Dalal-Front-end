@@ -341,3 +341,67 @@ a{
 .blue{
     color: #0277bd !important;
 }
+
+.modal-label{
+    color: black;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px;
+    text-align: left;
+
+}
+.activeSection{
+    font-size: 14px;
+    background-color: #ef6c00;
+    padding: 0px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 2px 2px 1px #888888;
+    cursor: pointer;
+       -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out; 
+    color: #fff;  
+}
+
+.passiveSection{
+    font-size: 14px;    
+    padding: 0px;
+    background-color: #fff ;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 0px 1px 1px #888888;   
+    cursor: pointer;
+      -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+.activeSection:hover{
+    color: #fff;  
+    font-size: 14px;
+    background-color: #e65100 ;
+    padding: 0px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 2px 2px 1px #888888;
+    cursor: pointer;
+    -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+.passiveSection:hover{
+    font-size: 14px;    
+    padding: 0px;
+    background-color: #ffe0b2   ;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 0px 1px 1px #888888;   
+    cursor: pointer;
+      -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}

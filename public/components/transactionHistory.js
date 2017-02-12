@@ -1,44 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var stockTransactions = [
-	{
-		id: 1,
-		userId: 112,
-		stockId: 1,
-		type: 'orderFill',
-		stockQuantity: 100,
-		price: 230,
-		createdAt: '23rd'
-	},
-	{
-		id: 1,
-		userId: 112,
-		stockId: 1,
-		type: 'buyFromExchange',
-		stockQuantity: 50,
-		price: 210,
-		createdAt: '23rd'
-	},
-	{
-		id: 2,
-		userId: 112,
-		stockId: 2,
-		type: 'mortgage',
-		stockQuantity: 200,
-		price: 430,
-		createdAt: '24rd'
-	}
-];
+var NetworkService = require('./main.js');
 
 class TransactionHistory extends React.Component{
 	constructor(props){
 		super(props);
-		console.log('trans');
-		console.log(props.stocksList);
+		
 		this.state = {
-			history: stockTransactions,			
-			stocks: props.stocksList
+			history: this.props.transactionHistory,			
+			stocks: this.props.stocksList,
+			transType : NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.TransactionType").values,
 		}
 	}
 	render(){
@@ -58,25 +30,30 @@ class TransactionHistory extends React.Component{
 							</tr>
 						</thead>
 						<tbody>
-							{(this.state.history).map((x)=>{
+							{Object.keys(this.state.history).map((temp)=>{
+								let x = (this.state.history)[temp];
+
 								let t,convert,cname;								
-								(this.state.stocks).map((y)=>{
+								Object.keys(this.state.stocks).map((z)=>{
+									let y = (this.state.stocks)[z];
 									if(y.id == x.id){
 										t = y.shortName;										
 									}
-								})
-								if(x.type=='orderFill'){
+								})																
+								console.log(this.state.transType,'wowow');
+
+								if(this.state.transType[x.type]=='ORDER_FILL_TRANSACTION'){
 									convert = 'Order Fill';
 									cname = 'orange';
 								}
-								else if(x.type=='buyFromExchange'){
+								else if(this.state.transType[x.type]=='FROM_EXCHANGE_TRANSACTION'){
 									convert = 'Buy From Exchange';
 									cname = 'green';
 								}
-								else if(x.type=='mortgage'){
+								else if(this.state.transType[x.type]=='MORTGAGE_TRANSACTION'){
 									convert = 'Mortgage';
 								}
-								else if(x.type=='dividend'){
+								else if(this.state.transType[x.type]=='DIVIDEND_TRANSACTION'){
 									convert = 'Dividend';
 									cname = "blue";
 								}

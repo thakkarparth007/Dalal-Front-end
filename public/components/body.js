@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {Router, Route} from 'react-router';
 import { browserHistory } from 'react-router';
 
-var testing = require('./main.js');
+var state = require('./state.js');
 var Navbar = require('./navbar.js');
 var LeaderBoard = require('./leaderboard.js');
 var StockExchange = require('./stockExchange.js');
@@ -14,23 +14,15 @@ var stocksList = require('./dashboard.js').stocksList;
 var TransactionHistory = require('./transactionHistory.js');
 var BuyAndSell = require('./buyAndSell.js');
 var News = require('./news.js');
-
-console.log(testing, "bhai bhai");
 // var currentView = <Dashboard />;
 
-class Home extends React.Component{
-	constructor(props){
-		super(props);
-	}
-	handleData(data){
-		let result = JSON.parse(data);
-		//get the result from websocket		
+console.log(state.User)
 
-	}
+class Home extends React.Component{	
 	render(){		
 		return (
 			<div>				
-				<Dashboard />				
+				<Dashboard state={state} />				
 			</div>
 			)
 		
@@ -57,8 +49,8 @@ class CompanyProfileContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav />
-					<CompanyPanel stocksList={stocksList} />														
+					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
+					<CompanyPanel stocksList={state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -72,8 +64,8 @@ class StockExchangeContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav />
-					<StockExchange />														
+					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
+					<StockExchange stocksList = {state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -87,7 +79,7 @@ class NewsContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">									
-					<News stocksList={stocksList} />														
+					<News stocksList={state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -101,8 +93,8 @@ class BuyAndSellContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav />
-					<BuyAndSell stocksList={stocksList} />														
+					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
+					<BuyAndSell stocksList={state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -116,7 +108,7 @@ class MortgageContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav />
+					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
 					<Mortgage stocksList={stocksList} />														
 				</div>								
 			</div>
@@ -131,7 +123,7 @@ class OrdersContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav />
+					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
 					<MyOrders />														
 				</div>								
 			</div>
@@ -146,8 +138,8 @@ class TransactionsContainer extends React.Component{
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav />
-					<TransactionHistory stocksList={stocksList} />														
+					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
+					<TransactionHistory stocksList={state.AllStockById} transactionHistory = {state.Transactions} />														
 				</div>								
 			</div>
 			)

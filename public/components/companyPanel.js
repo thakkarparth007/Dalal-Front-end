@@ -93,6 +93,7 @@ const Chart = ({statistics}) =>{
 class CompanyPanel extends React.Component{
 	constructor(props){
 		super(props);		
+		console.log(props,'company props');
 		this.state = {
 			currentCompany: '-',
 			currentCompanyPrice: '-',
@@ -100,14 +101,17 @@ class CompanyPanel extends React.Component{
 			currentCompanyStocks: '-',
 			currentCompanyStatistics: '',
 			currentMarketDepth: '',
-			stocksList: this.props
+			stocksList: this.props.stocksList
 		}
+		console.log(this.state);
 		this.handleChange = this.handleChange.bind(this);
 	}
 	handleChange(event){
 		this.setState({currentCompany: event.target.value});
 		let stockId = -1,events;
-		(this.state.stocksList['stocksList']).map((e)=>{
+		Object.keys(this.state.stocksList).map((x)=>{
+			let e = (this.state.stocksList)[x];
+
 			if(e.fullName == event.target.value){
 				this.setState({currentCompanyPrice: e.currentPrice, currentCompanyStocks: e.stockQuantity});
 				stockId = e.id;
@@ -157,7 +161,9 @@ class CompanyPanel extends React.Component{
 								<label>Select Company Name: </label>							
 								<select name="companyName" id="input-company" className="form-control" onChange = {this.handleChange}>
 									<option value="select">Select Company Name</option>
-									{(this.state.stocksList['stocksList']).map((stock)=>{				
+									{Object.keys(this.state.stocksList).map(x=>{										
+										let stock = (this.state.stocksList)[x];	
+										
 										return (
 											<option value={stock['fullName']}>{stock['fullName']}</option>
 											);
