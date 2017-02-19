@@ -17,22 +17,7 @@ var state = {
 		},		
 	},
 	AllStockById: {
-		1: {
-			id: 1,
-			shortName: 'Pragyan',
-			fullName: 'Festember',
-		 	description: "The Avatar The Avatar The AvatarThe AvatarTheThe AvatarThe AvatarThe AvatarThe Avatar",
-			currentPrice: 100,
-			dayHigh: 109,
-			dayLow: 90,
-			allTimeHigh: 120,
-			allTimeLow: 76,
-			stocksInExchange: 10,
-			stocksInMarket: 150,
-			upOrDown: true,
-			createdAt: Date('YYYY-MM-DDT11:22:63'),
-			updatedAt: Date('YYYY-MM-DDT13:22:44')
-		}
+		
 	},
 	Transactions:{
 		1: {

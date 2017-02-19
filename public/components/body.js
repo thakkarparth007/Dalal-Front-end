@@ -163,11 +163,10 @@ class MortgageContainer extends React.Component{
 	}
 	render(){	
 		return (
-			<div>
-				
+			<div>				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
 					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<Mortgage stocksList={this.state.AllStockById} />														
+					<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} />														
 				</div>								
 			</div>
 			)

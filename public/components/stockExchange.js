@@ -5,9 +5,9 @@ var NetworkService = require("./main.js").NetworkService;
 console.log(NetworkService, 'are you there?');
 var key = 0;
 
-const AlertModal = ({message}) =>{
+const AlertModal = ({id,message}) =>{
 	return (		
-		<div className="modal fade" id="alert-modal">
+		<div className="modal fade" id={id}>
 			<div className="modal-dialog">
 				<div className="modal-content">
 					<div className="modal-header">
@@ -24,6 +24,60 @@ const AlertModal = ({message}) =>{
 			</div>
 		</div>
 	)
+}
+
+class StockExchangeItem extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			color: props.color,
+			icon: props.icon,
+			stock: props.stock,
+		}
+	}
+	BuyStocksFromExchange(e){		
+		console.log('hey',e);
+		console.log(this);		
+
+		var type = $("tr[value="+e+"] td select option:selected").val();
+		var stock = {};
+		stock.stockId = $("tr[value="+e+"]").attr('data-stockId');
+		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
+		
+		console.log('stock obj is ', stock);		
+		NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
+			console.log("ritul mahan", response);
+			console.log(AlertModal("message"));
+			if(!response.notEnoughStocksError)	
+				$('#alert-modal').modal('show');
+			else
+				$('#error-modal').modal('show');
+			//will get trading price as the response			
+			
+		})
+		
+	}
+	render(){
+		return (
+				<tr className="text-center" key={key++} value={key} data-stockId={this.state.stock.id}>
+					<td>{this.state.stock.shortName}</td>
+					<td>{this.state.stock.dayLow}</td>
+					<td>{this.state.stock.dayHigh}</td>
+					<td className = {this.state.color} data-price={this.state.stock.currentPrice}>
+						{this.state.icon}
+						{this.state.stock.currentPrice}											
+					</td>
+					<td>{this.state.stock.stocksInMarket}</td>
+					<td>{this.state.stock.stocksInExchange}</td>
+					<td>
+						<input type="number" name="trade-stock" className="form-control"  step="1" required="required" title="trade-stock" min="0" max="99999" />
+					</td>
+					<td>
+						<button type="button" className="btn btn-success" onClick={this.BuyStocksFromExchange.bind(this, key)}>Trade</button>
+					</td>
+				</tr>
+			);
+	}
 }
 
 class StockExchange extends React.Component{
@@ -43,23 +97,6 @@ class StockExchange extends React.Component{
 		});
 		console.log(this.state, 'hi partha');
 	}	
-	BuyStocksFromExchange(e){		
-		console.log('hey',e);
-		console.log(this);		
-
-		var type = $("tr[value="+e+"] td select option:selected").val();
-		var stock = {};
-		stock.stockId = $("tr[value="+e+"]").attr('data-stockId');
-		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
-		
-		console.log('stock obj is ', stock);		
-		NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
-			console.log("ritul mahan", response);	
-			//will get trading price as the response			
-			$('#alert-modal').modal('show');
-		})
-		
-	}
 	render(){
 		return (
 			<div className="stock-exchange container">
@@ -80,7 +117,6 @@ class StockExchange extends React.Component{
 					<tbody>
 						{Object.keys(this.state.stocksList).map((t)=>{
 							let x = (this.state.stocksList)[t];
-
 							let icon;
 							let color;
 							if(x.upOrDown){
@@ -92,30 +128,15 @@ class StockExchange extends React.Component{
 								color="red";
 							}
 							return (
-									<tr className="text-center" key={key++} value={key} data-stockId={x.id}>
-										<td>{x.shortName}</td>
-										<td>{x.dayLow}</td>
-										<td>{x.dayHigh}</td>
-										<td className = {color} data-price={x.currentPrice}>
-											{icon}
-											{x.currentPrice}											
-										</td>
-										<td>{x.stocksInMarket}</td>
-										<td>{x.stocksInExchange}</td>
-										<td>
-											<input type="number" name="trade-stock" className="form-control"  step="1" required="required" title="trade-stock" min="0" max="99999" />
-										</td>
-										<td>
-											<button type="button" className="btn btn-success" onClick={this.BuyStocksFromExchange.bind(this, key)}>Trade</button>
-										</td>
-									</tr>
-								);
+								<StockExchangeItem stock = {x} icon = {icon} color = {color} />
+								)
 						})}
 						
 					</tbody>
 				</table>
-
-				<AlertModal message = {this.state.message} />
+				<AlertModal id = "alert-modal" message="Order Placed Successfully" />
+				<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
+				<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
 			</div>
 			)
 	}

@@ -206,7 +206,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 								 <div className="clearfix"> </div>
 								</div>
 
-								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 <col-xs-offset-3></col-xs-offset-3>">
+								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 col-xs-offset-3">
 									
 									<label>{userDetails.total}</label>
 									<p>Net Worth</p>

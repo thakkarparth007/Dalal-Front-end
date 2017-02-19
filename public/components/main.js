@@ -5,13 +5,13 @@ const protobufjson = require("../all_protos.json");
 const root = protobuf.Root.fromJSON(protobufjson);
 const DalalMessage = root.lookup("dalalstreet.socketapi.DalalMessage");
 const RequestWrapper = root.lookup("dalalstreet.socketapi.RequestWrapper");
-const SubsribeRequest = root.lookup("dalalstreet.socketapi.actions.SubscribeRequest");
+const SubscribeRequest = root.lookup("dalalstreet.socketapi.actions.SubscribeRequest");
 const DataStreamType = root.lookup("dalalstreet.socketapi.datastreams.DataStreamType").values;
 let state = require('./state.js');
 import {observable, extendObservable} from 'mobx';
 let MainComponent = require('./body.js');
-const ws = new WebSocket("ws://10.1.94.138:3000/ws");
 // const ws = new WebSocket("ws://10.1.94.138:3000/ws");
+const ws = new WebSocket("ws://172.20.10.11:3000/ws");
 let NetworkService;
 const callbacks = {
 	actions: {},
@@ -24,20 +24,35 @@ let lastRequestId = 0;
 ws.onopen = function(event) {
 	console.log("Connected!");
 	console.log(NetworkService);
+	// var email = prompt("Enter email");
+	// var password = prompt("Enter password");
+
 	NetworkService.Requests.Login({
-		email: "106114081@nitt.edu",
-		password: "081"
+		email: '106114081@nitt.edu',
+		password: '081'
 	}, function(response) {
 		if(!response.result) {
 			console.log("Not logged in.")
 			// redirect to login page			
 		}
-		console.log('hihi');
+		//adding subscribe
+		//let Streams = NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.DataStreamType").values;
+
 		console.log(response.result);		
 		extendObservable(state.User, response.result.user);
 		extendObservable(state.AllStockById, response.result.stockList);
 		// extendObservable(state.UserStockById, response.result.UserStockById);
 		state.NotifyUpdate();		
+		NetworkService.DataStreams.StockExchange.Subscribe(function(resp) {
+			console.log(resp, "subscription status");
+		}, function(response){
+			Object.keys(state.AllStockById).map(id=>{
+				state.AllStockById[id].currentPrice = response.stocksInExchange.price;
+				state.AllStockById[id].stocksInExchange = response.stocksInExchange.stocksInExchange;
+				state.AllStockById[id].stocksInMarket = response.stocksInExchange.stocksInMarket;
+			})
+			state.NotifyUpdate();
+		});				
 		//MainComponent.setState({
 		//	new_state: state
 		//});
@@ -70,14 +85,17 @@ ws.onmessage = function(event) {
 	    console.log(DM);
 
 	    if(DM.responseWrapper) {
+	    	console.log(DM.responseWrapper,'mai aa gaya hu');
 	    	let cb = callbacks.actions[DM.responseWrapper.requestId];
 	    	delete callbacks.actions[DM.responseWrapper.requestId];
 	    	// check if no callback - either server sent wrong reqId, or client didn't register a callback
+	    	console.log('Meheram');
 	    	console.log(callbacks);
 	    	cb(DM.responseWrapper);
 	    } else if (DM.dataStreamUpdateWrapper) {
 	    	let updateWrapper = DM.dataStreamUpdateWrapper;
 	    	let updateCbId = getUpdateCbName(updateWrapper.dataStreamType, updateWrapper.dataStreamId);
+	    	console.log(updateWrapper,updateCbId,'maahi maar ra hai',callbacks.datastreams);
 	    	let cb = callbacks.datastreams[updateCbId];
 	    	// same as above. But don't remove the callback entry.
 	    	cb(updateWrapper);
@@ -104,7 +122,7 @@ function wrapRWAndSend(reqWrap, cb, dsUpdateCb) {
 		let original_callback = cb;
 		cb = function(responseWrapper) {
 			if(responseWrapper.subscribeResponse.result) {
-				addSubscribeCb(req.dataStreamType, req.dataStreamId)
+				addSubscribeCb(req.dataStreamType, req.dataStreamId, dsUpdateCb)
 			}
 			original_callback(responseWrapper);
 		}
@@ -143,15 +161,17 @@ NetworkService = {
 			let buyStocksFromExchangeReqWrap = RequestWrapper.create();
 			buyStocksFromExchangeReqWrap.buyStocksFromExchangeRequest = req;
 			wrapRWAndSend(buyStocksFromExchangeReqWrap, function(respWrap) {
-				state.User.cash -= respWrap.buyStocksFromExchangeResponse.result.stockQuantity*respWrap.buyStocksFromExchangeResponse.result.tradingPrice;
-				state.UserStockById[((Object.keys(state.UserStockById).length)+1)] = {
-					id: parseInt(req.stockId),
-					stockQuantity: parseInt(respWrap.buyStocksFromExchangeResponse.result.stockQuantity),
-				};
-				state.AllStockById[req.stockId].stocksInExchange -= respWrap.buyStocksFromExchangeResponse.result.stockQuantity;
-								state.AllStockById[req.stockId].stocksInMarket += respWrap.buyStocksFromExchangeResponse.result.stockQuantity;
-				state.NotifyUpdate();						
-				console.log('mera state',state);
+				if(!respWrap.buyStocksFromExchangeResponse.notEnoughStocksError){
+					state.User.cash -= respWrap.buyStocksFromExchangeResponse.result.stockQuantity*respWrap.buyStocksFromExchangeResponse.result.tradingPrice;
+					state.UserStockById[((Object.keys(state.UserStockById).length)+1)] = {
+						id: parseInt(req.stockId),
+						stockQuantity: parseInt(respWrap.buyStocksFromExchangeResponse.result.stockQuantity),
+					};
+					state.AllStockById[req.stockId].stocksInExchange -= respWrap.buyStocksFromExchangeResponse.result.stockQuantity;
+									state.AllStockById[req.stockId].stocksInMarket += respWrap.buyStocksFromExchangeResponse.result.stockQuantity;
+					state.NotifyUpdate();						
+					console.log('mera state',state);
+				}
 				cb(respWrap.buyStocksFromExchangeResponse);
 			});
 		},
@@ -333,7 +353,7 @@ NetworkService = {
 				let subscribeReqWrap = RequestWrapper.create();
 				subscribeReqWrap.subscribeRequest = subscribeReq;
 				wrapRWAndSend(subscribeReqWrap, function(respWrap) {
-					cb(respWrap.subscribeResponse);
+					subscribeCb(respWrap.subscribeResponse);
 				}, function(updateWrap) {
 					updateCb(updateWrap.marketDepthUpdate);
 				});
@@ -358,7 +378,7 @@ NetworkService = {
 	   			let subscribeReqWrap = RequestWrapper.create();
 	   			subscribeReqWrap.subscribeRequest = subscribeReq;
 	   			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
-	   				cb(respWrap.subscribeResponse);
+	   				subscribeCb(respWrap.subscribeResponse);
 	   			}, function(updateWrap) {
 	   				updateCb(updateWrap.transactionsUpdate);
 	   			});
@@ -382,7 +402,7 @@ NetworkService = {
 	   			let subscribeReqWrap = RequestWrapper.create();
 	   			subscribeReqWrap.subscribeRequest = subscribeReq;
 	   			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
-	   				cb(respWrap.subscribeResponse);
+	   				subscribeCb(respWrap.subscribeResponse);
 	   			}, function(updateWrap) {
 	   				updateCb(updateWrap.notificationsUpdate);
 	   			});
@@ -406,7 +426,7 @@ NetworkService = {
 	   			let subscribeReqWrap = RequestWrapper.create();
 	   			subscribeReqWrap.subscribeRequest = subscribeReq;
 	   			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
-	   				cb(respWrap.subscribeResponse);
+	   				subscribeCb(respWrap.subscribeResponse);
 	   			}, function(updateWrap) {
 	   				updateCb(updateWrap.stockPricesUpdate);
 	   			});
@@ -430,7 +450,7 @@ NetworkService = {
 	   			let subscribeReqWrap = RequestWrapper.create();
 	   			subscribeReqWrap.subscribeRequest = subscribeReq;
 	   			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
-	   				cb(respWrap.subscribeResponse);
+	   				subscribeCb(respWrap.subscribeResponse);
 	   			}, function(updateWrap) {
 	   				updateCb(updateWrap.stockExchangeUpdate);
 	   			});
@@ -454,7 +474,7 @@ NetworkService = {
 	   			let subscribeReqWrap = RequestWrapper.create();
 	   			subscribeReqWrap.subscribeRequest = subscribeReq;
 	   			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
-	   				cb(respWrap.subscribeResponse);
+	   				subscribeCb(respWrap.subscribeResponse);
 	   			}, function(updateWrap) {
 	   				updateCb(updateWrap.marketEventsUpdate);
 	   			});
