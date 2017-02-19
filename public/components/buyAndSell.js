@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var NetworkService = require('./main.js');
+var NetworkService = require('./main.js').NetworkService;
 console.log(NetworkService,'lolejed');
 var key = 0;
 
@@ -12,6 +12,7 @@ var key = 0;
  	price (only for limit and stoploss)
  	stck qty
 */
+
 
 class BuyAndSell extends React.Component{
 	constructor(props){
@@ -25,6 +26,13 @@ class BuyAndSell extends React.Component{
 		this.orderParams = this.orderParams.bind(this);
 		this.placeOrder = this.placeOrder.bind(this);		
 		this.checkOrderType = this.checkOrderType.bind(this);		
+	}	
+	componentWillReceiveProps(nextProps){		
+		console.log('nextProps', nextProps.stocksList);
+		this.setState({						
+			stocksList : nextProps.stocksList,			
+		});
+		console.log(this.state, 'hi partha');
 	}	
 	placeOrder(e){	
 		e.preventDefault();
@@ -55,7 +63,7 @@ class BuyAndSell extends React.Component{
 				stockId: orderStockId,
 				price: orderPrice,
 			}, function(response){
-				console.log(response);
+				console.log(response.result);
 			});
 		}
 		else if(type='Sell'){
@@ -65,7 +73,7 @@ class BuyAndSell extends React.Component{
 				stockId: orderStockId,
 				price: orderPrice,
 			}, function(response){
-				console.log(response);
+				console.log(response.result);
 			});
 		}
 		else{

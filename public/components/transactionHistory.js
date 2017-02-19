@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var NetworkService = require('./main.js');
+var NetworkService = require('./main.js').NetworkService;
 
 class TransactionHistory extends React.Component{
 	constructor(props){
@@ -26,6 +26,7 @@ class TransactionHistory extends React.Component{
 								<th>Transaction Type</th>
 								<th>No. of Stocks</th>
 								<th>Price of Stock</th>
+								<th>Total</th>
 								<th>Timestamp</th>
 							</tr>
 						</thead>
@@ -43,19 +44,23 @@ class TransactionHistory extends React.Component{
 								console.log(this.state.transType,'wowow');
 
 								if(this.state.transType[x.type]=='ORDER_FILL_TRANSACTION'){
-									convert = 'Order Fill';
-									cname = 'orange';
+									convert = 'Order Fill';									
 								}
 								else if(this.state.transType[x.type]=='FROM_EXCHANGE_TRANSACTION'){
-									convert = 'Buy From Exchange';
-									cname = 'green';
+									convert = 'Buy From Exchange';									
 								}
 								else if(this.state.transType[x.type]=='MORTGAGE_TRANSACTION'){
 									convert = 'Mortgage';
 								}
 								else if(this.state.transType[x.type]=='DIVIDEND_TRANSACTION'){
-									convert = 'Dividend';
-									cname = "blue";
+									convert = 'Dividend';									
+								}
+
+								if(x.total >= 0){
+									cname = "green";
+								}
+								else{
+									cname = "red";
 								}
 								return(
 									<tr>
@@ -64,6 +69,7 @@ class TransactionHistory extends React.Component{
 										<td className={cname}>{convert}</td>
 										<td>{x.stockQuantity}</td>
 										<td>{x.price}</td>
+										<td>{x.total}</td>
 										<td>{x.createdAt}</td>
 									</tr>
 									)

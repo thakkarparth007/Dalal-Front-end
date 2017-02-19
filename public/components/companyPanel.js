@@ -43,7 +43,7 @@ var marketEvents = [
 		emotionScore: 80,
 		createdAt: '22-11-3'
 	}
-]
+];
 	
 
 
@@ -106,6 +106,13 @@ class CompanyPanel extends React.Component{
 		console.log(this.state);
 		this.handleChange = this.handleChange.bind(this);
 	}
+	componentWillReceiveProps(nextProps){		
+		console.log('nextProps', nextProps.stocksList);
+		this.setState({						
+			stocksList : nextProps.stocksList,			
+		});
+		console.log(this.state, 'hi partha');
+	}	
 	handleChange(event){
 		this.setState({currentCompany: event.target.value});
 		let stockId = -1,events;

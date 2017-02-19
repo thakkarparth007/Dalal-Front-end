@@ -1,19 +1,48 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var NetworkService = require("./main.js")[0];
-
+var NetworkService = require("./main.js").NetworkService;
+console.log(NetworkService, 'are you there?');
 var key = 0;
+
+const AlertModal = ({message}) =>{
+	return (		
+		<div className="modal fade" id="alert-modal">
+			<div className="modal-dialog">
+				<div className="modal-content">
+					<div className="modal-header">
+						<button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 className="modal-title">Alert</h4>
+					</div>
+					<div className="modal-body">
+						{message}
+					</div>
+					<div className="modal-footer">
+						<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>						
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
 
 class StockExchange extends React.Component{
 	constructor(props){
 		super(props);
 
 		this.state = {
-			stocksList: this.props.stocksList
+			stocksList: this.props.stocksList,
+			message: 'You Order has been placed!',
 		}
 		console.log(this.state, 'yeh mera hai');
 	}
+	componentWillReceiveProps(nextProps){		
+		console.log('nextProps', nextProps.stocksList);
+		this.setState({						
+			stocksList : nextProps.stocksList,			
+		});
+		console.log(this.state, 'hi partha');
+	}	
 	BuyStocksFromExchange(e){		
 		console.log('hey',e);
 		console.log(this);		
@@ -23,9 +52,11 @@ class StockExchange extends React.Component{
 		stock.stockId = $("tr[value="+e+"]").attr('data-stockId');
 		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
 		
-		console.log('stock obj is ', stock);
-		NetworkService.BuyStocksFromExchange(stock, function(response){
-			console.log("ritul mahan", response);
+		console.log('stock obj is ', stock);		
+		NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
+			console.log("ritul mahan", response);	
+			//will get trading price as the response			
+			$('#alert-modal').modal('show');
 		})
 		
 	}
@@ -83,6 +114,8 @@ class StockExchange extends React.Component{
 						
 					</tbody>
 				</table>
+
+				<AlertModal message = {this.state.message} />
 			</div>
 			)
 	}

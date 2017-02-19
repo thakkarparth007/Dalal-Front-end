@@ -8,44 +8,33 @@ var SideBarLogo = ['ic_action_home.png','ic_action_exchange.png','ic_action_exch
 var key = -1;
 var link;
 
-// function foo(L){
-// 	return (e)=>{ 
-// 		alert(L);
-// 		history.pushState({},"TEST", L);
-// 		e.preventDefault();
-// 	}
-// }
-
 const SideBar = () => {
 	return (
 		<div className="navbar-default sidebar" role="navigation">
-		         <div className="sidebar-nav navbar-collapse">
-		         <ul className="nav" id="side-menu">
+			<div className="sidebar-nav navbar-collapse">
+				<ul className="nav" id="side-menu">
 					{		
-						SideBarList.map((itemName)=>{
-						key++;				
+						SideBarList.map(itemName => {
+							key++;
 
-						if(key==0)
-							link = '/';
-						else
-							link = SideBarClass[key];
-						return (
+							if(key==0)
+								link = '/#/';
+							else
+								link = '/#/' + SideBarClass[key];
+							return (
 								<li>
-								    <a  href={link} key = {key} className={'hvr-bounce-to-right ' + SideBarClass[key]}>
+									<a  href={link} key = {key} className={'hvr-bounce-to-right ' + SideBarClass[key]}>
 										<img src={'public/images/icon/' + SideBarLogo[key]} className="img-responsive sidebar-icon" alt="Image" />
 										<span className="nav-label">{itemName}</span>
 									</a>
 								</li>
 							)
-					})}		
-		             
-		            
-		             
-		         </ul>
-		     </div>
+						})
+					}
+				</ul>
+			</div>
 		</div>
-		)
+	)
 }
 
 module.exports = SideBar;
-

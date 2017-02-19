@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 const protobuf = require("protobufjs");
 const protobufjson = require("../all_protos.json");
 const root = protobuf.Root.fromJSON(protobufjson);
@@ -6,8 +8,10 @@ const RequestWrapper = root.lookup("dalalstreet.socketapi.RequestWrapper");
 const SubsribeRequest = root.lookup("dalalstreet.socketapi.actions.SubscribeRequest");
 const DataStreamType = root.lookup("dalalstreet.socketapi.datastreams.DataStreamType").values;
 let state = require('./state.js');
-
-const ws = new WebSocket("ws://10.1.95.0/ws");
+import {observable, extendObservable} from 'mobx';
+let MainComponent = require('./body.js');
+const ws = new WebSocket("ws://10.1.94.138:3000/ws");
+// const ws = new WebSocket("ws://10.1.94.138:3000/ws");
 let NetworkService;
 const callbacks = {
 	actions: {},
@@ -19,14 +23,37 @@ let lastRequestId = 0;
 
 ws.onopen = function(event) {
 	console.log("Connected!");
-	NetworkService.Login({
-		email: "",
-		password: ""
+	console.log(NetworkService);
+	NetworkService.Requests.Login({
+		email: "106114081@nitt.edu",
+		password: "081"
 	}, function(response) {
 		if(!response.result) {
 			console.log("Not logged in.")
-			// redirect to login page
+			// redirect to login page			
 		}
+		console.log('hihi');
+		console.log(response.result);		
+		extendObservable(state.User, response.result.user);
+		extendObservable(state.AllStockById, response.result.stockList);
+		// extendObservable(state.UserStockById, response.result.UserStockById);
+		state.NotifyUpdate();		
+		//MainComponent.setState({
+		//	new_state: state
+		//});
+		// state.User.sessionId = response.result.sessionId;		
+		// state.User.total = response.result.user.total;
+		// state.User.name = response.result.user.name;
+		// state.User.UserStockById = response.result.user.UserStockById;
+		// state.User.Transactions = response.result.user.Transactions;
+
+		// Object.keys(response.result.stockList).map((x)=>{
+		// 	let y = (response.result.stockList)[x];
+		// 	state.AllStockById[x] = y;
+		// 	console.log(y,'hi da');			
+		// })
+		
+		console.log(state);
 	});
 }
 
@@ -41,16 +68,17 @@ ws.onmessage = function(event) {
 	    data = new Uint8Array(this.result);
 	    DM = DalalMessage.decode(data);
 	    console.log(DM);
+
 	    if(DM.responseWrapper) {
 	    	let cb = callbacks.actions[DM.responseWrapper.requestId];
 	    	delete callbacks.actions[DM.responseWrapper.requestId];
 	    	// check if no callback - either server sent wrong reqId, or client didn't register a callback
+	    	console.log(callbacks);
 	    	cb(DM.responseWrapper);
 	    } else if (DM.dataStreamUpdateWrapper) {
 	    	let updateWrapper = DM.dataStreamUpdateWrapper;
 	    	let updateCbId = getUpdateCbName(updateWrapper.dataStreamType, updateWrapper.dataStreamId);
 	    	let cb = callbacks.datastreams[updateCbId];
-
 	    	// same as above. But don't remove the callback entry.
 	    	cb(updateWrapper);
 	    } else {
@@ -85,7 +113,7 @@ function wrapRWAndSend(reqWrap, cb, dsUpdateCb) {
 		removeSubscribeCb(req.dataStreamType, req.dataStreamId);
 	}
 	
-	callbacks[DM.requestWrapper.requestId.toString()] = cb;
+	callbacks.actions[DM.requestWrapper.requestId.toString()] = cb;
 
 	let buff = DalalMessage.encode(DM).finish();
 	console.log(buff);
@@ -113,15 +141,24 @@ NetworkService = {
 	Requests: {
 		BuyStocksFromExchange: function(req, cb) {
 			let buyStocksFromExchangeReqWrap = RequestWrapper.create();
-			buyStocksFromExchangeReqWrap.BuyStocksFromExchangeRequest = req;
-			wrapRWAndSend(buyStocksFromExchangeRequest, function(respWrap) {
+			buyStocksFromExchangeReqWrap.buyStocksFromExchangeRequest = req;
+			wrapRWAndSend(buyStocksFromExchangeReqWrap, function(respWrap) {
+				state.User.cash -= respWrap.buyStocksFromExchangeResponse.result.stockQuantity*respWrap.buyStocksFromExchangeResponse.result.tradingPrice;
+				state.UserStockById[((Object.keys(state.UserStockById).length)+1)] = {
+					id: parseInt(req.stockId),
+					stockQuantity: parseInt(respWrap.buyStocksFromExchangeResponse.result.stockQuantity),
+				};
+				state.AllStockById[req.stockId].stocksInExchange -= respWrap.buyStocksFromExchangeResponse.result.stockQuantity;
+								state.AllStockById[req.stockId].stocksInMarket += respWrap.buyStocksFromExchangeResponse.result.stockQuantity;
+				state.NotifyUpdate();						
+				console.log('mera state',state);
 				cb(respWrap.buyStocksFromExchangeResponse);
 			});
 		},
 
 		CancelAskOrder: function(req, cb) {
 			let cancelAskOrderReqWrap = RequestWrapper.create();
-			cancelAskOrderReqWrap.CancelAskOrderRequest = req;
+			cancelAskOrderReqWrap.cancelAskOrderRequest = req;
 			wrapRWAndSend(cancelAskOrderReqWrap, function(respWrap) {
 				cb(respWrap.cancelAskOrderResponse)
 			});
@@ -129,7 +166,7 @@ NetworkService = {
 
 		CancelBidOrder: function(req, cb) {
 			let cancelBidOrderReqWrap = RequestWrapper.create();
-			cancelBidOrderReqWrap.CancelBidOrderRequest = req;
+			cancelBidOrderReqWrap.cancelBidOrderRequest = req;
 			wrapRWAndSend(cancelBidOrderReqWrap, function(respWrap) {
 				cb(respWrap.cancelBidOrderResponse)
 			});
@@ -139,6 +176,7 @@ NetworkService = {
 			let loginReqWrap = RequestWrapper.create();
 			loginReqWrap.loginRequest = req;
 			wrapRWAndSend(loginReqWrap, function(respWrap) {
+				console.log('hehe');
 				console.log(respWrap);
 				cb(respWrap.loginResponse);
 			});
@@ -146,7 +184,7 @@ NetworkService = {
 
 		Logout: function(req, cb) {
 			let logoutReqWrap = RequestWrapper.create();
-			logoutReqWrap.LogoutRequest = req;
+			logoutReqWrap.logoutRequest = req;
 			wrapRWAndSend(LogoutReqWrap, function(respWrap) {
 				cb(respWrap.logoutResponse)
 			});
@@ -164,21 +202,42 @@ NetworkService = {
 			let placeAskOrderReqWrap = RequestWrapper.create();
 			placeAskOrderReqWrap.placeAskOrderRequest = req;
 			wrapRWAndSend(placeAskOrderReqWrap, function(respWrap) {
+				(state.MyOrders.Asks.Open)[Object.keys(state.MyOrders.Asks.Open).length + 1] = {
+					id: Object.keys(state.MyOrders.Asks.Open).length + 1,					
+					stockId: req.stockId,
+					price: req.price,
+					orderType : req.orderType,
+					stockQuantity: req.stockQuantity,
+					isClosed: false,
+					createdAt: Date('YYYY-MM-DDT11:22:63')
+				};				
+				state.NotifyUpdate();										
 				cb(respWrap.response);
 			});
 		},
 
 		PlaceBidOrder: function(req, cb) {
 			let placeBidOrderReqWrap = RequestWrapper.create();
-			placeBidOrderReqWrap.PlaceBidOrderRequest = req;
+			placeBidOrderReqWrap.placeBidOrderRequest = req;
 			wrapRWAndSend(placeBidOrderReqWrap, function(respWrap) {
+				console.log(Object.keys(state.MyOrders.Bids.Open).length + 1,'yehi hu mai');
+				(state.MyOrders.Bids.Open)[Object.keys(state.MyOrders.Bids.Open).length + 1] = {
+					id: Object.keys(state.MyOrders.Bids.Open).length + 1,					
+					stockId: req.stockId,
+					price: req.price,
+					orderType : req.orderType,
+					stockQuantity: req.stockQuantity,
+					isClosed: false,
+					createdAt: Date('YYYY-MM-DDT11:22:63')
+				};	
+				state.NotifyUpdate();										
 				cb(respWrap.response);
 			});
 		},
 
 		RetrieveMortgageStocks: function(req, cb) {
 			let retrieveMortgageStocksReqWrap = RequestWrapper.create();
-			retrieveMortgageStocksReqWrap.RetrieveMortgageStocksRequest = req;
+			retrieveMortgageStocksReqWrap.retrieveMortgageStocksRequest = req;
 			wrapRWAndSend(retrieveMortgageStocksReqWrap, function(respWrap) {
 				cb(respWrap.retrieveMortgageStocksResponse)
 			});
@@ -186,7 +245,7 @@ NetworkService = {
 
 		Unsubscribe: function(req, cb) {
 			let unsubscribeReqWrap = RequestWrapper.create();
-			unsubscribeReqWrap.UnsubscribeRequest = req;
+			unsubscribeReqWrap.unsubscribeRequest = req;
 			wrapRWAndSend(unsubscribeReqWrap, function(respWrap) {
 				cb(respWrap.unsubscribeResponse)
 			});
@@ -194,7 +253,7 @@ NetworkService = {
 
 		Subscribe: function(req, cb) {
 			let subscribeReqWrap = RequestWrapper.create();
-			subscribeReqWrap.SubscribeRequest = req;
+			subscribeReqWrap.subscribeRequest = req;
 			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
 				cb(respWrap.subscribeResponse)
 			});
@@ -202,7 +261,7 @@ NetworkService = {
 
 		GetCompanyProfile: function(req, cb) {
 			let getCompanyProfileReqWrap = RequestWrapper.create();
-			getCompanyProfileReqWrap.GetCompanyProfileRequest = req;
+			getCompanyProfileReqWrap.getCompanyProfileRequest = req;
 			wrapRWAndSend(getCompanyProfileReqWrap, function(respWrap) {
 				cb(respWrap.getCompanyProfileResponse)
 			});
@@ -210,7 +269,7 @@ NetworkService = {
 
 		GetMarketEvents: function(req, cb) {
 			let getMarketEventsReqWrap = RequestWrapper.create();
-			getMarketEventsReqWrap.GetMarketEventsRequest = req;
+			getMarketEventsReqWrap.getMarketEventsRequest = req;
 			wrapRWAndSend(getMarketEventsReqWrap, function(respWrap) {
 				cb(respWrap.getMarketEventsResponse)
 			});
@@ -218,7 +277,7 @@ NetworkService = {
 
 		GetMyAsks: function(req, cb) {
 			let getMyAsksReqWrap = RequestWrapper.create();
-			getMyAsksReqWrap.GetMyAsksRequest = req;
+			getMyAsksReqWrap.getMyAsksRequest = req;
 			wrapRWAndSend(getMyAsksReqWrap, function(respWrap) {
 				cb(respWrap.getMyAsksResponse)
 			});
@@ -226,7 +285,7 @@ NetworkService = {
 
 		GetMyBids: function(req, cb) {
 			let getMyBidsReqWrap = RequestWrapper.create();
-			getMyBidsReqWrap.GetMyBidsRequest = req;
+			getMyBidsReqWrap.getMyBidsRequest = req;
 			wrapRWAndSend(getMyBidsReqWrap, function(respWrap) {
 				cb(respWrap.getMyBidsResponse)
 			});
@@ -234,7 +293,7 @@ NetworkService = {
 
 		GetNotifications: function(req, cb) {
 			let getNotificationsReqWrap = RequestWrapper.create();
-			getNotificationsReqWrap.GetNotificationsRequest = req;
+			getNotificationsReqWrap.getNotificationsRequest = req;
 			wrapRWAndSend(getNotificationsReqWrap, function(respWrap) {
 				cb(respWrap.getNotificationsResponse)
 			});
@@ -242,7 +301,7 @@ NetworkService = {
 
 		GetTransactions: function(req, cb) {
 			let getTransactionsReqWrap = RequestWrapper.create();
-			getTransactionsReqWrap.GetTransactionsRequest = req;
+			getTransactionsReqWrap.getTransactionsRequest = req;
 			wrapRWAndSend(getTransactionsReqWrap, function(respWrap) {
 				cb(respWrap.getTransactionsResponse)
 			});
@@ -250,7 +309,7 @@ NetworkService = {
 
 		GetMortgageDetails: function(req, cb) {
 			let getMortgageDetailsReqWrap = RequestWrapper.create();
-			getMortgageDetailsReqWrap.GetMortgageDetailsRequest = req;
+			getMortgageDetailsReqWrap.getMortgageDetailsRequest = req;
 			wrapRWAndSend(getMortgageDetailsReqWrap, function(respWrap) {
 				cb(respWrap.getMortgageDetailsResponse)
 			});
@@ -258,7 +317,7 @@ NetworkService = {
 
 		GetLeaderboard: function(req, cb) {
 			let getLeaderboardReqWrap = RequestWrapper.create();
-			getLeaderboardReqWrap.GetLeaderboardRequest = req;
+			getLeaderboardReqWrap.getLeaderboardRequest = req;
 			wrapRWAndSend(getLeaderboardReqWrap, function(respWrap) {
 				cb(respWrap.getLeaderboardResponse)
 			});
@@ -416,4 +475,4 @@ NetworkService = {
 
 console.log('yoososo',NetworkService);
 
-module.exports = NetworkService;
+module.exports = {NetworkService, state};

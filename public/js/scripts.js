@@ -34,14 +34,14 @@
         $('.sellSection').removeClass('activeSection');
         $('.sellSection').addClass('passiveSection');
         $('.buySection').removeClass('passiveSection');
-        $('.buySection').addClass('activeSection');
+        $('.buySection').addClass('activeSection');        
     });
 
     $('.sellSection').click(function(e){        
         $('.buySection').removeClass('activeSection');
         $('.buySection').addClass('passiveSection');
         $('.sellSection').removeClass('passiveSection');
-        $('.sellSection').addClass('activeSection');
+        $('.sellSection').addClass('activeSection');        
     });
 
 

@@ -353,6 +353,10 @@
                         "tradingPrice": {
                           "type": "uint32",
                           "id": 1
+                        },
+                        "stockQuantity": {
+                          "type": "int32",
+                          "id": 2
                         }
                       }
                     },
@@ -1311,6 +1315,10 @@
                           "keyType": "uint32",
                           "type": "models.Transaction",
                           "id": 1
+                        },
+                        "moreExists": {
+                          "type": "bool",
+                          "id": 2
                         }
                       }
                     }
@@ -1800,13 +1808,17 @@
                       "type": "bool",
                       "id": 12
                     },
+                    "previousDayClose": {
+                      "type": "uint32",
+                      "id": 13
+                    },
                     "createdAt": {
                       "type": "string",
-                      "id": 13
+                      "id": 14
                     },
                     "updatedAt": {
                       "type": "string",
-                      "id": 14
+                      "id": 15
                     }
                   }
                 },

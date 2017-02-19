@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+var NetworkService = require("./main.js").NetworkService;
 
 //make request for mortgaged stocks
-var mortgagedStocks = [
-	{
-		companyName: 'Pragyan',
-		currentPrice: 100,
-		mortgagedStocksQuantity: 50,
-		 
-	}
-];
+// var mortgagedStocks = [
+// 	{
+// 		companyName: 'Pragyan',
+// 		currentPrice: 100,
+// 		mortgagedStocksQuantity: 50,		 
+// 	}
+// ];
 
 $('.active-btn').click(function(){
 	alert('hry');
@@ -61,6 +61,13 @@ class MortgagePanel extends React.Component{
 	constructor(props){
 		super(props);
 		console.log(props.stocksList);
+		let mortgagedStocks = {};
+
+		// NetworkService.Requests.GetMortgageDetails(mortgagedStocks, function(response){
+		// 		console.log("ritul mahan", response);
+				
+		// });
+
 		this.state = {
 			mortgageStocks: mortgagedStocks,
 			stocksList: this.props.stocksList

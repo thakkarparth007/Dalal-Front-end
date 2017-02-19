@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {observer} from 'mobx-react';
+import {observable} from 'mobx';
+
 var CompanyPanel = require('./companyPanel.js');
 var MortgagePanel = require('./mortgagePanel.js');
 // items required from user
@@ -169,7 +172,8 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 
 const DashboardNav = ({AllStocksList,userDetails}) => {
 	let stocksList;
-	console.log(AllStocksList,'yahi hu ,oa');
+	console.log( AllStocksList,'yahi hu ,oa');
+	console.log( userDetails.cash ,'diufodiodji');
 	return (
 			    <div>
 			       <div className="content-main">			 			  		
@@ -222,21 +226,32 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 		);
 }
 
+
 class Dashboard extends React.Component{
 	constructor(props){
 		super(props);
-		console.log(props['state']);
+		console.log(props['state'],'hello babay');
 		this.state = {
 			userStocks : this.props.state.UserStockById,
 			stocksList : this.props.state.AllStockById,
-			userDetails : this.props.state.User,
+			userDetails : this.props.state.User,			
 		}
 		console.log(this.state);
 	}
+	componentWillReceiveProps(nextProps){		
+		console.log('nextProps', nextProps.state);
+		this.setState({			
+			userStocks : nextProps.state.UserStockById,
+			stocksList : nextProps.state.AllStockById,
+			userDetails :nextProps.state.User ,
+		});
+		console.log(this.state, 'hi parth');
+	}	
 	render(){
 		return (
 			<div>
-			<div id="page-wrapper" className="gray-bg dashbard-1">
+			{this.state.userDetails.cash}
+			<div id="page-wrapper" className="gray-bg dashbard-1">				
 				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} />
 				<div className="content-top">
 						<TransactionPanel userStocks = {this.state.userStocks} stocksList={this.state.stocksList} />

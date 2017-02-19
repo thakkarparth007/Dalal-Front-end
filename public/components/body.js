@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route} from 'react-router';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 
 var state = require('./state.js');
 var Navbar = require('./navbar.js');
@@ -14,15 +14,45 @@ var stocksList = require('./dashboard.js').stocksList;
 var TransactionHistory = require('./transactionHistory.js');
 var BuyAndSell = require('./buyAndSell.js');
 var News = require('./news.js');
-// var currentView = <Dashboard />;
+var Mortgage = require('./mortgagePanel.js');
+import {observer} from 'mobx-react';
 
-console.log(state.User)
+// var currentView = <Dashboard />;
+console.log(state,'wtf is happening?	');
+
+
+// @observer
+// class Home extends React.Component{	
+// 	render(){			
+// 		var componentState = {
+// 					User: state.User,
+// 					UserStockById: state.UserStockById,					
+// 					Transactions: state.Transactions,
+// 					AllStockById : {}
+// 				}							
+// 		Object.keys(state.AllStockById).map((x)=>{
+// 			let y = (state.AllStockById)[x];
+// 			(componentState.AllStockById[x] = y);			
+// 		});		
+// 		return (
+// 			<div>				
+// 				<Dashboard state={state} />				
+// 			</div>
+// 			)
+		
+// 	}
+// }
 
 class Home extends React.Component{	
-	render(){		
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
+	render(){					
 		return (
 			<div>				
-				<Dashboard state={state} />				
+				<Dashboard state={this.state} />				
 			</div>
 			)
 		
@@ -30,6 +60,11 @@ class Home extends React.Component{
 }
 
 class LeaderBoardContainer extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
 	render(){	
 		return (
 			<div>
@@ -44,13 +79,17 @@ class LeaderBoardContainer extends React.Component{
 }
 
 class CompanyProfileContainer extends React.Component{
-	render(){	
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
+	render(){		
 		return (
-			<div>
-				
+			<div>				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
-					<CompanyPanel stocksList={state.AllStockById} />														
+					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+					<CompanyPanel stocksList={this.state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -59,13 +98,17 @@ class CompanyProfileContainer extends React.Component{
 }
 
 class StockExchangeContainer extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
 	render(){	
 		return (
-			<div>
-				
+			<div>			
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
-					<StockExchange stocksList = {state.AllStockById} />														
+					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+					<StockExchange stocksList = {this.state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -74,12 +117,17 @@ class StockExchangeContainer extends React.Component{
 }
 
 class NewsContainer extends React.Component{
-	render(){	
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
+	render(){			
 		return (
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">									
-					<News stocksList={state.AllStockById} />														
+					<News stocksList={this.state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -88,13 +136,18 @@ class NewsContainer extends React.Component{
 }
 
 class BuyAndSellContainer extends React.Component{
-	render(){	
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
+	render(){			
 		return (
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
-					<BuyAndSell stocksList={state.AllStockById} />														
+					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+					<BuyAndSell stocksList={this.state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -103,28 +156,18 @@ class BuyAndSellContainer extends React.Component{
 }
 
 class MortgageContainer extends React.Component{
-	render(){	
-		return (
-			<div>
-				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
-					<Mortgage stocksList={stocksList} />														
-				</div>								
-			</div>
-			)
-		
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
 	}
-}
-
-class OrdersContainer extends React.Component{
 	render(){	
 		return (
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
-					<MyOrders />														
+					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+					<Mortgage stocksList={this.state.AllStockById} />														
 				</div>								
 			</div>
 			)
@@ -133,13 +176,17 @@ class OrdersContainer extends React.Component{
 }
 
 class TransactionsContainer extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
 	render(){	
 		return (
-			<div>
-				
+			<div>				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={state.AllStockById} userDetails = {state.User} />
-					<TransactionHistory stocksList={state.AllStockById} transactionHistory = {state.Transactions} />														
+					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+					<TransactionHistory stocksList={this.state.AllStockById} transactionHistory = {this.state.Transactions} />														
 				</div>								
 			</div>
 			)
@@ -165,16 +212,21 @@ buy sell stock option
 
 ReactDOM.render(<Navbar />, document.getElementById('wrapper'));
 
-ReactDOM.render(
-	<Router  history={browserHistory}>	
-	        <Route path="/" component={Home}  />
-	        <Route path="/stockExchange" component={StockExchangeContainer}/>
-	        <Route path="/companyProfile" component={CompanyProfileContainer}/>
-	        <Route path="/news" component={NewsContainer}/>
-	        <Route path="/buyAndSell" component={BuyAndSellContainer}/>
-	        <Route path="/mortgage" component={MortgageContainer}/>
-	        <Route path="/myOrders" component={OrdersContainer}/>
-	        <Route path="/transactions" component={TransactionsContainer}/>
-	        <Route path="/leaderboard" component={LeaderBoardContainer}/>
-	</Router>
+var mainComponent = <Router history={hashHistory}>	
+        <Route path="/" component={Home}  />
+        <Route path="/stockExchange" component={StockExchangeContainer}/>
+        <Route path="/companyProfile" component={CompanyProfileContainer}/>
+        <Route path="/news" component={NewsContainer}/>
+        <Route path="/buyAndSell" component={BuyAndSellContainer}/>
+        <Route path="/mortgage" component={MortgageContainer}/>        
+        <Route path="/transactions" component={TransactionsContainer}/>
+        <Route path="/leaderboard" component={LeaderBoardContainer}/>
+</Router>;
+
+module.exports = ReactDOM.render(
+	mainComponent
 	,document.getElementById('inner-content'));
+
+window.Home = Home;
+window.mainComponent = mainComponent
+module.exports = mainComponent;
