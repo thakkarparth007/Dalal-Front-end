@@ -5,6 +5,7 @@ import {observable} from 'mobx';
 
 var CompanyPanel = require('./companyPanel.js');
 var MortgagePanel = require('./mortgagePanel.js');
+var state = require('./state.js');
 // items required from user
 // market Events
 // net cash
@@ -12,69 +13,8 @@ var MortgagePanel = require('./mortgagePanel.js');
 // wealth
 
 //this is the complete list of stocks present in market.
-var stocks = [
-		{
-			id: 1,
-			shortName: 'Pragyan',
-			fullName: 'Pragyan',
-			currentPrice: 100,
-			dayHigh: 109,
-			dayLow: 90,
-			allTimeHigh: 120,
-			allTimeLow: 76,
-			stocksInExchange: 10,
-			stocksInMarket: 150,
-			upOrDown: true,
-			createdAt: '11-22-63',
-			updatedAt: '13-22-44'
-		},
-		{
-			id: 2,
-			shortName: 'Festember',
-			fullName: 'Festember',
-			currentPrice: 320,
-			dayHigh: 339,
-			dayLow: 300,
-			allTimeHigh: 400,
-			allTimeLow: 290,
-			stocksInExchange: 50,
-			stocksInMarket: 200,
-			upOrDown: false,
-			createdAt: '11-22-63',
-			updatedAt: '13-22-44'
-		}
-	];
+
 //stock state needs to be changed later
-
-//stocks owned by user,will be required in transaction panel
-var userStocks = [
-		{
-			id: 1,
-			userId: 112,
-			stockId: 1,
-			type: 4,
-			stockQuantity: 100,
-			price: 300,
-			createdAt: '11-22-63',			
-		}
-	];
-var stockTemp = stocks;
-
-//appending userdata to stockTemp
-userStocks.map((e)=>{
-	console.log('lol');
-	console.log(e.stockQuantity);
-	for(let i=0;i<stockTemp.length;i++){
-		console.log(stockTemp[i].id + '  ' + e.id);
-		if(stockTemp[i].id == e.id){
-			console.log('llss');
-			stockTemp[i].stockQuantity = e.stockQuantity;
-			break;
-		}
-	}
-	console.log('ll');
-	console.log(stockTemp);
-})
 
 const StocksList = ({stocks}) => {
 	console.log(stocks,'uououo');
@@ -109,10 +49,9 @@ const StocksList = ({stocks}) => {
 		);
 }
 
-const TransactionPanel = ({userStocks,stocksList}) =>{	
-	console.log(userStocks['1'],'test');
+const TransactionPanel = ({userStocks,stocksList}) =>{		
 	let counter = 1;
-	userStocks.keys
+	console.log(userStocks,stocksList,'hi dude');
 	return (	
 		<div className="table-responsive">          
 		  <table className="table table-hover">
@@ -131,38 +70,42 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 		      </tr>
 		    </thead>
 		    <tbody>
-		    {Object.keys(userStocks).map(stockId => {
-		    	let stock = userStocks[stockId];		    	
-		    	console.log(stock,'yeh hai stock',stocksList);		    
-		    	let temp;		    	
-		    	Object.keys(stocksList).map(uStockId => {
-		    		let x = stocksList[uStockId];
+		    
+		    {
+		    		    	Object.keys(userStocks).map(stockId => {
+		    		    	console.log(stockId,stocksList,stocksList[stockId],'sab tera')
+		    		    	let stock = userStocks[stockId];		    	
+		    		    	// console.log(stock,'yeh hai stock bhaiya',stocksList,userStocks,stockId);		    
+		    		    	let temp ;		    	
+		    		    	// console.log(Object.keys(stocksList),stocksList, "bhai kyun");
+		    		    	Object.keys(stocksList).map(uStockId => {
+		    		    		let x = stocksList[uStockId];
+		    		    		// console.log('helloworld')		    		
+		    		    		if(x.id==stockId){
+		    		    			temp = x;	  			
+		    		    		}
+		    		    	});
 
-		    		console.log(x,'lolll', stock.id);
-		    		if(x.id==stock.id){
-		    			temp = x;	  			
-		    		}
-		    	});
-
-		    	console.log(temp,'yehi hu mai');
-		    	if(temp!=0)
-		    		return (
-		    			<tr>
-		    			  <td>{temp.id}</td>
-		    			  <td>{temp.fullName}</td>
-		    			  <td>{temp.allTimeLow}</td>
-		    			  <td>{temp.allTimeHigh}</td>
-		    			  <td>{temp.dayLow}</td>
-		    			  <td>{temp.dayHigh}</td>
-		    			  <td>{temp.currentPrice}</td>
-		    			  <td>{temp.stocksInMarket}</td>
-		    			  <td>{stock.stockQuantity}</td>		    			  
-		    			  <td></td>
-		    			</tr>
-		    			);
-		    	else
-		    		return(<tr></tr>)
-		    })}	
+		    		    	// console.log(temp,'yehi hu mai final valla');
+		    		    	if(temp!=0)
+		    		    		return (
+		    		    			<tr>
+		    		    			  <td>{temp.id}</td>
+		    		    			  <td>{temp.fullName}</td>
+		    		    			  <td>{temp.allTimeLow}</td>
+		    		    			  <td>{temp.allTimeHigh}</td>
+		    		    			  <td>{temp.dayLow}</td>
+		    		    			  <td>{temp.dayHigh}</td>
+		    		    			  <td>{temp.currentPrice}</td>
+		    		    			  <td>{temp.stocksInMarket}</td>
+		    		    			  <td>{userStocks[stockId]}</td>		    			  
+		    		    			  <td></td>
+		    		    			</tr>
+		    		    			);
+		    		    	else
+		    		    		return(<tr></tr>)
+		    		    })		    
+		    		}		
 		      
 		    </tbody>
 		  </table>
@@ -188,7 +131,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 						<h3 className="dash-head">Your Profile</h3>
 						<div className="row">
 							<div className="col-md-10 ">
-								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-1 col-xs-6 col-xs-offset-3">
+								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-2 col-xs-6 col-xs-offset-3">
 									
 									<label>{userDetails.cash}</label>
 									<p>Total Cash</p>
@@ -197,7 +140,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 								 <div className="clearfix"> </div>
 								</div>
 
-								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-2 col-xs-6 col-xs-offset-3">
+								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 col-xs-offset-3">
 									
 									<label>{userDetails.stockWorth}</label>
 									<p>Stock Worth</p>
@@ -206,7 +149,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 								 <div className="clearfix"> </div>
 								</div>
 
-								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 col-xs-offset-3">
+								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-1 col-xs-6 col-xs-offset-3">
 									
 									<label>{userDetails.total}</label>
 									<p>Net Worth</p>
@@ -229,24 +172,23 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 
 class Dashboard extends React.Component{
 	constructor(props){
-		super(props);
-		console.log(props['state'],'hello babay');
+		super(props);		
 		this.state = {
-			userStocks : this.props.state.UserStockById,
-			stocksList : this.props.state.AllStockById,
-			userDetails : this.props.state.User,			
+			userStocks : state.UserStockById,
+			stocksList : state.AllStockById,
+			userDetails : state.User,
+			mortgagedStocks: state.MortgagedStocks,			
 		}
-		console.log(this.state);
-	}
-	componentWillReceiveProps(nextProps){		
-		console.log('nextProps', nextProps.state);
-		this.setState({			
-			userStocks : nextProps.state.UserStockById,
-			stocksList : nextProps.state.AllStockById,
-			userDetails :nextProps.state.User ,
-		});
-		console.log(this.state, 'hi parth');
+		console.log(this.state,'pelam banda',props);
 	}	
+	componentWillReceiveProps(newProps){
+		console.log(newProps)
+		this.setState({
+			mortgagedStocks : newProps.state.MortgagedStocks,
+		});
+
+		console.log(newProps.state.MortgagedStocks,'checking')
+	}
 	render(){
 		return (
 			<div>
@@ -256,7 +198,7 @@ class Dashboard extends React.Component{
 				<div className="content-top">
 						<TransactionPanel userStocks = {this.state.userStocks} stocksList={this.state.stocksList} />
 						<CompanyPanel stocksList={this.state.stocksList} />
-						<MortgagePanel stocksList={this.state.stocksList} />
+						<MortgagePanel stocksList={this.state.stocksList} userStocks={this.state.userStocks} mortgagedStocks = {this.state.mortgagedStocks} />
 				</div>
 			</div>
 			</div>
@@ -269,4 +211,4 @@ module.exports = {
 	dashboard:Dashboard,
 	companyPanel: CompanyPanel,	
 };
-exports.stocksList = stockTemp;
+

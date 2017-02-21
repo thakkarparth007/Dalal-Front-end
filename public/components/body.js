@@ -10,11 +10,12 @@ var StockExchange = require('./stockExchange.js');
 var Dashboard = require('./dashboard.js').dashboard;
 var DashboardNav = require('./dashboard.js').dashboardNav;
 var CompanyPanel = require('./dashboard.js').companyPanel;
-var stocksList = require('./dashboard.js').stocksList;
 var TransactionHistory = require('./transactionHistory.js');
 var BuyAndSell = require('./buyAndSell.js');
 var News = require('./news.js');
 var Mortgage = require('./mortgagePanel.js');
+var MyOrders = require('./myOrders.js');
+
 import {observer} from 'mobx-react';
 
 // var currentView = <Dashboard />;
@@ -48,6 +49,7 @@ class Home extends React.Component{
 		super(props);
 		this.state = state;
 		state.Listen(this.setState.bind(this));
+		console.log(this.state,'kya problme hai?')
 	}
 	render(){					
 		return (
@@ -64,15 +66,16 @@ class LeaderBoardContainer extends React.Component{
 		super(props);
 		this.state = state;
 		state.Listen(this.setState.bind(this));
+		console.log(this.state,'yeh tune kya kiya!');
 	}
 	render(){	
 		return (
 			<div>
 				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
-													<LeaderBoard />
-											</div>								
-				</div>
+					<LeaderBoard leaderboardDetails = {this.state.Leaderboard} userDetails = {this.state.User} />
+				</div>								
+			</div>
 			)
 		
 	}
@@ -155,18 +158,39 @@ class BuyAndSellContainer extends React.Component{
 	}
 }
 
+class MyOrdersContainer extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
+	render(){			
+		return (
+			<div>
+				
+				<div id="page-wrapper" className="gray-bg dashbard-1">				
+					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+					<MyOrders orders={this.state.MyOrders} />														
+				</div>								
+			</div>
+			)
+		
+	}
+}
+
 class MortgageContainer extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = state;
 		state.Listen(this.setState.bind(this));
+		console.log(this.state,'pelam banda')
 	}
 	render(){	
 		return (
 			<div>				
 				<div id="page-wrapper" className="gray-bg dashbard-1">				
 					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} />														
+					<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} mortgagedStocks = {this.state.MortgagedStocks} />														
 				</div>								
 			</div>
 			)
@@ -209,7 +233,20 @@ buy sell stock option
 </div>
 */
 
-ReactDOM.render(<Navbar />, document.getElementById('wrapper'));
+class NavbarContainer extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = state;
+		state.Listen(this.setState.bind(this));
+	}
+	render(){
+		return (
+			<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />
+			)
+	}
+}
+
+ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
 
 var mainComponent = <Router history={hashHistory}>	
         <Route path="/" component={Home}  />
@@ -219,6 +256,7 @@ var mainComponent = <Router history={hashHistory}>
         <Route path="/buyAndSell" component={BuyAndSellContainer}/>
         <Route path="/mortgage" component={MortgageContainer}/>        
         <Route path="/transactions" component={TransactionsContainer}/>
+        <Route path="/myOrders" component={MyOrdersContainer}/>
         <Route path="/leaderboard" component={LeaderBoardContainer}/>
 </Router>;
 

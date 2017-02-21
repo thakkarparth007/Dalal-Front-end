@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="/favicon.ico">
+    
 
     <title>Login || Dalal Street</title>
 
@@ -31,78 +31,23 @@
 
   <body>
 
-
-    <div class="container">
-    	<div class="flat-form">
-  <ul class="tabs">
-    <li>
-      <a href="#login" class="active">Login</a>
-    </li>
-    <li>
-      <a href="#register">Register</a>
-    </li>
-    <li>
-      <a href="#reset">Reset Password</a>
-    </li>
-  </ul>
-  <div id="login" class="form-action show">
-    <h1>Login on Flat UI</h1>
-    <p>Lorem ipsum by <a href="http://codepen.io/davideast">David East</a> dolor sit amet, consectetur adipisicing elit. Veritatis, magni culpa facilis.</p>
-    <form>
-      <ul>
-        <li>
-          <input type="text" placeholder="Username" />
-        </li>
-        <li>
-          <input type="password" placeholder="Password" />
-        </li>
-        <li>
-          <input type="submit" value="Login" class="button" />
-        </li>
-      </ul>
+<div class="login-page">
+  <div class="form">
+    <form class="register-form">
+      <input type="text" placeholder="name"/>
+      <input type="password" placeholder="password"/>
+      <input type="text" placeholder="email address"/>
+      <button>create</button>
+      <p class="message">Already registered? <a href="#">Sign In</a></p>
+    </form>
+    <form class="login-form">
+      <input type="text" placeholder="username"/>
+      <input type="password" placeholder="password"/>
+      <button>login</button>
+      <p class="message">Not registered? <a href="#">Create an account</a></p>
     </form>
   </div>
-  <!--/#login.form-action-->
-  <div id="register" class="form-action hide">
-    <h1>Register</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod, culpa repudiandae.</p>
-    <form>
-      <ul>
-        <li>
-          <input type="text" placeholder="Username" />
-        </li>
-        <li>
-          <input type="password" placeholder="Password" />
-        </li>
-        <li>
-          <input type="submit" value="Sign Up" class="button" />
-        </li>
-      </ul>
-    </form>
-  </div>
-  <!--/#register.form-action-->
-  <div id="reset" class="form-action hide">
-    <h1>Reset Password</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, provident in accusamus possimus.</p>
-    <form>
-      <ul>
-        <li>
-          <input type="text" placeholder="Email" />
-        </li>
-        <li>
-          <input type="text" placeholder="Birthday" />
-        </li>
-        <li>
-          <input type="submit" value="Send" class="button" />
-        </li>
-      </ul>
-    </form>
-  </div>
-  <!--/#register.form-action-->
 </div>
-    </div><!-- /.container -->
-
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

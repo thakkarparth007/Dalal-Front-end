@@ -405,3 +405,72 @@ a{
     -ms-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
+
+.bidOrderActive,.askOrderActive{
+    font-size: 14px;
+    background-color: #0277bd;
+    padding: 0px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 2px 2px 1px #888888;
+    cursor: pointer;
+       -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out; 
+    color: #fff;  
+}
+
+.bidOrderPassive,.askOrderPassive{
+    font-size: 14px;    
+    padding: 0px;
+    background-color: #e1f5fe ;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 0px 1px 1px #888888;   
+    cursor: pointer;
+      -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-tr
+    ansition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.bidOrderActive:hover,.askOrderActive:hover{
+    font-size: 14px;
+    background-color: #01579b;
+    padding: 0px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 2px 2px 1px #888888;
+    cursor: pointer;
+       -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out; 
+    color: #fff;  
+}
+
+.bidOrderPassive:hover,.askOrderPassive:hover{
+     font-size: 14px;    
+    padding: 0px;
+    background-color: #b3e5fc ;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+    box-shadow: 0px 1px 1px #888888;   
+    cursor: pointer;
+      -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-rank{
+    font-weight: 600;   
+}
+
+.notificationsList{
+    height: 300px;
+    overflow: scroll;
+}
+

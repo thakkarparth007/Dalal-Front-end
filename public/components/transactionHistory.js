@@ -12,6 +12,14 @@ class TransactionHistory extends React.Component{
 			stocks: this.props.stocksList,
 			transType : NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.TransactionType").values,
 		}
+		console.log(this.state,'history 1',props,props.transactionHistory);
+	}
+	componentWillReceiveProps(nextProps){		
+		console.log('nextProps', nextProps.stocksList);
+		this.setState({						
+			history: nextProps.transactionHistory,									
+		});
+		console.log(nextProps,'history 2');
 	}
 	render(){
 		return (
@@ -25,9 +33,7 @@ class TransactionHistory extends React.Component{
 								<th>Stock Name</th>
 								<th>Transaction Type</th>
 								<th>No. of Stocks</th>
-								<th>Price of Stock</th>
-								<th>Total</th>
-								<th>Timestamp</th>
+								<th>Price of Stock</th>								
 							</tr>
 						</thead>
 						<tbody>
@@ -37,7 +43,7 @@ class TransactionHistory extends React.Component{
 								let t,convert,cname;								
 								Object.keys(this.state.stocks).map((z)=>{
 									let y = (this.state.stocks)[z];
-									if(y.id == x.id){
+									if(y.id == x.stockId){
 										t = y.shortName;										
 									}
 								})																
@@ -68,9 +74,7 @@ class TransactionHistory extends React.Component{
 										<td>{t}</td>
 										<td className={cname}>{convert}</td>
 										<td>{x.stockQuantity}</td>
-										<td>{x.price}</td>
-										<td>{x.total}</td>
-										<td>{x.createdAt}</td>
+										<td>{(x.price==0)?'-':x.price}</td>
 									</tr>
 									)
 							})}

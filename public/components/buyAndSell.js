@@ -13,6 +13,27 @@ var key = 0;
  	stck qty
 */
 
+const AlertModal = ({id,message}) =>{
+	return (		
+		<div className="modal fade" id={id}>
+			<div className="modal-dialog">
+				<div className="modal-content">
+					<div className="modal-header">
+						<button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 className="modal-title">Alert</h4>
+					</div>
+					<div className="modal-body">
+						{message}
+					</div>
+					<div className="modal-footer">
+						<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>						
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
 
 class BuyAndSell extends React.Component{
 	constructor(props){
@@ -62,17 +83,37 @@ class BuyAndSell extends React.Component{
 				stockQuantity: orderStockQuantity,
 				stockId: orderStockId,
 				price: orderPrice,
-			}, function(response){
+			}, function(response){				
+				console.log(response,'plisss');
+				if(response.result){
+					$('#alert-modal').modal('show');
+				}
+				else if(response.bidLimitExceededError){
+					$('#exceed-modal').modal('show');
+				}
+				else if(response.notEnoughCashError){
+					$('#error-modal').modal('show');
+				}
 				console.log(response.result);
 			});
 		}
 		else if(type='Sell'){
-			NetworkService.Requests.PlaceAskOrder({
+			NS.Requests.PlaceAskOrder({
 				orderType: OrderType[orderType],
 				stockQuantity: orderStockQuantity,
 				stockId: orderStockId,
 				price: orderPrice,
 			}, function(response){
+				console.log(response,'plisss');
+				if(response.result){
+					$('#alert-modal').modal('show');
+				}
+				else if(response.bidLimitExceededError){
+					$('#exceed-modal').modal('show');
+				}
+				else if(response.notEnoughCashError){
+					$('#error-modal').modal('show');
+				}
 				console.log(response.result);
 			});
 		}
@@ -187,8 +228,11 @@ class BuyAndSell extends React.Component{
 							})}
 							
 						</tbody>
-					</table>
+					</table>					
 					</div>
+					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
+					<AlertModal id = "error-modal" message="Not Enough Cash Available" />
+					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
 				</div>
 			</div>
 			)

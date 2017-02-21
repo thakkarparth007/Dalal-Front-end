@@ -44,7 +44,35 @@
         $('.sellSection').addClass('activeSection');        
     });
 
+    $('.bid-2').click(function(e){        
+        $('.bid-1').removeClass('bidOrderActive');
+        $('.bid-1').addClass('bidOrderPassive');
+        $('.bid-2').removeClass('bidOrderPassive');
+        $('.bid-2').addClass('bidOrderActive');
+    });
 
+    $('.bid-1').click(function(e){        
+        $('.bid-2').removeClass('bidOrderActive');
+        $('.bid-2').addClass('bidOrderPassive');
+        $('.bid-1').removeClass('bidOrderPassive');
+        $('.bid-1').addClass('bidOrderActive');
+    });
+
+    $('.ask-2').click(function(e){        
+        $('.ask-1').removeClass('askOrderActive');
+        $('.ask-1').addClass('askOrderPassive');
+        $('.ask-2').removeClass('askOrderPassive');
+        $('.ask-2').addClass('askOrderActive');
+    });
+
+    $('.ask-1').click(function(e){        
+        $('.ask-2').removeClass('askOrderActive');
+        $('.ask-2').addClass('askOrderPassive');
+        $('.ask-1').removeClass('askOrderPassive');
+        $('.ask-1').addClass('askOrderActive');
+    });
+
+    
 
 })(jQuery);
 

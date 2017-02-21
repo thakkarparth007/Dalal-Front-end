@@ -235,7 +235,8 @@
                     "notificationUpdate",
                     "stockPricesUpdate",
                     "marketEventsUpdate",
-                    "stockExchangeUpdate"
+                    "stockExchangeUpdate",
+                    "myOrderUpdate"
                   ]
                 }
               },
@@ -271,6 +272,10 @@
                 "stockExchangeUpdate": {
                   "type": "datastreams.StockExchangeUpdate",
                   "id": 8
+                },
+                "myOrderUpdate": {
+                  "type": "datastreams.MyOrderUpdate",
+                  "id": 9
                 }
               }
             },
@@ -355,13 +360,9 @@
                   "nested": {
                     "BuyStocksFromExchangeSuccessResponse": {
                       "fields": {
-                        "tradingPrice": {
-                          "type": "uint32",
-                          "id": 1
-                        },
-                        "stockQuantity": {
-                          "type": "int32",
-                          "id": 2
+                        "transaction": {
+                          "type": "models.Transaction",
+                          "id": 3
                         }
                       }
                     },
@@ -681,13 +682,9 @@
                   "nested": {
                     "MortgageStocksSuccessResponse": {
                       "fields": {
-                        "success": {
-                          "type": "bool",
-                          "id": 1
-                        },
-                        "tradingPrice": {
-                          "type": "uint32",
-                          "id": 2
+                        "transaction": {
+                          "type": "models.Transaction",
+                          "id": 3
                         }
                       }
                     },
@@ -912,13 +909,9 @@
                   "nested": {
                     "RetrieveMortgageStocksSuccessResponse": {
                       "fields": {
-                        "success": {
-                          "type": "bool",
-                          "id": 1
-                        },
-                        "tradingPrice": {
-                          "type": "uint32",
-                          "id": 2
+                        "transaction": {
+                          "type": "models.Transaction",
+                          "id": 3
                         }
                       }
                     },
@@ -1472,7 +1465,8 @@
                     "NOTIFICATIONS": 2,
                     "STOCK_PRICES": 3,
                     "STOCK_EXCHANGE": 4,
-                    "MARKET_EVENTS": 5
+                    "MARKET_EVENTS": 5,
+                    "MY_ORDERS": 6
                   }
                 },
                 "MarketDepthUpdate": {
@@ -1548,6 +1542,26 @@
                     "marketEvent": {
                       "type": "models.MarketEvent",
                       "id": 1
+                    }
+                  }
+                },
+                "MyOrderUpdate": {
+                  "fields": {
+                    "id": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "isAsk": {
+                      "type": "bool",
+                      "id": 2
+                    },
+                    "tradeQuantity": {
+                      "type": "uint32",
+                      "id": 3
+                    },
+                    "isClosed": {
+                      "type": "bool",
+                      "id": 4
                     }
                   }
                 }
@@ -1673,25 +1687,29 @@
                       "type": "uint32",
                       "id": 2
                     },
-                    "rank": {
-                      "type": "uint32",
+                    "userName": {
+                      "type": "string",
                       "id": 3
                     },
-                    "cash": {
+                    "rank": {
                       "type": "uint32",
                       "id": 4
                     },
-                    "debt": {
+                    "cash": {
                       "type": "uint32",
                       "id": 5
                     },
+                    "debt": {
+                      "type": "uint32",
+                      "id": 6
+                    },
                     "stockWorth": {
                       "type": "int32",
-                      "id": 6
+                      "id": 7
                     },
                     "totalWorth": {
                       "type": "int32",
-                      "id": 7
+                      "id": 8
                     }
                   }
                 },

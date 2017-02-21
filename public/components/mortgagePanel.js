@@ -11,6 +11,28 @@ var mortgagedStocks = {
 	}
 };
 
+const AlertModal = ({id,message}) =>{
+	return (		
+		<div className="modal fade" id={id}>
+			<div className="modal-dialog">
+				<div className="modal-content">
+					<div className="modal-header">
+						<button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 className="modal-title">Alert</h4>
+					</div>
+					<div className="modal-body">
+						{message}
+					</div>
+					<div className="modal-footer">
+						<button type="button" className="btn btn-default" data-dismiss="modal">Close</button>						
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+
 class GetMortgageStocksItem extends React.Component{
 	constructor(props) {
 		super(props);
@@ -19,6 +41,12 @@ class GetMortgageStocksItem extends React.Component{
 			stockQuantityToMortgage: 0,
 			stockQuantityOwned: this.props.stockQuantityOwned
 		}
+	}
+	componentWillReceiveProps(newProps){
+		this.setState ({
+			stock: newProps.stock,			
+			stockQuantityOwned: newProps.stockQuantityOwned,
+		})
 	}
 	updateStockQuantity(e) {
 		this.setState({
@@ -48,12 +76,20 @@ class GetMortgageStocksItem extends React.Component{
 class GetMortgagedStocks extends React.Component{
 	constructor(props){
 		super(props);		
+		console.log('heyeye lol',props.params,this.state)
 		this.state = {
 			mortgageStockList: props.params,
 			stocksList : props.stocksList,
 		}	
-		console.log('heyeye',props.params,this.state)
+		
 		// this.manageChange = this.manageChange.bind(this);
+	}
+	componentWillReceiveProps(newProps){
+		this.setState({
+				mortgageStockList: newProps.params,
+				stocksList : newProps.stocksList,			
+		})
+		console.log('heyeye joe',newProps.params,newProps.stocksList)
 	}
 	manageChange(e){
 		console.log(e.target);
@@ -77,14 +113,17 @@ class GetMortgagedStocks extends React.Component{
 							</tr>
 						</thead>
 						<tbody>
-							{
+							{								
 								Object.keys(this.state.mortgageStockList).map(id=>{
-									let mortgageStock = this.state.mortgageStockList[id];	
-									let stock = this.state.stocksList[id];
+									console.log(this.state.mortgageStockList,'check cechik');
+									let mortgageStock = (this.state.mortgageStockList)[id];	
+									let stock = this.state.stocksList[mortgageStock.stockId];
+									console.log(mortgageStock.stockId,stock,'pliss pliss pliss');
 								return (
-								 <GetMortgageStocksItem stock={stock} stockQuantityOwned={mortgageStock.stockQuantity} />
+								 <GetMortgageStocksItem stock={stock} stockQuantityOwned={mortgageStock.numStocksInBank} />
 									)
-							})}											
+							})
+							}											
 						</tbody>
 					</table>
 				</div>
@@ -100,11 +139,31 @@ class PutMortgageStocksItem extends React.Component{
 			stock: this.props.stock,
 			stockQuantityToMortgage: 0,
 			stockQuantityOwned: this.props.stockQuantityOwned
-		}
+		}		
+	}	
+	componentWillReceiveProps(newProps){
+		this.setState ({
+			stock: newProps.stock,			
+			stockQuantityOwned: newProps.stockQuantityOwned,
+		})
 	}
 	updateStockQuantity(e) {
 		this.setState({
 			stockQuantityToMortgage: e.target.value
+		})
+	}
+	putStockInMortgage(){		
+		NetworkService.Requests.MortgageStocks({
+			stockId: this.state.stock.id,
+			stockQuantity: this.state.stockQuantityToMortgage,
+		},function(resp){
+			console.log(resp,'mortgagedStocks mai bhejne ka response')
+			if(resp.transaction){
+				$('#alert-modal').modal('show');
+			}
+			else{
+				$('#error-modal').modal('show');
+			}
 		})
 	}
 	render() {
@@ -120,7 +179,7 @@ class PutMortgageStocksItem extends React.Component{
 					<p>{this.state.stockQuantityToMortgage * this.state.stock.currentPrice}</p>
 				</td>
 				<td>
-					<button type="button" className="btn btn-success">Mortgage</button>
+					<button type="button" className="btn btn-success" onClick={this.putStockInMortgage.bind(this)}>Mortgage</button>
 				</td>
 			</tr>
 		)
@@ -136,6 +195,12 @@ class PutMortgageStocks extends React.Component{
 			stocksList : props.stocksList,
 		}	
 		// this.manageChange = this.manageChange.bind(this);
+	}
+	componentWillReceiveProps(newProps){
+		this.setState({
+				userStockList: newProps.params,
+				stocksList : newProps.stocksList,			
+		})		
 	}
 	render(){
 		return (
@@ -155,9 +220,9 @@ class PutMortgageStocks extends React.Component{
 						<tbody>
 							{
 								Object.keys(this.state.userStockList).map(id=>{
-									let userStock = this.state.userStockList[id];	
+									let userStock = (this.state.userStockList)[id];	
 									let stock = this.state.stocksList[id];
-									return <PutMortgageStocksItem stock={stock} stockQuantityOwned={userStock.stockQuantity} />
+									return <PutMortgageStocksItem stock={stock} stockQuantityOwned={userStock} />
 								})
 							}
 						</tbody>
@@ -170,7 +235,7 @@ class PutMortgageStocks extends React.Component{
 }
 
 const MortgageContainer = ({stocksList,params,type}) =>{
-	console.log(type,'ki and ka',params, stocksList);
+	console.log(type,'ki and ka returns',params, stocksList);
 	if(type == 'getFromMortgage'){
 		return (
 			<GetMortgagedStocks stocksList={stocksList} params = {params} />
@@ -187,7 +252,7 @@ const MortgageContainer = ({stocksList,params,type}) =>{
 class MortgagePanel extends React.Component{
 	constructor(props){
 		super(props);
-		console.log(props.stocksList);		
+		console.log(props, "yayayaya");		
 
 		// NetworkService.Requests.GetMortgageDetails(mortgagedStocks, function(response){
 		// 		console.log("ritul mahan", response);
@@ -195,10 +260,10 @@ class MortgagePanel extends React.Component{
 		// });
 
 		this.state = {
-			mortgagedStocks: mortgagedStocks,
+			mortgagedStocks: this.props.mortgagedStocks,
 			stocksList: this.props.stocksList,
 			userStocks: this.props.userStocks,
-			params : this.props.userStocks,
+			params : this.props.mortgagedStocks,
 			type: 'getFromMortgage'
 		}
 		//change params later
@@ -206,11 +271,25 @@ class MortgagePanel extends React.Component{
 		console.log(this.state,'chamiya',mortgagedStocks,props.userStocks);
 		this.changeState = this.changeState.bind(this);
 	}
+	componentWillReceiveProps(nextProps){		
+		console.log('nextProps', nextProps.state);
+		this.setState({			
+			mortgagedStocks: nextProps.mortgagedStocks,
+			stocksList: nextProps.stocksList,
+			userStocks: nextProps.userStocks,
+			params : nextProps.mortgagedStocks,
+			type: 'getFromMortgage'		
+		});
+
+		
+
+		console.log(this.state, 'hi partho');
+	}	
 	changeState(p){
 		console.log('p hu mai..', p, this.state.mortgagedStocks,this.state);
 		if(p==1){
 			this.setState({
-				params: this.state.userStocks,
+				params: this.state.mortgagedStocks,
 				type: 'getFromMortgage',
 			})			
 		}
@@ -238,6 +317,10 @@ class MortgagePanel extends React.Component{
 				<div className="row">
 					<MortgageContainer stocksList={this.state.stocksList} params={this.state.params} type={this.state.type} />
 				</div>
+
+				<AlertModal id = "alert-modal" message="Order Placed Successfully" />
+				<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
+				<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
 			</div>
 			)
 	}

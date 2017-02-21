@@ -36,6 +36,5 @@ NetworkService.DataStreams.Transactions.Subscribe(Streams.TRANSACTIONS,function(
 		if(state.UserStockById[Transaction.stockId].stockQuantity == 0){
 			delete state.UserStockById[Transaction.stockId];
 		}
-
 	}
 });

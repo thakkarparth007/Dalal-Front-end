@@ -35,9 +35,14 @@ class StockExchangeItem extends React.Component{
 			stock: props.stock,
 		}
 	}
+	componentWillReceiveProps(nextProps){
+		this.setState({						
+			stock : nextProps.stock,			
+		});
+	}
 	BuyStocksFromExchange(e){		
 		console.log('hey',e);
-		console.log(this);		
+		console.log(this);	
 
 		var type = $("tr[value="+e+"] td select option:selected").val();
 		var stock = {};
@@ -63,9 +68,10 @@ class StockExchangeItem extends React.Component{
 					<td>{this.state.stock.shortName}</td>
 					<td>{this.state.stock.dayLow}</td>
 					<td>{this.state.stock.dayHigh}</td>
-					<td className = {this.state.color} data-price={this.state.stock.currentPrice}>
-						{this.state.icon}
-						{this.state.stock.currentPrice}											
+					<td className = {this.state.color} data-price={this.state.stock.currentPrice}>										
+						<sub>{Math.abs(this.state.stock.previousDayClose - this.state.stock.currentPrice)}</sub>											
+						{this.state.icon}					
+						{this.state.stock.currentPrice}
 					</td>
 					<td>{this.state.stock.stocksInMarket}</td>
 					<td>{this.state.stock.stocksInExchange}</td>
@@ -96,7 +102,7 @@ class StockExchange extends React.Component{
 			stocksList : nextProps.stocksList,			
 		});
 		console.log(this.state, 'hi partha');
-	}	
+	}
 	render(){
 		return (
 			<div className="stock-exchange container">
@@ -119,9 +125,9 @@ class StockExchange extends React.Component{
 							let x = (this.state.stocksList)[t];
 							let icon;
 							let color;
-							if(x.upOrDown){
+							if(x.currentPrice >= x.previousDayClose){
 								icon = <i className="fa fa-sort-asc" aria-hidden="true"></i>;
-								color = 'green';
+								color = 'green';								
 							}
 							else{
 								icon = <i className="fa fa-sort-desc" aria-hidden="true"></i>;	
@@ -129,7 +135,7 @@ class StockExchange extends React.Component{
 							}
 							return (
 								<StockExchangeItem stock = {x} icon = {icon} color = {color} />
-								)
+							)
 						})}
 						
 					</tbody>

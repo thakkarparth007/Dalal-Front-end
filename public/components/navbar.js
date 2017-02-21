@@ -27,12 +27,12 @@ const NavbarHeader = () => {
 		)
 }
 
-const Notification = ({title,time}) =>{
+const Notification = ({id,title}) =>{
 	return (
 			<li><a href="#">			
 			  <div className="user-new">
 			  <p>{title}</p>
-			  <span>{time}</span>
+			  <span>{id}</span>
 			  </div>
 			  <div className="user-new-left">
 			
@@ -48,8 +48,10 @@ class NotificationContainer extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			notifications: NotificationList
+			notifications: props.notifications,
+			userDetails: props.userDetails,
 		}				
+		console.log(this.state,'lo da');
 	}
 	render(){
 		return (			
@@ -69,12 +71,12 @@ class NotificationContainer extends React.Component{
 			  <div className="drop-men" >
 			      <ul className=" nav_1">			         
 			      <li className="dropdown at-drop">
-			            <a href="#" className="dropdown-toggle dropdown-at " data-toggle="dropdown"><i className="fa fa-globe"></i> <span className="number">{NotificationList.length}</span></a>
-			            <ul className="dropdown-menu menu1 " role="menu">			              
-			              {(this.state.notifications).map((notifications)=>{
-			              		console.log(notifications.title	);
+			            <a href="#" className="dropdown-toggle dropdown-at " data-toggle="dropdown"><i className="fa fa-globe"></i> <span className="number">{Object.keys(this.state.notifications).length}</span></a>
+			            <ul className="dropdown-menu menu1 notificationsList" role="menu">			              
+			              {Object.keys(this.state.notifications).map((id)=>{
+			              		console.log(id);
 			              		return (
-			              				<Notification time={notifications.time} title={notifications.title} />
+			              				<Notification id={id} title={this.state.notifications[id].text} />
 			              			)
 			              			
 			              	})
@@ -84,7 +86,7 @@ class NotificationContainer extends React.Component{
 			            </ul>
 			          </li>
 			    <li className="dropdown">
-			            <a href="#" className="dropdown-toggle dropdown-at" data-toggle="dropdown"><span className=" name-caret">-UserName-<i className="caret"></i></span><img width="60px" height="60px" src="public/images/wo.png" /></a>
+			            <a href="#" className="dropdown-toggle dropdown-at" data-toggle="dropdown"><span className=" name-caret">{this.state.userDetails.name}<i className="caret"></i></span><img width="60px" height="60px" src="public/images/wo.png" /></a>
 			            <ul className="dropdown-menu " role="menu">
 			              <li><a href="profile.html"><i className="fa fa-user"></i>Edit Profile</a></li>
 			              <li><a href="inbox.html"><i className="fa fa-envelope"></i>Inbox</a></li>
@@ -105,11 +107,19 @@ class NotificationContainer extends React.Component{
 }
 
 class Navbar extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			notificationsList : props.notifications,
+			userDetails: props.userDetails,
+		}
+		console.log(this.state, props, 'notifications');
+	}
 	render(){
 		return (
 			<nav className="navbar-default navbar-static-top" role="navigation">
-				<NavbarHeader />
-				<NotificationContainer />
+				<NavbarHeader  />
+				<NotificationContainer notifications = {this.state.notificationsList}  userDetails = {this.state.userDetails} />
 			</nav>			
 			)
 	}

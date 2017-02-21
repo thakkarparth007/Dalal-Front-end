@@ -95,11 +95,11 @@ class CompanyPanel extends React.Component{
 		super(props);		
 		console.log(props,'company props');
 		this.state = {
-			currentCompany: '-',
-			currentCompanyPrice: '-',
-			currentCompanyNews: '-',
-			currentCompanyStocks: '-',
-			currentCompanyStatistics: '',
+			currentCompany: this.props.stocksList[Object.keys(props.stocksList)[0]].fullName,
+			currentCompanyPrice: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
+			currentCompanyNews: this.props.stocksList[Object.keys(props.stocksList)[0]].description,
+			currentCompanyStocks: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
+			currentCompanyStatistics: companyStatistics[Object.keys(props.stocksList)[0]],
 			currentMarketDepth: '',
 			stocksList: this.props.stocksList
 		}
@@ -146,11 +146,11 @@ class CompanyPanel extends React.Component{
 
 		if(stockId == -1){
 			this.setState({
-				currentCompany: '-',
-			currentCompanyPrice: '-',
-			currentCompanyNews: '-',
-			currentCompanyStocks: '-',
-			currentCompanyStatistics: ''
+			currentCompany: this.props.stocksList[Object.keys(props.stocksList)[0]].fullName,
+			currentCompanyPrice: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
+			currentCompanyNews: this.props.stocksList[Object.keys(props.stocksList)[0]].description,
+			currentCompanyStocks: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
+			currentCompanyStatistics: companyStatistics[Object.keys(props.stocksList)[0]],			
 			})
 		}
 		
@@ -166,8 +166,7 @@ class CompanyPanel extends React.Component{
 						<div className="row detail-1">
 							<div className="col-md-6">	
 								<label>Select Company Name: </label>							
-								<select name="companyName" id="input-company" className="form-control" onChange = {this.handleChange}>
-									<option value="select">Select Company Name</option>
+								<select name="companyName" id="input-company" className="form-control" onChange = {this.handleChange}>									
 									{Object.keys(this.state.stocksList).map(x=>{										
 										let stock = (this.state.stocksList)[x];	
 										
