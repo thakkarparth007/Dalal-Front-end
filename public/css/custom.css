@@ -474,3 +474,31 @@ a{
     overflow: scroll;
 }
 
+
+.dash-nav{
+    margin-top: 50px;
+}
+
+.sidebar ul li a{
+    background: #fff;
+}
+.nav{
+    width: 250px;
+}
+
+.home-preloader{    
+    min-height: 100vh;
+    background: #fff;
+    padding-top: 300px;
+    text-align: center;
+}
+
+@media(max-width:500px) {
+.dash-main{
+    margin-top: 100px;
+}
+.nav{
+    width: 300px;
+}
+
+}

@@ -3,6 +3,7 @@ import {observable, extendObservable, map} from 'mobx';
 var listeners = [];
 
 var state = {
+	IsConnected: false,
 	User: {
 		sessionId: '',
 		name: '',
@@ -111,6 +112,9 @@ var state = {
 				},
 			},
 	},
+	CompanyProfile: {
+
+	},
 	Notifications: {
 		
 	},
@@ -119,6 +123,10 @@ var state = {
 		rankList: {
 
 		}
+	},
+	Status: {
+		ExchangeUnderProcess: false,
+		BidOrAskUnderProcess: false,
 	}	
 };
 

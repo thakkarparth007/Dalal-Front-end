@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { CubeGrid } from 'better-react-spinkit'
+
+var state = require('./state.js');
 var NetworkService = require("./main.js").NetworkService;
 console.log(NetworkService, 'are you there?');
 var key = 0;
@@ -50,13 +53,18 @@ class StockExchangeItem extends React.Component{
 		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
 		
 		console.log('stock obj is ', stock);		
+		state.Status.ExchangeUnderProcess = true;
 		NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
 			console.log("ritul mahan", response);
 			console.log(AlertModal("message"));
-			if(!response.notEnoughStocksError)	
-				$('#alert-modal').modal('show');
-			else
+			alert('response aa gaya');
+			state.Status.ExchangeUnderProcess = false;
+			if(response.buyLimitExceededError)
+				$('#exceed-modal').modal('show');			
+			else if(response.notEnoughStocksError)	
 				$('#error-modal').modal('show');
+			else
+				$('#alert-modal').modal('show');
 			//will get trading price as the response			
 			
 		})
@@ -104,47 +112,58 @@ class StockExchange extends React.Component{
 		console.log(this.state, 'hi partha');
 	}
 	render(){
-		return (
-			<div className="stock-exchange container">
-				<h3>Stock Exchange </h3>
-				<table className="table-exchange table table-striped table-hover table-responsive table-condensed" >
-					<thead>
-						<tr>
-							<th>Stock</th>
-							<th>Day Low</th>
-							<th>Day High</th>
-							<th>Current</th>
-							<th>Stock In Market</th>
-							<th>Stock In Exchange</th>
-							<th>Trade Stock</th>
-							<th>Trade</th>
-						</tr>
-					</thead>
-					<tbody>
-						{Object.keys(this.state.stocksList).map((t)=>{
-							let x = (this.state.stocksList)[t];
-							let icon;
-							let color;
-							if(x.currentPrice >= x.previousDayClose){
-								icon = <i className="fa fa-sort-asc" aria-hidden="true"></i>;
-								color = 'green';								
-							}
-							else{
-								icon = <i className="fa fa-sort-desc" aria-hidden="true"></i>;	
-								color="red";
-							}
-							return (
-								<StockExchangeItem stock = {x} icon = {icon} color = {color} />
-							)
-						})}
-						
-					</tbody>
-				</table>
-				<AlertModal id = "alert-modal" message="Order Placed Successfully" />
-				<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
-				<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
-			</div>
-			)
+		if(state.Status.ExchangeUnderProcess){
+			return (
+				<div>
+					<CubeGrid size={15} color='blue' />
+					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
+					<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
+					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
+				</div>
+				)
+		}
+		else
+			return (
+				<div className="stock-exchange container">
+					<h3>Stock Exchange </h3>				
+					<table className="table-exchange table table-striped table-hover table-responsive table-condensed" >
+						<thead>
+							<tr>
+								<th>Stock</th>
+								<th>Day Low</th>
+								<th>Day High</th>
+								<th>Current</th>
+								<th>Stock In Market</th>
+								<th>Stock In Exchange</th>
+								<th>Trade Stock</th>
+								<th>Trade</th>
+							</tr>
+						</thead>
+						<tbody>
+							{Object.keys(this.state.stocksList).map((t)=>{
+								let x = (this.state.stocksList)[t];
+								let icon;
+								let color;
+								if(x.currentPrice >= x.previousDayClose){
+									icon = <i className="fa fa-sort-asc" aria-hidden="true"></i>;
+									color = 'green';								
+								}
+								else{
+									icon = <i className="fa fa-sort-desc" aria-hidden="true"></i>;	
+									color="red";
+								}
+								return (
+									<StockExchangeItem stock = {x} icon = {icon} color = {color} />
+								)
+							})}
+							
+						</tbody>
+					</table>
+					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
+					<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
+					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
+				</div>
+				)
 	}
 }
 

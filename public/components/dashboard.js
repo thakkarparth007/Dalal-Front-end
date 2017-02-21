@@ -16,12 +16,18 @@ var state = require('./state.js');
 
 //stock state needs to be changed later
 
-const StocksList = ({stocks}) => {
-	console.log(stocks,'uououo');
+class StocksList extends React.Component{
+	constructor(props){
+		super(props);		
+		this.state = {
+			stocks: this.props.stocks
+		}
+	}	
+	render(){	
 	return (
 			<marquee className="stocks-list">
-			{	Object.keys(stocks).map((x)=>{
-				let stock = stocks[x];
+			{	Object.keys(this.state.stocks).map((x)=>{
+				let stock = (this.state.stocks)[x];
 
 				let icon;
 				if(stock.upOrDown){
@@ -47,6 +53,7 @@ const StocksList = ({stocks}) => {
 			})}
 			</marquee>		
 		);
+	}
 }
 
 const TransactionPanel = ({userStocks,stocksList}) =>{		
@@ -99,7 +106,7 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 		    		    			  <td>{temp.currentPrice}</td>
 		    		    			  <td>{temp.stocksInMarket}</td>
 		    		    			  <td>{userStocks[stockId]}</td>		    			  
-		    		    			  <td></td>
+		    		    			  <td> {temp.currentPrice*userStocks[stockId]} </td>
 		    		    			</tr>
 		    		    			);
 		    		    	else
@@ -118,7 +125,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 	console.log( AllStocksList,'yahi hu ,oa');
 	console.log( userDetails.cash ,'diufodiodji');
 	return (
-			    <div>
+			    <div className="dash-nav">
 			       <div className="content-main">			 			  		
 					    <div className="banner">					   
 							<StocksList stocks={AllStocksList} />	
@@ -191,7 +198,7 @@ class Dashboard extends React.Component{
 	}
 	render(){
 		return (
-			<div>
+			<div className="dash-main">
 			{this.state.userDetails.cash}
 			<div id="page-wrapper" className="gray-bg dashbard-1">				
 				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} />

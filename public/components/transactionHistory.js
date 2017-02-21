@@ -13,6 +13,7 @@ class TransactionHistory extends React.Component{
 			transType : NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.TransactionType").values,
 		}
 		console.log(this.state,'history 1',props,props.transactionHistory);
+		this.lazyScroll();
 	}
 	componentWillReceiveProps(nextProps){		
 		console.log('nextProps', nextProps.stocksList);
@@ -20,20 +21,34 @@ class TransactionHistory extends React.Component{
 			history: nextProps.transactionHistory,									
 		});
 		console.log(nextProps,'history 2');
+		
+	}
+	lazyScroll(){
+		var win = $(window);
+		var doc = $(doc);
+		
+		console.log(win,doc,'vim');
+		console.log(win.scroll)
+		win.scroll(function(){
+		    if(doc.height() - win.height() == win.scrollTop()){
+		        console.log('end pahucha');	
+		    }
+		})
 	}
 	render(){
 		return (
 			<div className="container transaction-container">
 				<h3>Transactions History</h3>
-				<div className="row">
+				<div className="row col-md-10">
 					<table className="table table-hover table-responsive">
 						<thead>
 							<tr>
-								<th>Stock Id</th>
+								<th>Transaction Id</th>
 								<th>Stock Name</th>
 								<th>Transaction Type</th>
-								<th>No. of Stocks</th>
-								<th>Price of Stock</th>								
+								<th>No. of Stocks</th>								
+								<th>Price of Stock</th>
+								<th>Total</th>								
 							</tr>
 						</thead>
 						<tbody>
@@ -75,6 +90,7 @@ class TransactionHistory extends React.Component{
 										<td className={cname}>{convert}</td>
 										<td>{x.stockQuantity}</td>
 										<td>{(x.price==0)?'-':x.price}</td>
+										<td>{x.total}</td>
 									</tr>
 									)
 							})}

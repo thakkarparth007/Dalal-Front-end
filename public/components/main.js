@@ -11,9 +11,12 @@ let state = require('./state.js');
 import {observable, extendObservable} from 'mobx';
 let MainComponent = require('./body.js');
 // const ws = new WebSocket("ws://10.1.94.138:3000/ws");
+window.ws = ws;
+window.estate = state;
 // const ws = new WebSocket("ws://10.1.94.134:3000/ws");
 // const ws = new WebSocket("ws://192.168.43.79:3000/ws");
 const ws = new WebSocket("ws://172.20.10.11:3000/ws");
+// const ws = new WebSocket("ws://192.168.0.48:3000/ws");
 let NetworkService;
 const callbacks = {
 	actions: {},
@@ -26,7 +29,7 @@ let loggedIn = false;
 let lastRequestId = 0;
 
 ws.onopen = function(event) {
-	state.isConnected = true;
+	state.isConnected = true;		//9788240115
 
 	console.log("Connected!");
 	console.log(NetworkService);
@@ -48,6 +51,7 @@ ws.onopen = function(event) {
 		Object.assign(state.User, response.result.user);
 		Object.assign(state.AllStockById, response.result.stockList);
 		Object.assign(state.UserStockById, response.result.stocksOwned);		
+		state.IsConnected = true;
 		// Object.assign(state.MortgagedStocks, response.result.mortgagedStocks);
 		console.log("kaun hai tu", state);
 		// extendObservable(state.UserStockById, response.result.UserStockById);
@@ -98,7 +102,22 @@ ws.onopen = function(event) {
 			state.MyOrders.Bids.Open = (resp.result.openBidOrders);
 			state.MyOrders.Bids.Closed = (resp.result.closedBidOrders) || {};
 			state.NotifyUpdate();
-		})		
+		});
+		
+		Object.keys(state.AllStockById).map(id=>{
+			NetworkService.Requests.GetCompanyProfile({
+				stockId: id,
+			},function(resp){
+				console.log(resp,'company ka details',id);
+				if(resp.result){
+					state.CompanyProfile[id] = resp.result;
+				}
+				else{
+
+				}
+			});		
+		})
+			
 
 		NetworkService.Requests.GetTransactions({},function(resp){
 			console.log(resp.result.transactionsMap,'mere get my transaction aa gaye!!')
@@ -111,7 +130,7 @@ ws.onopen = function(event) {
 
 		console.log(state,'mera state aa gaya');
 
-		//stock exchange subscribe
+		// stock exchange subscribe
 		NetworkService.DataStreams.StockExchange.Subscribe(function(resp) {
 			console.log(resp, "subscription status");
 		}, function(update){
@@ -145,6 +164,13 @@ ws.onopen = function(event) {
 			console.log('stock prices update response', update);
 				Object.keys(update.prices).map(id=>{
 					state.AllStockById[id].currentPrice = update.prices[id];	
+					var newStockWorth = 0;
+					Object.keys(state.UserStockById).forEach(stkId => {
+						let stkQty = state.UserStockById[stkId];
+						newStockWorth += stkQty * state.AllStockById[stkId].currentPrice;
+					})
+					state.User.stockWorth = newStockWorth;
+					state.User.total = state.User.cash + state.User.stockWorth;
 				});
 				state.NotifyUpdate();			
 		});				
@@ -292,6 +318,7 @@ NetworkService = {
 				}
 				state.AllStockById[req.stockId].stocksInExchange -= transaction.stockQuantity;
 				state.AllStockById[req.stockId].stocksInMarket += transaction.stockQuantity;
+				state.Transactions[transaction.id] = transaction;
 				state.NotifyUpdate();
 				console.log('mera state',state);
 
@@ -343,6 +370,7 @@ NetworkService = {
 					state.User.cash += (transaction.total);
 					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
 					state.Transactions[transaction.id] = transaction;
+					state.MortgagedStocks[transaction.stockId] = transaction;
 					state.NotifyUpdate();			
 				}
 				cb(respWrap.mortgageStocksResponse.result)
@@ -355,7 +383,8 @@ NetworkService = {
 			wrapRWAndSend(placeAskOrderReqWrap, function(respWrap) {
 				console.log(respWrap,'error check');
 			if(respWrap.placeAskOrderResponse.result){
-				(state.MyOrders.Asks.Open)[Object.keys(state.MyOrders.Asks.Open).length + 1] = {
+				window.merabhai = state.MyOrders.Asks.Open;
+				state.MyOrders.Asks.Open[respWrap.placeAskOrderResponse.result.bidId] = {
 						id: Object.keys(state.MyOrders.Asks.Open).length + 1,					
 						stockId: req.stockId,
 						bidId: respWrap.placeAskOrderResponse.result.bidId,
@@ -384,7 +413,7 @@ NetworkService = {
 
 				console.log(Object.keys(state.MyOrders.Bids.Open).length + 1,'yehi hu mai');
 				if(respWrap.placeBidOrderResponse.result){
-					(state.MyOrders.Bids.Open)[Object.keys(state.MyOrders.Bids.Open).length + 1] = {
+					state.MyOrders.Bids.Open[respWrap.placeBidOrderResponse.result.bidId] = {
 						id: Object.keys(state.MyOrders.Bids.Open).length + 1,					
 						stockId: req.stockId,
 						bidId: respWrap.placeBidOrderResponse.result.bidId,

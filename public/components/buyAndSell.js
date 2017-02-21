@@ -57,14 +57,11 @@ class BuyAndSell extends React.Component{
 	}	
 	placeOrder(e){	
 		e.preventDefault();
-		
-		
-		var type = $('.section-container .activeSection').html();			
+		var type = $('.section-container .activeSection').html();	
+				alert(type);		
 		console.log(this.state.key,'keyed');
-
 		var NS = NetworkService;
 		var PR = NS.ProtoRoot;
-		
 		var orderType = $('.orderType').find(":selected").val();
 		console.log(orderType,'mera type mahan');
 		var orderStockQuantity = $('.stockQuantity').val();
@@ -76,7 +73,7 @@ class BuyAndSell extends React.Component{
 		}
 
 		var OrderType = PR.lookup("dalalstreet.socketapi.models.OrderType").values;
-		
+
 		if(type=='Buy'){
 			NS.Requests.PlaceBidOrder({
 				orderType: OrderType[orderType],
@@ -143,6 +140,7 @@ class BuyAndSell extends React.Component{
 		return(
 			<div className="container buy-sell-container">
 				<h3>Buy and Sell</h3>				
+				
 				<div className="modal fade" id="modal-id">
 					<div className="modal-dialog">
 						<div className="modal-content">
@@ -193,6 +191,7 @@ class BuyAndSell extends React.Component{
 						</div>
 					</div>
 				</div>
+
 				<div className="row">
 					<div className="col-md-11">
 					<table className="table table-striped table-hover table-responsive table-condensed">

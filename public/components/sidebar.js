@@ -10,7 +10,7 @@ var link;
 const SideBar = () => {
 	return (
 		<div className="navbar-default sidebar" role="navigation">
-			<div className="sidebar-nav navbar-collapse">
+			<div className="sidebar-nav-fixed navbar-collapse affix">
 				<ul className="nav" id="side-menu">
 					{		
 						SideBarList.map((itemName, key) => {							

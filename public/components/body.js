@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route} from 'react-router';
 import { hashHistory } from 'react-router';
+import { ThreeBounce } from 'better-react-spinkit'
+// var Spinner = require('react-spinkit');
 
 var state = require('./state.js');
 var Navbar = require('./navbar.js');
@@ -51,14 +53,22 @@ class Home extends React.Component{
 		state.Listen(this.setState.bind(this));
 		console.log(this.state,'kya problme hai?')
 	}
-	render(){					
-		return (
-			<div>				
-				<Dashboard state={this.state} />				
-			</div>
-			)
+	render(){		
+			if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else			
+				return (
+						<div>									
+							<Dashboard state={this.state} />				
+						</div>		
+					)
+		}	
 		
-	}
 }
 
 class LeaderBoardContainer extends React.Component{
@@ -69,13 +79,21 @@ class LeaderBoardContainer extends React.Component{
 		console.log(this.state,'yeh tune kya kiya!');
 	}
 	render(){	
-		return (
-			<div>
-				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<LeaderBoard leaderboardDetails = {this.state.Leaderboard} userDetails = {this.state.User} />
-				</div>								
-			</div>
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else			
+				return (
+						<div>
+							
+							<div id="page-wrapper" className="gray-bg dashbard-1">				
+								<LeaderBoard leaderboardDetails = {this.state.Leaderboard} userDetails = {this.state.User} />
+							</div>								
+						</div>
 			)
 		
 	}
@@ -87,16 +105,24 @@ class CompanyProfileContainer extends React.Component{
 		this.state = state;
 		state.Listen(this.setState.bind(this));
 	}
-	render(){		
-		return (
-			<div>				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<CompanyPanel stocksList={this.state.AllStockById} />														
-				</div>								
-			</div>
-			)
-		
+	render(){
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else					
+				return (
+					<div>				
+						<div id="page-wrapper" className="gray-bg dashbard-1">				
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<CompanyPanel stocksList={this.state.AllStockById} />														
+						</div>								
+					</div>
+					)
+				
 	}
 }
 
@@ -107,15 +133,23 @@ class StockExchangeContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){	
-		return (
-			<div>			
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<StockExchange stocksList = {this.state.AllStockById} />														
-				</div>								
-			</div>
-			)
-		
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else			
+				return (
+					<div>			
+						<div id="page-wrapper" className="gray-bg dashbard-1">				
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<StockExchange stocksList = {this.state.AllStockById} />														
+						</div>								
+					</div>
+					)
+				
 	}
 }
 
@@ -125,16 +159,24 @@ class NewsContainer extends React.Component{
 		this.state = state;
 		state.Listen(this.setState.bind(this));
 	}
-	render(){			
-		return (
-			<div>
+	render(){
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else						
+				return (
+					<div>
+						
+						<div id="page-wrapper" className="gray-bg dashbard-1">									
+							<News stocksList={this.state.AllStockById} />														
+						</div>								
+					</div>
+					)
 				
-				<div id="page-wrapper" className="gray-bg dashbard-1">									
-					<News stocksList={this.state.AllStockById} />														
-				</div>								
-			</div>
-			)
-		
 	}
 }
 
@@ -144,17 +186,25 @@ class BuyAndSellContainer extends React.Component{
 		this.state = state;
 		state.Listen(this.setState.bind(this));
 	}
-	render(){			
-		return (
-			<div>
+	render(){
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else						
+				return (
+					<div>
+						
+						<div id="page-wrapper" className="gray-bg dashbard-1">				
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<BuyAndSell stocksList={this.state.AllStockById} />														
+						</div>								
+					</div>
+					)
 				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<BuyAndSell stocksList={this.state.AllStockById} />														
-				</div>								
-			</div>
-			)
-		
 	}
 }
 
@@ -165,16 +215,24 @@ class MyOrdersContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){			
-		return (
-			<div>
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else			
+				return (
+					<div>
+						
+						<div id="page-wrapper" className="gray-bg dashbard-1">				
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<MyOrders orders={this.state.MyOrders} />														
+						</div>								
+					</div>
+					)
 				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<MyOrders orders={this.state.MyOrders} />														
-				</div>								
-			</div>
-			)
-		
 	}
 }
 
@@ -185,16 +243,24 @@ class MortgageContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 		console.log(this.state,'pelam banda')
 	}
-	render(){	
-		return (
-			<div>				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} mortgagedStocks = {this.state.MortgagedStocks} />														
-				</div>								
-			</div>
-			)
-		
+	render(){
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+		else				
+			return (
+				<div>				
+					<div id="page-wrapper" className="gray-bg dashbard-1">				
+						<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+						<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} mortgagedStocks = {this.state.MortgagedStocks} />														
+					</div>								
+				</div>
+				)
+			
 	}
 }
 
@@ -205,15 +271,23 @@ class TransactionsContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){	
-		return (
-			<div>				
-				<div id="page-wrapper" className="gray-bg dashbard-1">				
-					<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-					<TransactionHistory stocksList={this.state.AllStockById} transactionHistory = {this.state.Transactions} />														
-				</div>								
-			</div>
-			)
-		
+		if(!this.state.IsConnected){
+					return (
+							<div className="home-preloader">
+								      <ThreeBounce size={15} color='blue' />	
+							</div>
+						)
+			}	
+			else			
+				return (
+					<div>				
+						<div id="page-wrapper" className="gray-bg dashbard-1">				
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<TransactionHistory stocksList={this.state.AllStockById} transactionHistory = {this.state.Transactions} />														
+						</div>								
+					</div>
+					)
+				
 	}
 }
 
@@ -240,14 +314,16 @@ class NavbarContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){
+		
 		return (
 			<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />
 			)
 	}
 }
 
-ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
 
+
+ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
 var mainComponent = <Router history={hashHistory}>	
         <Route path="/" component={Home}  />
         <Route path="/stockExchange" component={StockExchangeContainer}/>
@@ -263,6 +339,9 @@ var mainComponent = <Router history={hashHistory}>
 module.exports = ReactDOM.render(
 	mainComponent
 	,document.getElementById('inner-content'));
+
+
+
 
 window.Home = Home;
 window.mainComponent = mainComponent

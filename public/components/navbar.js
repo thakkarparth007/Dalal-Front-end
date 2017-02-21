@@ -117,8 +117,8 @@ class Navbar extends React.Component{
 	}
 	render(){
 		return (
-			<nav className="navbar-default navbar-static-top" role="navigation">
-				<NavbarHeader  />
+			<nav className="navbar-default navbar-fixed-top" role="navigation">
+				<NavbarHeader />
 				<NotificationContainer notifications = {this.state.notificationsList}  userDetails = {this.state.userDetails} />
 			</nav>			
 			)
