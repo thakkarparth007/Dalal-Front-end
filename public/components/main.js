@@ -10,12 +10,15 @@ const DataStreamType = root.lookup("dalalstreet.socketapi.datastreams.DataStream
 let state = require('./state.js');
 import {observable, extendObservable} from 'mobx';
 let MainComponent = require('./body.js');
-// const ws = new WebSocket("ws://10.1.94.138:3000/ws");
+
+let nextConnectAttemptIn = 1;
+let reconnectingIntervalId = null;
+let ws = null;
 window.ws = ws;
 window.estate = state;
 // const ws = new WebSocket("ws://10.1.94.134:3000/ws");
 // const ws = new WebSocket("ws://192.168.43.79:3000/ws");
-const ws = new WebSocket("ws://172.20.10.11:3000/ws");
+// const ws = new WebSocket("ws://172.20.10.11:3000/ws");
 // const ws = new WebSocket("ws://192.168.0.48:3000/ws");
 let NetworkService;
 const callbacks = {
@@ -28,17 +31,19 @@ const requestQueue = [];
 let loggedIn = false;
 let lastRequestId = 0;
 
-ws.onopen = function(event) {
-	state.isConnected = true;		//9788240115
+function onOpen(event) {
+			//9788240115
+	nextConnectAttemptIn = 1;
+	clearInterval(reconnectingIntervalId);
 
 	console.log("Connected!");
 	console.log(NetworkService);
-	var email = prompt("Enter email");
-	var password = prompt("Enter password");
+	// var email = prompt("Enter email");
+	// var password = prompt("Enter password");
 
 	NetworkService.Requests.Login({
-		email: email,
-		password: password
+		email: '106114081@nitt.edu',
+		password: '081'
 	}, function(response) {
 		if(!response.result) {
 			console.log("Not logged in.")
@@ -74,6 +79,21 @@ ws.onopen = function(event) {
 			state.NotifyUpdate();
 		})
 
+		NetworkService.Requests.GetMyBids({},function(resp){
+			console.log(resp,'mere get my bids aa gaye!!')
+			state.MyOrders.Bids.Open = (resp.result.openBidOrders);
+			state.MyOrders.Bids.Closed = (resp.result.closedBidOrders) || {};
+			state.Status.BidLoaded = true;			
+			state.NotifyUpdate();
+		});
+
+		NetworkService.Requests.GetMyAsks({},function(resp){
+			console.log(resp,'mere get my asks aa gaye!!')
+			state.MyOrders.Asks.Open = (resp.result.openAskOrders);
+			state.MyOrders.Asks.Closed = (resp.result.closedAskOrders) || {};
+			state.Status.AskLoaded = true;						
+			state.NotifyUpdate();
+		});				
 		
 
 		NetworkService.Requests.GetLeaderboard({},function(resp){
@@ -86,23 +106,9 @@ ws.onopen = function(event) {
 		NetworkService.Requests.GetMortgageDetails({},function(resp){
 			console.log(resp.result.mortgageMap,'mere mortgagedStocks aa gaye!!');
 			state.MortgagedStocks = resp.result.mortgageMap;
-			console.log(state,'mortgage daala');
+			console.log(state,'mortgage daala');			
 			state.NotifyUpdate();
 		})
-
-		NetworkService.Requests.GetMyAsks({},function(resp){
-			console.log(resp,'mere get my asks aa gaye!!')
-			state.MyOrders.Asks.Open = (resp.result.openAskOrders);
-			state.MyOrders.Asks.Closed = (resp.result.closedAskOrders) || {};
-			state.NotifyUpdate();
-		})
-
-		NetworkService.Requests.GetMyBids({},function(resp){
-			console.log(resp,'mere get my bids aa gaye!!')
-			state.MyOrders.Bids.Open = (resp.result.openBidOrders);
-			state.MyOrders.Bids.Closed = (resp.result.closedBidOrders) || {};
-			state.NotifyUpdate();
-		});
 		
 		Object.keys(state.AllStockById).map(id=>{
 			NetworkService.Requests.GetCompanyProfile({
@@ -213,7 +219,35 @@ ws.onopen = function(event) {
 	});
 }
 
-ws.onmessage = function(event) {
+function connect(){
+	console.log("In connect()");
+	ws = new WebSocket("ws://10.1.94.138:3000/ws");
+	window.ws = ws;
+	ws.onopen = onOpen;
+	ws.onclose = onClose;
+	ws.onmessage = onMessage;
+}
+
+connect();
+
+function onClose() {
+	console.log("Closed");
+	state.IsConnected = false;
+	state.NotifyUpdate();
+
+	var counter = nextConnectAttemptIn;
+	reconnectingIntervalId = setInterval(function() {
+		console.log("Connecting in " + counter + " seconds");
+		counter--;
+		if(counter <= 0) {
+			clearInterval(reconnectingIntervalId);
+			connect();
+			nextConnectAttemptIn *= 2;
+		}
+	}, 1000)
+}
+
+function onMessage(event) {
 	console.log("Got message", event);
 	console.log(event.data);
 
@@ -396,6 +430,7 @@ NetworkService = {
 						createdAt: Date('YYYY-MM-DDT11:22:63')
 					};	
 					state.NotifyUpdate();
+					console.log(state.MyOrders,'checking myorders')	
 			}
 			else{
 				console.log(respWrap.response,'seriosuly');
@@ -414,17 +449,16 @@ NetworkService = {
 				console.log(Object.keys(state.MyOrders.Bids.Open).length + 1,'yehi hu mai');
 				if(respWrap.placeBidOrderResponse.result){
 					state.MyOrders.Bids.Open[respWrap.placeBidOrderResponse.result.bidId] = {
-						id: Object.keys(state.MyOrders.Bids.Open).length + 1,					
-						stockId: req.stockId,
-						bidId: respWrap.placeBidOrderResponse.result.bidId,
-						price: req.price || '-',
+						id: respWrap.placeBidOrderResponse.result.bidId,
+						stockId: parseInt(req.stockId),						
+						price: parseInt(req.price) || '-',
 						orderType : req.orderType,
-						stockQuantity: req.stockQuantity,
 						stockQuantityFulfilled: 0,
-						isClosed: false,
+						stockQuantity: parseInt(req.stockQuantity),												
 						createdAt: Date('YYYY-MM-DDT11:22:63')
 					};	
-					state.NotifyUpdate();					
+					state.NotifyUpdate();				
+					console.log(state.MyOrders,'checking myorders')	
 				}
 				else{
 

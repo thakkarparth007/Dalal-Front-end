@@ -57,23 +57,24 @@ class BuyAndSell extends React.Component{
 	}	
 	placeOrder(e){	
 		e.preventDefault();
-		var type = $('.section-container .activeSection').html();	
-				alert(type);		
+		var type = $('.section-container .activeSection').html();			
 		console.log(this.state.key,'keyed');
 		var NS = NetworkService;
 		var PR = NS.ProtoRoot;
 		var orderType = $('.orderType').find(":selected").val();
+
+
 		console.log(orderType,'mera type mahan');
 		var orderStockQuantity = $('.stockQuantity').val();
 		var orderStockId = $("tr[value="+this.state.key+"]").attr('data-stockId');
-		var orderPrice = $(".stockPrice").val();
-
-		if(orderType=='MARKET'){
-
-		}
+		var orderPrice = $(".stockPrice").val();		
 
 		var OrderType = PR.lookup("dalalstreet.socketapi.models.OrderType").values;
 
+		if(!orderStockQuantity || !orderPrice){
+			$('#fill-modal').modal('show');
+		}
+		else{
 		if(type=='Buy'){
 			NS.Requests.PlaceBidOrder({
 				orderType: OrderType[orderType],
@@ -118,6 +119,7 @@ class BuyAndSell extends React.Component{
 			//some error occured
 			console.log('error');
 		}
+		}
 	}
 	checkOrderType(e){
 		console.log(e);
@@ -148,6 +150,7 @@ class BuyAndSell extends React.Component{
 								<button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 								<h4 className="modal-title">Order Box</h4>
 							</div>
+
 							<div className="modal-body">
 								<div className="container-fluid">
 									<div className="row section-container">
@@ -159,10 +162,11 @@ class BuyAndSell extends React.Component{
 										</div>
 
 									</div>
+									
 									<div className="row text-center">										
 										<div className="col-md-8 col-md-offset-2">
 											<p className="modal-label">Type of Order</p>
-											<select name="" id="input" className="form-control orderType" required="required" onChange={this.checkOrderType.bind(this)}>												
+											<select name="" id="input" className="form-control orderType" required onChange={this.checkOrderType.bind(this)}>												
 												<option value="LIMIT">Limit</option>
 												<option value="STOPLOSS">Stoploss</option>
 												<option value="MARKET">Market</option>
@@ -172,15 +176,15 @@ class BuyAndSell extends React.Component{
 
 									<div className="row text-center">
 										<div className="col-md-8 col-md-offset-2">
-											<p className="modal-label">Quantity</p>
-											<input type="number" id="input" className="form-control stockQuantity" required="required" title="" min="0" max="999999" />
+											<p className="modal-label">Quantity</p>											
+													<input type="number" id="input" className="form-control stockQuantity" required title="" placeholder="Enter stock quantity" min="1" max="999999" step="1" />											
 										</div>																		
 									</div>
 
 									<div className="row text-center stockPriceContainer">
 										<div className="col-md-8 col-md-offset-2">
 											<p className="modal-label">Stock Price</p>
-											<input type="number" id="input" className="form-control stockPrice" required="required" title="" min="0" max="999999" />
+											<input type="number" id="input" className="form-control stockPrice" required="true" title="" placeholder="Enter stock price" min="1" max="999999" step="1" />
 										</div>																		
 									</div>
 								</div>
@@ -188,6 +192,7 @@ class BuyAndSell extends React.Component{
 							<div className="modal-footer text-center">								
 								<button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.placeOrder.bind(this)} >Place Order</button>
 							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -232,6 +237,7 @@ class BuyAndSell extends React.Component{
 					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
 					<AlertModal id = "error-modal" message="Not Enough Cash Available" />
 					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
+					<AlertModal id = "fill-modal" message="Kindly Fill all the fields!" />
 				</div>
 			</div>
 			)

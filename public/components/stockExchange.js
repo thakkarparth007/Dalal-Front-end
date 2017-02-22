@@ -36,11 +36,15 @@ class StockExchangeItem extends React.Component{
 			color: props.color,
 			icon: props.icon,
 			stock: props.stock,
+			status: props.status,
+			stockQuantityOwned: props.stockQuantityOwned,	
 		}
 	}
 	componentWillReceiveProps(nextProps){
 		this.setState({						
-			stock : nextProps.stock,			
+			stock : nextProps.stock,
+			status: nextProps.status,		
+			stockQuantityOwned: nextProps.stockQuantityOwned,	
 		});
 	}
 	BuyStocksFromExchange(e){		
@@ -51,47 +55,72 @@ class StockExchangeItem extends React.Component{
 		var stock = {};
 		stock.stockId = $("tr[value="+e+"]").attr('data-stockId');
 		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
-		
-		console.log('stock obj is ', stock);		
-		state.Status.ExchangeUnderProcess = true;
-		NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
-			console.log("ritul mahan", response);
-			console.log(AlertModal("message"));
-			alert('response aa gaya');
-			state.Status.ExchangeUnderProcess = false;
-			if(response.buyLimitExceededError)
-				$('#exceed-modal').modal('show');			
-			else if(response.notEnoughStocksError)	
-				$('#error-modal').modal('show');
-			else
-				$('#alert-modal').modal('show');
-			//will get trading price as the response			
-			
-		})
+		if(stock.stockQuantity != 0){
+			console.log('stock obj is ', stock);		
+			this.setState({
+				status: true,
+			})
+			NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
+				console.log("ritul mahan", response);
+				console.log(AlertModal("message"));						
+
+				if(response.buyLimitExceededError)
+					$('#exceed-modal').modal('show');			
+				else if(response.notEnoughStocksError)	
+					$('#error-modal').modal('show');
+				else
+					$('#alert-modal').modal('show');
+				//will get trading price as the response			
+				this.setState({
+					status: false,
+				})
+			})	
+		}
+		else{
+			$('#fill-modal').modal('show');
+		}
 		
 	}
-	render(){
-		return (
-				<tr className="text-center" key={key++} value={key} data-stockId={this.state.stock.id}>
-					<td>{this.state.stock.shortName}</td>
-					<td>{this.state.stock.dayLow}</td>
-					<td>{this.state.stock.dayHigh}</td>
-					<td className = {this.state.color} data-price={this.state.stock.currentPrice}>										
-						<sub>{Math.abs(this.state.stock.previousDayClose - this.state.stock.currentPrice)}</sub>											
-						{this.state.icon}					
-						{this.state.stock.currentPrice}
+	render(){	
+			let spinner;
+			if(this.state.status){
+				 spinner = (
+					<td className="spinner">
+						<CubeGrid size={15} color='blue' />					
 					</td>
-					<td>{this.state.stock.stocksInMarket}</td>
-					<td>{this.state.stock.stocksInExchange}</td>
-					<td>
-						<input type="number" name="trade-stock" className="form-control"  step="1" required="required" title="trade-stock" min="0" max="99999" />
+					)
+			}
+			else{
+				spinner = (
+					<td className="dummy-spinner">
+						<CubeGrid size={15} color='blue' />					
 					</td>
-					<td>
-						<button type="button" className="btn btn-success" onClick={this.BuyStocksFromExchange.bind(this, key)}>Trade</button>
-					</td>
-				</tr>
-			);
-	}
+					)	
+			}
+			return (
+					<tr className="text-center" key={key++} value={key} data-stockId={this.state.stock.id}>
+						<td>{this.state.stock.shortName}</td>
+						<td>{this.state.stock.dayLow}</td>
+						<td>{this.state.stock.dayHigh}</td>
+						<td className = {this.state.color} data-price={this.state.stock.currentPrice}>										
+							<sub>{Math.abs(this.state.stock.previousDayClose - this.state.stock.currentPrice)}</sub>											
+							{this.state.icon}					
+							{this.state.stock.currentPrice}
+						</td>
+						<td>{this.state.stock.stocksInMarket}</td>
+						<td>{this.state.stock.stocksInExchange}</td>
+						<td>{this.state.stockQuantityOwned}</td>
+						<td>
+							<input type="number" name="trade-stock" className="form-control"  step="1" required="required" title="trade-stock" min="1" max="99999" />
+						</td>
+						<td>
+							<button type="button" className="btn btn-success" onClick={this.BuyStocksFromExchange.bind(this, key)}>Trade</button>
+						</td>
+						{spinner}
+					</tr>
+				);
+	
+		}
 }
 
 class StockExchange extends React.Component{
@@ -101,6 +130,8 @@ class StockExchange extends React.Component{
 		this.state = {
 			stocksList: this.props.stocksList,
 			message: 'You Order has been placed!',
+			status : this.props.status,
+			userStocks: this.props.userStocks,
 		}
 		console.log(this.state, 'yeh mera hai');
 	}
@@ -112,17 +143,7 @@ class StockExchange extends React.Component{
 		console.log(this.state, 'hi partha');
 	}
 	render(){
-		if(state.Status.ExchangeUnderProcess){
-			return (
-				<div>
-					<CubeGrid size={15} color='blue' />
-					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
-					<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
-					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
-				</div>
-				)
-		}
-		else
+		
 			return (
 				<div className="stock-exchange container">
 					<h3>Stock Exchange </h3>				
@@ -135,8 +156,10 @@ class StockExchange extends React.Component{
 								<th>Current</th>
 								<th>Stock In Market</th>
 								<th>Stock In Exchange</th>
-								<th>Trade Stock</th>
+								<th>Stocks Owned</th>
+								<th>No. of Stocks</th>
 								<th>Trade</th>
+								<th>.</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -153,7 +176,7 @@ class StockExchange extends React.Component{
 									color="red";
 								}
 								return (
-									<StockExchangeItem stock = {x} icon = {icon} color = {color} />
+									<StockExchangeItem stock = {x} icon = {icon} color = {color} status = {this.state.status} stockQuantityOwned = {this.state.userStocks[x.id]} />
 								)
 							})}
 							
@@ -162,9 +185,10 @@ class StockExchange extends React.Component{
 					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
 					<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
 					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
+					<AlertModal id = "fill-modal" message="Kindly Fill Number of stocks!" />
 				</div>
 				)
-	}
+	
+		}
 }
-
 module.exports = StockExchange;

@@ -140,7 +140,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 							<div className="col-md-10 ">
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-2 col-xs-6 col-xs-offset-3">
 									
-									<label>{userDetails.cash}</label>
+									<label><i class="fa fa-inr" aria-hidden="true"></i>{userDetails.cash}</label>
 									<p>Total Cash</p>
 									
 																
@@ -149,7 +149,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 col-xs-offset-3">
 									
-									<label>{userDetails.stockWorth}</label>
+									<label><i class="fa fa-inr" aria-hidden="true"></i>{userDetails.stockWorth}</label>
 									<p>Stock Worth</p>
 									
 																
@@ -158,7 +158,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-1 col-xs-6 col-xs-offset-3">
 									
-									<label>{userDetails.total}</label>
+									<label><i class="fa fa-inr" aria-hidden="true"></i>{userDetails.total}</label>
 									<p>Net Worth</p>
 									
 																

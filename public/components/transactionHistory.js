@@ -52,7 +52,7 @@ class TransactionHistory extends React.Component{
 							</tr>
 						</thead>
 						<tbody>
-							{Object.keys(this.state.history).map((temp)=>{
+							{Object.keys(this.state.history).sort((a,b)=> b-a).map((temp)=>{
 								let x = (this.state.history)[temp];
 
 								let t,convert,cname;								

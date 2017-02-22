@@ -17,6 +17,7 @@ var BuyAndSell = require('./buyAndSell.js');
 var News = require('./news.js');
 var Mortgage = require('./mortgagePanel.js');
 var MyOrders = require('./myOrders.js');
+var NetworkService = require('./main.js').NetworkService;
 
 import {observer} from 'mobx-react';
 
@@ -145,7 +146,7 @@ class StockExchangeContainer extends React.Component{
 					<div>			
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-							<StockExchange stocksList = {this.state.AllStockById} />														
+							<StockExchange stocksList = {this.state.AllStockById} status = {this.state.Status.ExchangeUnderProcess} userStocks = {this.state.UserStockById}/>														
 						</div>								
 					</div>
 					)
@@ -200,7 +201,7 @@ class BuyAndSellContainer extends React.Component{
 						
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-							<BuyAndSell stocksList={this.state.AllStockById} />														
+							<BuyAndSell stocksList={this.state.AllStockById} status = {this.state.Status.BidOrAskUnderProcess} />														
 						</div>								
 					</div>
 					)
@@ -212,12 +213,12 @@ class MyOrdersContainer extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = state;
-		state.Listen(this.setState.bind(this));
-	}
+		state.Listen(this.setState.bind(this));	
+	}	
 	render(){			
 		if(!this.state.IsConnected){
 					return (
-							<div className="home-preloader">
+							<div className="home-preloader">									
 								      <ThreeBounce size={15} color='blue' />	
 							</div>
 						)
@@ -225,7 +226,7 @@ class MyOrdersContainer extends React.Component{
 			else			
 				return (
 					<div>
-						
+						hey						
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
 							<MyOrders orders={this.state.MyOrders} />														
@@ -314,7 +315,7 @@ class NavbarContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){
-		
+
 		return (
 			<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />
 			)

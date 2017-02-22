@@ -493,6 +493,10 @@ a{
     text-align: center;
 }
 
+.dummy-spinner{
+    visibility: hidden;    
+}
+
 @media(max-width:500px) {
 .dash-main{
     margin-top: 100px;

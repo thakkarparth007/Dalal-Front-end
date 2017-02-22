@@ -127,6 +127,8 @@ var state = {
 	Status: {
 		ExchangeUnderProcess: false,
 		BidOrAskUnderProcess: false,
+		BidLoaded: false,
+		AskLoaded: false,
 	}	
 };
 

@@ -8,7 +8,16 @@ console.log('I am state',state.AllStockById[1].fullName);
 
 const MainContainerItem = ({item}) =>{
 	console.log(item,'mera stock id')
-
+	let temp;
+	if(item.orderType == 0){
+		temp = 'Limit';
+	}
+	else if(item.orderType == 1){
+		temp = 'Stoploss';
+	}
+	else{
+		temp = 'Market';
+	}
 	return (
 		<tr>
 			<td>{item.id}</td>
@@ -16,7 +25,7 @@ const MainContainerItem = ({item}) =>{
 			<td>{item.price}</td>
 			<td>{item.stockQuantity}</td>
 			<td>{item.stockQuantityFulfilled}</td>
-			<td>{item.orderType}</td>
+			<td>{temp}</td>
 		</tr>
 		)
 }
@@ -69,7 +78,7 @@ class MainContainer extends React.Component{
 						</thead>
 						<tbody>
 								{
-									Object.keys(temp).map(id=>{
+									(Object.keys(temp)).sort((a,b)=> b-a).map(id=>{
 										let object = (temp)[id];
 										return (
 											<MainContainerItem item = {object} />
@@ -144,6 +153,13 @@ class MyBidOrders extends React.Component{
 		}		
 		console.log(this.state,'child state',props);
 		this.changeState = this.changeState.bind(this);
+	}
+	componentWillReceiveProps(nextProps){
+		this.setState({
+			BidOrders: nextProps.BidOrders,
+			params: nextProps.BidOrders.Open,
+		});
+		console.log('updated props');
 	}
 	changeState(p){		
 		if(p==1){
