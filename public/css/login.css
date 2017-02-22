@@ -1,11 +1,11 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+/*@import url(https://fonts.googleapis.com/css?family=Roboto:300);*/
 
 .login-page {
   width: 360px;
   padding: 8% 0 0;
   margin: auto;
 }
-.form {
+.form-login {
   position: relative;
   z-index: 1;
   background: #FFFFFF;
@@ -15,7 +15,7 @@
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
-.form input {
+.form-login input {
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
@@ -26,11 +26,11 @@
   box-sizing: border-box;
   font-size: 14px;
 }
-.form button {
+.form-login button {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #d95459;
+  background: #c62828;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -40,22 +40,22 @@
   transition: all 0.3 ease;
   cursor: pointer;
 }
-.form button:hover,.form button:active,.form button:focus {
-  background: #43A047;
+.form-login button:hover,.form-login button:active,.form-login button:focus {
+  background: #b71c1c;
 }
-.form .message {
+.form-login .message {
   margin: 15px 0 0;
   color: #b3b3b3;
   font-size: 12px;
 }
-.form .message a {
+.form-login .message a {
   color: #4CAF50;
   text-decoration: none;
 }
-.form .register-form {
+.form-login .register-form {
   display: none;
 }
-.container {
+/*.container {
   position: relative;
   z-index: 1;
   max-width: 300px;
@@ -87,14 +87,30 @@
 }
 .container .info span .fa {
   color: #EF3B3A;
-}
-body {
-  background: #d95459; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #d95459, #d95459);
-  background: -moz-linear-gradient(right, #d95459, #d95459);
-  background: -o-linear-gradient(right, #d95459, #d95459);
-  background: linear-gradient(to left, #d95459, #d95459);
+}*/
+.body-login {
+  background: #c62828; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #c62828, #c62828);
+  background: -moz-linear-gradient(right, #c62828, #c62828);
+  background: -o-linear-gradient(right, #c62828, #c62828);
+  background: linear-gradient(to left, #c62828, #c62828);
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
+  -moz-osx-font-smoothing: grayscale; 
+  height: 100vh;     
+}
+
+.form-login h2{
+  padding:15px;
+}
+
+.form-login h3{
+  padding: 10px;
+}
+
+.under{
+  height: 1px;
+  width: 100%;
+  text-align: center;
+  background: rgba(0,0,0,0.1);
 }

@@ -4,12 +4,18 @@ var listeners = [];
 
 var state = {
 	IsConnected: false,
+	MarketOpen: false,
+	IsLoggedIn: true,
+	ClosingString: '',
 	User: {
 		sessionId: '',
 		name: '',
 		cash: 0,
 		stockWorth: 0,
 		total: 0,
+	},
+	Constants:{
+
 	},	
 	UserStockById:{
 		1: 100,		
@@ -32,6 +38,9 @@ var state = {
 			createdAt: Date('YYYY-MM-DDT11:22:63'),
 			updatedAt: Date('YYYY-MM-DDT13:22:44')
 		},
+	},
+	MarketEvents: {
+
 	},
 	Transactions:{
 		1: {
@@ -132,7 +141,9 @@ var state = {
 	}	
 };
 
-window.listeners = listeners;
+//window.listeners = listeners;
+var _isConnected = false;
+
 Object.defineProperty(state, 'Listen', {
 	value: function(cb) {
 		listeners.push(cb);
@@ -144,6 +155,33 @@ Object.defineProperty(state, 'NotifyUpdate', {
 		listeners.forEach(cb => cb(state));
 	}
 });
+
+var connectListeners = [];
+var disconnectListeners = [];
+Object.defineProperty(state, 'OnConnect', {
+	value: function(cb) {
+		connectListeners.push(cb);
+		if(state.IsConnected) cb(state);
+	}
+});
+Object.defineProperty(state, 'OnDisconnect', {
+	value: function(cb) {
+		disconnectListeners.push(cb);
+		if(!state.IsConnected) cb(state);
+	}
+});
+
+state.Listen(function() {
+	if(state.IsConnected && !_isConnected) {
+		_isConnected = true;
+		connectListeners.forEach(cb => cb(state));
+	}
+	else if (!state.IsConnected && _isConnected) {
+		_isConnected = false;
+		disconnectListeners.forEach(cb => cb(state));
+	}
+});
+
 
 /*
 

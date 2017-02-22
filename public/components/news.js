@@ -6,21 +6,26 @@ class News extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {			
-			stocks: this.props.stocksList
+			events: this.props.marketEvents
 		}
+	}
+	componentWillReceiveProps(newProps){
+		this.setState({
+			events: newProps.marketEvents	
+		})
 	}
 	render(){
 		return(
-			<div className="container">
+			<div className="container NewsContainer">
 				<h2>News List</h2>
-				{Object.keys(this.state.stocks).map((t)=>{
-					let e = (this.state.stocks)[t];
+				{Object.keys(this.state.events).map((t)=>{
+					let e = (this.state.events)[t];
 					
 					return (
 						<div className="row newsRow">							
 							<div className="col-md-8 col-md-offset-1">
-								<h4 className="company-heading">{e.fullName}</h4>
-								<p className="company-text">{e.description}</p>
+								<h4 className="company-heading">{e.headline}</h4>
+								<p className="company-text">{e.text}</p>
 							</div>
 						</div>
 						)

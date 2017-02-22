@@ -108,7 +108,7 @@ class GetMortgagedStocks extends React.Component{
 								<th>Current Price</th>
 								<th>No of Stocks Mortgaged</th>
 								<th>No of Stocks to exchange</th>
-								<th>Amount Received</th>
+								<th>Amount to be Paid</th>
 								<th>Exchange</th>
 							</tr>
 						</thead>
@@ -213,7 +213,7 @@ class PutMortgageStocks extends React.Component{
 								<th>Current Price</th>
 								<th>No of Stocks</th>
 								<th>No of Stocks to Mortgage</th>
-								<th>Amount to be Paid</th>
+								<th>Amount Received</th>
 								<th>Mortgage</th>
 							</tr>
 						</thead>
@@ -222,7 +222,8 @@ class PutMortgageStocks extends React.Component{
 								Object.keys(this.state.userStockList).map(id=>{
 									let userStock = (this.state.userStockList)[id];	
 									let stock = this.state.stocksList[id];
-									return <PutMortgageStocksItem stock={stock} stockQuantityOwned={userStock} />
+									if(userStock>=0)
+										return <PutMortgageStocksItem stock={stock} stockQuantityOwned={userStock} />
 								})
 							}
 						</tbody>

@@ -42,8 +42,7 @@ class BuyAndSell extends React.Component{
 		this.state = {
 			stocks : this.props.stocksList,	
 			key : 0					
-		}
-		
+		}		
 		this.orderParams = this.orderParams.bind(this);
 		this.placeOrder = this.placeOrder.bind(this);		
 		this.checkOrderType = this.checkOrderType.bind(this);		
@@ -199,7 +198,8 @@ class BuyAndSell extends React.Component{
 
 				<div className="row">
 					<div className="col-md-11">
-					<table className="table table-striped table-hover table-responsive table-condensed">
+					<div className="table-responsive table-hover col-md-12">
+					<table className="table table-striped table-condensed">
 						<thead>
 							<tr>
 								<th>Stock</th>
@@ -232,7 +232,8 @@ class BuyAndSell extends React.Component{
 							})}
 							
 						</tbody>
-					</table>					
+					</table>				
+					</div>	
 					</div>
 					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
 					<AlertModal id = "error-modal" message="Not Enough Cash Available" />

@@ -94,6 +94,9 @@ class CompanyPanel extends React.Component{
 	constructor(props){
 		super(props);		
 		console.log(props,'company props');
+
+
+
 		this.state = {
 			currentCompany: this.props.stocksList[Object.keys(props.stocksList)[0]].fullName,
 			currentCompanyPrice: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
@@ -101,8 +104,14 @@ class CompanyPanel extends React.Component{
 			currentCompanyStocks: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
 			currentCompanyStatistics: companyStatistics[Object.keys(props.stocksList)[0]],
 			currentMarketDepth: '',
-			stocksList: this.props.stocksList
+			stocksList: this.props.stocksList,
+			companyProfile: this.props.companyProfile,
 		}
+		// state.OnLogin(() => {
+		// 	NS.Requests.GetCompanyProfile(resp => {
+
+		// 	});
+		// });
 		console.log(this.state);
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -110,8 +119,13 @@ class CompanyPanel extends React.Component{
 		console.log('nextProps', nextProps.stocksList);
 		this.setState({						
 			stocksList : nextProps.stocksList,			
+			companyProfile: nextProps.companyProfile,
 		});
 		console.log(this.state, 'hi partha');
+
+		let currentCompanyStats;
+		currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getMinutes();
+		console.log(currentCompanyStats,'noobing');
 	}	
 	handleChange(event){
 		this.setState({currentCompany: event.target.value});
@@ -191,7 +205,7 @@ class CompanyPanel extends React.Component{
 							<Chart statistics = {this.state.currentCompanyStatistics} />
 						</div>
 
-						<div className="col-md-12 marketDepth">
+						<div className="col-md-12 marketDepth" >
 							<h4>Market Depth:</h4>
 							<Chart statistics = {this.state.currentMarketDepth} />
 						</div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 var SideBar  = require('./sidebar.js');
+var NS = require('./main.js').NetworkService;
+var AlertModal = require('./stockExchange.js').AlertModal;
 
 var NotificationList = [
 	{
@@ -53,6 +55,22 @@ class NotificationContainer extends React.Component{
 		}				
 		console.log(this.state,'lo da');
 	}
+	logout(){
+		NS.Requests.Logout({}, function(resp){
+			console.log('resp logout',resp);
+			if(resp.result){
+				$('#logout-success').modal('show');
+				//redirect to login page
+				
+			}
+			else if(resp.badRequestError){
+				$('#error-modal').modal('show');
+			}
+			else if(resp.internalServerError){
+				$('#internal-modal').modal('show');
+			}
+		})
+	}
 	render(){
 		return (			
 			 <div className=" border-bottom">
@@ -88,10 +106,7 @@ class NotificationContainer extends React.Component{
 			    <li className="dropdown">
 			            <a href="#" className="dropdown-toggle dropdown-at" data-toggle="dropdown"><span className=" name-caret">{this.state.userDetails.name}<i className="caret"></i></span><img width="60px" height="60px" src="public/images/wo.png" /></a>
 			            <ul className="dropdown-menu " role="menu">
-			              <li><a href="profile.html"><i className="fa fa-user"></i>Edit Profile</a></li>
-			              <li><a href="inbox.html"><i className="fa fa-envelope"></i>Inbox</a></li>
-			              <li><a href="calendar.html"><i className="fa fa-calendar"></i>Calender</a></li>
-			              <li><a href="inbox.html"><i className="fa fa-clipboard"></i>Tasks</a></li>
+			              <li><a href="#" onClick={this.logout.bind(this)}><i className="fa fa-user"></i>Logout</a></li>			              
 			            </ul>
 			          </li>
 			         
@@ -101,6 +116,7 @@ class NotificationContainer extends React.Component{
 			</div>
 
 			<SideBar />
+			
 		</div>
 			)
 	}
@@ -117,10 +133,16 @@ class Navbar extends React.Component{
 	}
 	render(){
 		return (
+			<div>
 			<nav className="navbar-default navbar-fixed-top" role="navigation">
 				<NavbarHeader />
 				<NotificationContainer notifications = {this.state.notificationsList}  userDetails = {this.state.userDetails} />
-			</nav>			
+
+			</nav>
+			<AlertModal id = "logout-success" message="Logout Successfully" />
+			<AlertModal id = "error-modal" message="Bad Request Error" />
+			<AlertModal id = "internal-modal" message="Internal Server Error" />						
+			</div>
 			)
 	}
 }

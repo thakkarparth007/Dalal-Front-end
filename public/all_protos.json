@@ -1469,6 +1469,22 @@
                     "MY_ORDERS": 6
                   }
                 },
+                "Trade": {
+                  "fields": {
+                    "tradePrice": {
+                      "type": "uint32",
+                      "id": 1
+                    },
+                    "tradeQuantity": {
+                      "type": "uint32",
+                      "id": 2
+                    },
+                    "tradeTime": {
+                      "type": "string",
+                      "id": 3
+                    }
+                  }
+                },
                 "MarketDepthUpdate": {
                   "fields": {
                     "stockId": {
@@ -1484,6 +1500,11 @@
                       "keyType": "uint32",
                       "type": "uint32",
                       "id": 3
+                    },
+                    "latestTrades": {
+                      "keyType": "uint32",
+                      "type": "Trade",
+                      "id": 4
                     }
                   }
                 },
@@ -1723,17 +1744,25 @@
                       "type": "uint32",
                       "id": 2
                     },
-                    "text": {
+                    "headline": {
                       "type": "string",
                       "id": 3
                     },
+                    "text": {
+                      "type": "string",
+                      "id": 4
+                    },
                     "emotionScore": {
                       "type": "sint32",
-                      "id": 4
+                      "id": 5
+                    },
+                    "isGlobal": {
+                      "type": "bool",
+                      "id": 7
                     },
                     "createdAt": {
                       "type": "string",
-                      "id": 5
+                      "id": 6
                     }
                   }
                 },
@@ -1770,6 +1799,10 @@
                     "text": {
                       "type": "string",
                       "id": 3
+                    },
+                    "isBroadcast": {
+                      "type": "bool",
+                      "id": 5
                     },
                     "createdAt": {
                       "type": "string",

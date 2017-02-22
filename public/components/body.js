@@ -8,7 +8,7 @@ import { ThreeBounce } from 'better-react-spinkit'
 var state = require('./state.js');
 var Navbar = require('./navbar.js');
 var LeaderBoard = require('./leaderboard.js');
-var StockExchange = require('./stockExchange.js');
+var StockExchange = require('./stockExchange.js').StockExchange;
 var Dashboard = require('./dashboard.js').dashboard;
 var DashboardNav = require('./dashboard.js').dashboardNav;
 var CompanyPanel = require('./dashboard.js').companyPanel;
@@ -17,6 +17,7 @@ var BuyAndSell = require('./buyAndSell.js');
 var News = require('./news.js');
 var Mortgage = require('./mortgagePanel.js');
 var MyOrders = require('./myOrders.js');
+var LoginComponent = require('./login.js');
 var NetworkService = require('./main.js').NetworkService;
 
 import {observer} from 'mobx-react';
@@ -72,6 +73,17 @@ class Home extends React.Component{
 		
 }
 
+class LoginComponentContainer extends React.Component{
+	constructor(props){
+		super(props);
+	}
+	render(){
+		return (
+			<LoginComponent />
+			)
+	}
+}
+
 class LeaderBoardContainer extends React.Component{
 	constructor(props){
 		super(props);
@@ -118,8 +130,8 @@ class CompanyProfileContainer extends React.Component{
 				return (
 					<div>				
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
-							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
-							<CompanyPanel stocksList={this.state.AllStockById} />														
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
+							<CompanyPanel stocksList={this.state.AllStockById} companyProfile = {this.state.CompanyProfile} />														
 						</div>								
 					</div>
 					)
@@ -145,7 +157,7 @@ class StockExchangeContainer extends React.Component{
 				return (
 					<div>			
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
-							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<StockExchange stocksList = {this.state.AllStockById} status = {this.state.Status.ExchangeUnderProcess} userStocks = {this.state.UserStockById}/>														
 						</div>								
 					</div>
@@ -173,7 +185,7 @@ class NewsContainer extends React.Component{
 					<div>
 						
 						<div id="page-wrapper" className="gray-bg dashbard-1">									
-							<News stocksList={this.state.AllStockById} />														
+							<News marketEvents={this.state.MarketEvents} />														
 						</div>								
 					</div>
 					)
@@ -200,7 +212,7 @@ class BuyAndSellContainer extends React.Component{
 					<div>
 						
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
-							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<BuyAndSell stocksList={this.state.AllStockById} status = {this.state.Status.BidOrAskUnderProcess} />														
 						</div>								
 					</div>
@@ -228,7 +240,7 @@ class MyOrdersContainer extends React.Component{
 					<div>
 						hey						
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
-							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<MyOrders orders={this.state.MyOrders} />														
 						</div>								
 					</div>
@@ -256,7 +268,7 @@ class MortgageContainer extends React.Component{
 			return (
 				<div>				
 					<div id="page-wrapper" className="gray-bg dashbard-1">				
-						<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+						<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 						<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} mortgagedStocks = {this.state.MortgagedStocks} />														
 					</div>								
 				</div>
@@ -283,7 +295,7 @@ class TransactionsContainer extends React.Component{
 				return (
 					<div>				
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
-							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} />
+							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<TransactionHistory stocksList={this.state.AllStockById} transactionHistory = {this.state.Transactions} />														
 						</div>								
 					</div>
@@ -323,25 +335,29 @@ class NavbarContainer extends React.Component{
 }
 
 
-
-ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
-var mainComponent = <Router history={hashHistory}>	
-        <Route path="/" component={Home}  />
-        <Route path="/stockExchange" component={StockExchangeContainer}/>
-        <Route path="/companyProfile" component={CompanyProfileContainer}/>
-        <Route path="/news" component={NewsContainer}/>
-        <Route path="/buyAndSell" component={BuyAndSellContainer}/>
-        <Route path="/mortgage" component={MortgageContainer}/>        
-        <Route path="/transactions" component={TransactionsContainer}/>
-        <Route path="/myOrders" component={MyOrdersContainer}/>
-        <Route path="/leaderboard" component={LeaderBoardContainer}/>
-</Router>;
-
-module.exports = ReactDOM.render(
-	mainComponent
-	,document.getElementById('inner-content'));
-
-
+if(state.IsLoggedIn)
+	{ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
+		var mainComponent = <Router history={hashHistory}>	
+		        <Route path="/" component={Home}  />
+		        <Route path="/stockExchange" component={StockExchangeContainer}/>
+		        <Route path="/companyProfile" component={CompanyProfileContainer}/>
+		        <Route path="/news" component={NewsContainer}/>
+		        <Route path="/buyAndSell" component={BuyAndSellContainer}/>
+		        <Route path="/mortgage" component={MortgageContainer}/>        
+		        <Route path="/transactions" component={TransactionsContainer}/>
+		        <Route path="/myOrders" component={MyOrdersContainer}/>
+		        <Route path="/leaderboard" component={LeaderBoardContainer}/>
+		</Router>;
+	
+		ReactDOM.render(
+			mainComponent
+			,document.getElementById('inner-content'));}
+else
+	{ReactDOM.render(
+			<LoginComponentContainer />,
+			document.getElementById('inner-content')
+			);
+	}
 
 
 window.Home = Home;

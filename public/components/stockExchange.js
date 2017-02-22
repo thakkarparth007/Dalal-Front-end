@@ -60,7 +60,7 @@ class StockExchangeItem extends React.Component{
 			this.setState({
 				status: true,
 			})
-			NetworkService.Requests.BuyStocksFromExchange(stock, function(response){
+			NetworkService.Requests.BuyStocksFromExchange(stock, (response) =>{
 				console.log("ritul mahan", response);
 				console.log(AlertModal("message"));						
 
@@ -100,8 +100,8 @@ class StockExchangeItem extends React.Component{
 			return (
 					<tr className="text-center" key={key++} value={key} data-stockId={this.state.stock.id}>
 						<td>{this.state.stock.shortName}</td>
-						<td>{this.state.stock.dayLow}</td>
-						<td>{this.state.stock.dayHigh}</td>
+						<td className="hidden-xs">{this.state.stock.dayLow}</td>
+						<td className="hidden-xs">{this.state.stock.dayHigh}</td>
 						<td className = {this.state.color} data-price={this.state.stock.currentPrice}>										
 							<sub>{Math.abs(this.state.stock.previousDayClose - this.state.stock.currentPrice)}</sub>											
 							{this.state.icon}					
@@ -147,19 +147,20 @@ class StockExchange extends React.Component{
 			return (
 				<div className="stock-exchange container">
 					<h3>Stock Exchange </h3>				
-					<table className="table-exchange table table-striped table-hover table-responsive table-condensed" >
+					<div className="table-responsive table-hover col-md-12">
+					<table className="table-exchange table table-striped table-condensed" >
 						<thead>
 							<tr>
 								<th>Stock</th>
-								<th>Day Low</th>
-								<th>Day High</th>
+								<th className="hidden-xs">Day Low</th>
+								<th className="hidden-xs">Day High</th>
 								<th>Current</th>
 								<th>Stock In Market</th>
 								<th>Stock In Exchange</th>
 								<th>Stocks Owned</th>
 								<th>No. of Stocks</th>
 								<th>Trade</th>
-								<th>.</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -182,6 +183,7 @@ class StockExchange extends React.Component{
 							
 						</tbody>
 					</table>
+					</div>
 					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
 					<AlertModal id = "error-modal" message="Not Enough Stocks Available" />
 					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
@@ -191,4 +193,4 @@ class StockExchange extends React.Component{
 	
 		}
 }
-module.exports = StockExchange;
+module.exports = {StockExchange,AlertModal};

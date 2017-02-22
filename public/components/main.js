@@ -18,7 +18,7 @@ window.ws = ws;
 window.estate = state;
 // const ws = new WebSocket("ws://10.1.94.134:3000/ws");
 // const ws = new WebSocket("ws://192.168.43.79:3000/ws");
-// const ws = new WebSocket("ws://172.20.10.11:3000/ws");
+// const ws = new WebSocket("ws://10.1.12.143:3000/ws");
 // const ws = new WebSocket("ws://192.168.0.48:3000/ws");
 let NetworkService;
 const callbacks = {
@@ -42,186 +42,16 @@ function onOpen(event) {
 	// var password = prompt("Enter password");
 
 	NetworkService.Requests.Login({
-		email: '106114081@nitt.edu',
-		password: '081'
+		email: '',
+		password: ''
 	}, function(response) {
-		if(!response.result) {
-			console.log("Not logged in.")
-			// redirect to login page			
-		}
-		//adding subscribe
-		//let Streams = NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.DataStreamType").values;
-
-		console.log(response.result,'mera result mahaan');		
-		Object.assign(state.User, response.result.user);
-		Object.assign(state.AllStockById, response.result.stockList);
-		Object.assign(state.UserStockById, response.result.stocksOwned);		
-		state.IsConnected = true;
-		// Object.assign(state.MortgagedStocks, response.result.mortgagedStocks);
-		console.log("kaun hai tu", state);
-		// extendObservable(state.UserStockById, response.result.UserStockById);
-		state.NotifyUpdate();
-
-		let stockWorth = 0;
-		Object.keys(state.UserStockById).map(id=>{
-			stockWorth += state.UserStockById[id]*(state.AllStockById[id].currentPrice);
-		})
-
-		state.User.stockWorth = stockWorth;
-		state.User.total = state.User.cash + state.User.stockWorth;
-
-		NetworkService.Requests.GetNotifications({},function(resp){
-			console.log(resp.result.notifications,'mera notification!!');
-			Object.keys(resp.result.notifications).map(id=>{
-				let n = (resp.result.notifications)[id];
-				state.Notifications[id] = n;
-			})
-			state.NotifyUpdate();
-		})
-
-		NetworkService.Requests.GetMyBids({},function(resp){
-			console.log(resp,'mere get my bids aa gaye!!')
-			state.MyOrders.Bids.Open = (resp.result.openBidOrders);
-			state.MyOrders.Bids.Closed = (resp.result.closedBidOrders) || {};
-			state.Status.BidLoaded = true;			
-			state.NotifyUpdate();
-		});
-
-		NetworkService.Requests.GetMyAsks({},function(resp){
-			console.log(resp,'mere get my asks aa gaye!!')
-			state.MyOrders.Asks.Open = (resp.result.openAskOrders);
-			state.MyOrders.Asks.Closed = (resp.result.closedAskOrders) || {};
-			state.Status.AskLoaded = true;						
-			state.NotifyUpdate();
-		});				
-		
-
-		NetworkService.Requests.GetLeaderboard({},function(resp){
-			console.log(resp.result,'mera leaderboard!!');
-			state.Leaderboard.myRank = resp.result.myRank;
-			state.Leaderboard.rankList = resp.result.rankList;
-			state.NotifyUpdate();
-		})
-
-		NetworkService.Requests.GetMortgageDetails({},function(resp){
-			console.log(resp.result.mortgageMap,'mere mortgagedStocks aa gaye!!');
-			state.MortgagedStocks = resp.result.mortgageMap;
-			console.log(state,'mortgage daala');			
-			state.NotifyUpdate();
-		})
-		
-		Object.keys(state.AllStockById).map(id=>{
-			NetworkService.Requests.GetCompanyProfile({
-				stockId: id,
-			},function(resp){
-				console.log(resp,'company ka details',id);
-				if(resp.result){
-					state.CompanyProfile[id] = resp.result;
-				}
-				else{
-
-				}
-			});		
-		})
-			
-
-		NetworkService.Requests.GetTransactions({},function(resp){
-			console.log(resp.result.transactionsMap,'mere get my transaction aa gaye!!')
-			state.Transactions = resp.result.transactionsMap;
-			Object.keys(resp.result.transactionsMap).map(id=>{
-				state.Transactions[id] = resp.result.transactionsMap[id];
-			})
-			state.NotifyUpdate();
-		})		
-
-		console.log(state,'mera state aa gaya');
-
-		// stock exchange subscribe
-		NetworkService.DataStreams.StockExchange.Subscribe(function(resp) {
-			console.log(resp, "subscription status");
-		}, function(update){
-			Object.keys(update.stocksInExchange).map(id=>{
-				state.AllStockById[id].currentPrice = update.stocksInExchange[id].price;
-				state.AllStockById[id].stocksInExchange = update.stocksInExchange[id].stocksInExchange;
-				state.AllStockById[id].stocksInMarket = update.stocksInExchange[id].stocksInMarket;
-			})
-			state.NotifyUpdate();
-		});				
-
-		//subscribe transaction
-		//test krna hai ek baar
-		NetworkService.DataStreams.Transactions.Subscribe(function(resp) {
-			console.log(resp, "subscription status of transactions");
-		}, function(update){			
-			console.log('transaction update response', update);
-			if(!state.Transactions[update.transaction.id]){
-				state.Transactions[update.transaction.id] = update.transaction;
-				state.User.cash += update.transaction.total;
-				state.UserStockById[update.transaction.stockId] += update.transaction.stockQuantity;
-				state.NotifyUpdate();
-			}
-
-		});				
-
-		//stock prices subscribe
-		NetworkService.DataStreams.StockPrices.Subscribe(function(resp) {
-			console.log(resp, "subscription status of stock prices");
-		}, function(update){
-			console.log('stock prices update response', update);
-				Object.keys(update.prices).map(id=>{
-					state.AllStockById[id].currentPrice = update.prices[id];	
-					var newStockWorth = 0;
-					Object.keys(state.UserStockById).forEach(stkId => {
-						let stkQty = state.UserStockById[stkId];
-						newStockWorth += stkQty * state.AllStockById[stkId].currentPrice;
-					})
-					state.User.stockWorth = newStockWorth;
-					state.User.total = state.User.cash + state.User.stockWorth;
-				});
-				state.NotifyUpdate();			
-		});				
-
-		//market events subscribe
-		NetworkService.DataStreams.MarketEvents.Subscribe(function(resp) {
-			console.log(resp, "subscription status of market events");
-		}, function(update){
-			console.log('market events update response', update);
-		});				
-
-		//notifications subscribe
-		NetworkService.DataStreams.Notifications.Subscribe(function(resp) {
-			console.log(resp, "subscription status of Notifications");
-		}, function(update){
-			console.log(update,'yololol');
-			// update.id,update.text;
-			state.Notifications[update.notification.id] = {
-				text: update.notification.text,
-			}
-			state.NotifyUpdate();			
-		});				
-		//MainComponent.setState({
-		//	new_state: state
-		//});
-		// state.User.sessionId = response.result.sessionId;		
-		// state.User.total = response.result.user.total;
-		// state.User.name = response.result.user.name;
-		// state.User.UserStockById = response.result.user.UserStockById;
-		// state.User.Transactions = response.result.user.Transactions;
-
-		// Object.keys(response.result.stockList).map((x)=>{
-		// 	let y = (response.result.stockList)[x];
-		// 	state.AllStockById[x] = y;
-		// 	console.log(y,'hi da');			
-		// })
-		
-		requestQueue.forEach(ws.send.bind(ws));
-		console.log(state);
+		onLoginResponse(response);
 	});
 }
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://10.1.94.138:3000/ws");
+	ws = new WebSocket("ws://172.20.10.11:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -313,6 +143,198 @@ function wrapRWAndSend(reqWrap, cb, dsUpdateCb) {
 	ws.send(buff);
 }
 
+function onLoginResponse(response){
+	if(!response.result) {
+		console.log("Not logged in.")
+		// redirect to login page			
+	}
+	//adding subscribe
+	//let Streams = NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.DataStreamType").values;
+
+	console.log(response.result,'mera result mahaan');		
+	Object.assign(state.User, response.result.user);
+	Object.assign(state.AllStockById, response.result.stockList);
+	Object.assign(state.UserStockById, response.result.stocksOwned);		
+	Object.assign(state.Constants, response.result.constants);		
+	state.IsConnected = true;
+	state.IsLoggedIn = true;
+	state.ClosingString = response.result.closingString;
+	// state.MarketOpen = response.result.isMarketOpen;
+
+	// Object.assign(state.MortgagedStocks, response.result.mortgagedStocks);
+	console.log("kaun hai tu", state);
+	// extendObservable(state.UserStockById, response.result.UserStockById);
+	state.NotifyUpdate();
+
+	let stockWorth = 0;
+	Object.keys(state.UserStockById).map(id=>{
+		stockWorth += state.UserStockById[id]*(state.AllStockById[id].currentPrice);
+	})
+
+	state.User.stockWorth = stockWorth;
+	state.User.total = state.User.cash + state.User.stockWorth;
+
+	NetworkService.Requests.GetMarketEvents({},function(resp){
+		console.log(resp.result.marketEvents,'mera market events!!');
+		Object.keys(resp.result.marketEvents).map(id=>{
+			let n = (resp.result.marketEvents)[id];
+			state.MarketEvents[id] = n;
+		});
+		state.NotifyUpdate();
+	})		
+
+	NetworkService.Requests.GetNotifications({},function(resp){
+		console.log(resp.result.notifications,'mera notification!!');
+		Object.keys(resp.result.notifications).map(id=>{
+			let n = (resp.result.notifications)[id];
+			state.Notifications[id] = n;
+		})
+		state.NotifyUpdate();
+	})
+
+	NetworkService.Requests.GetMyBids({},function(resp){
+		console.log(resp,'mere get my bids aa gaye!!')
+		state.MyOrders.Bids.Open = (resp.result.openBidOrders);
+		state.MyOrders.Bids.Closed = (resp.result.closedBidOrders) || {};
+		state.Status.BidLoaded = true;			
+		state.NotifyUpdate();
+	});
+
+	NetworkService.Requests.GetMyAsks({},function(resp){
+		console.log(resp,'mere get my asks aa gaye!!')
+		state.MyOrders.Asks.Open = (resp.result.openAskOrders);
+		state.MyOrders.Asks.Closed = (resp.result.closedAskOrders) || {};
+		state.Status.AskLoaded = true;						
+		state.NotifyUpdate();
+	});				
+	
+
+	NetworkService.Requests.GetLeaderboard({},function(resp){
+		console.log(resp.result,'mera leaderboard!!');
+		state.Leaderboard.myRank = resp.result.myRank;
+		state.Leaderboard.rankList = resp.result.rankList;
+		state.NotifyUpdate();
+	})
+
+	NetworkService.Requests.GetMortgageDetails({},function(resp){
+		console.log(resp.result.mortgageMap,'mere mortgagedStocks aa gaye!!');
+		state.MortgagedStocks = resp.result.mortgageMap;
+		console.log(state,'mortgage daala');			
+		state.NotifyUpdate();
+	})
+	
+	Object.keys(state.AllStockById).map(id=>{
+		NetworkService.Requests.GetCompanyProfile({
+			stockId: id,
+		},function(resp){
+			console.log(resp,'company ka details',id);
+			if(resp.result){
+				state.CompanyProfile[id] = resp.result.stockHistoryMap;
+			}
+			else{
+
+			}
+		});		
+	})
+		
+
+	NetworkService.Requests.GetTransactions({},function(resp){
+		console.log(resp.result.transactionsMap,'mere get my transaction aa gaye!!')
+		state.Transactions = resp.result.transactionsMap;
+		Object.keys(resp.result.transactionsMap).map(id=>{
+			state.Transactions[id] = resp.result.transactionsMap[id];
+		})
+		state.NotifyUpdate();
+	})		
+
+	console.log(state,'mera state aa gaya');
+
+	// stock exchange subscribe
+	NetworkService.DataStreams.StockExchange.Subscribe(function(resp) {
+		console.log(resp, "subscription status");
+	}, function(update){
+		Object.keys(update.stocksInExchange).map(id=>{
+			state.AllStockById[id].currentPrice = update.stocksInExchange[id].price;
+			state.AllStockById[id].stocksInExchange = update.stocksInExchange[id].stocksInExchange;
+			state.AllStockById[id].stocksInMarket = update.stocksInExchange[id].stocksInMarket;
+		})
+		state.NotifyUpdate();
+	});				
+
+	//subscribe transaction
+	//test krna hai ek baar
+	NetworkService.DataStreams.Transactions.Subscribe(function(resp) {
+		console.log(resp, "subscription status of transactions");
+	}, function(update){			
+		console.log('transaction update response', update);
+		if(!state.Transactions[update.transaction.id]){
+			state.Transactions[update.transaction.id] = update.transaction;
+			state.User.cash += update.transaction.total;
+			state.UserStockById[update.transaction.stockId] += update.transaction.stockQuantity;
+			state.NotifyUpdate();
+		}
+
+	});				
+
+	//stock prices subscribe
+	NetworkService.DataStreams.StockPrices.Subscribe(function(resp) {
+		console.log(resp, "subscription status of stock prices");
+	}, function(update){
+		console.log('stock prices update response', update);
+			Object.keys(update.prices).map(id=>{
+				state.AllStockById[id].currentPrice = update.prices[id];	
+				var newStockWorth = 0;
+				Object.keys(state.UserStockById).forEach(stkId => {
+					let stkQty = state.UserStockById[stkId];
+					newStockWorth += stkQty * state.AllStockById[stkId].currentPrice;
+				})
+				state.User.stockWorth = newStockWorth;
+				state.User.total = state.User.cash + state.User.stockWorth;
+			});
+			state.NotifyUpdate();			
+	});				
+
+	//market events subscribe
+	NetworkService.DataStreams.MarketEvents.Subscribe(function(resp) {
+		console.log(resp, "subscription status of market events");
+	}, function(update){
+		state.MarketEvents[update.marketEvent.id] = update.marketEvent;
+		state.NotifyUpdate();
+	});				
+
+	//notifications subscribe
+	NetworkService.DataStreams.Notifications.Subscribe(function(resp) {
+		console.log(resp, "subscription status of Notifications");
+	}, function(update){
+		console.log(update,'yololol');
+		// update.id,update.text;
+		if(update.notification.text == state.ClosingString){
+			state.MarketOpen = false;
+		}
+		state.Notifications[update.notification.id] = {
+			text: update.notification.text,
+		}
+		state.NotifyUpdate();			
+	});				
+	//MainComponent.setState({
+	//	new_state: state
+	//});
+	// state.User.sessionId = response.result.sessionId;		
+	// state.User.total = response.result.user.total;
+	// state.User.name = response.result.user.name;
+	// state.User.UserStockById = response.result.user.UserStockById;
+	// state.User.Transactions = response.result.user.Transactions;
+
+	// Object.keys(response.result.stockList).map((x)=>{
+	// 	let y = (response.result.stockList)[x];
+	// 	state.AllStockById[x] = y;
+	// 	console.log(y,'hi da');			
+	// })
+	
+	requestQueue.forEach(ws.send.bind(ws));
+	console.log(state);
+}
+
 function getUpdateCbName(dataStreamType, dataStreamId) {
 	let dsId = dataStreamId || "0";
 	let updateCbId = dataStreamType + "_" + dsId;
@@ -389,7 +411,7 @@ NetworkService = {
 		Logout: function(req, cb) {
 			let logoutReqWrap = RequestWrapper.create();
 			logoutReqWrap.logoutRequest = req;
-			wrapRWAndSend(LogoutReqWrap, function(respWrap) {
+			wrapRWAndSend(logoutReqWrap, function(respWrap) {
 				cb(respWrap.logoutResponse)
 			});
 		},

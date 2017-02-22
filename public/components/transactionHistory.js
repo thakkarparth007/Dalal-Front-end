@@ -40,7 +40,8 @@ class TransactionHistory extends React.Component{
 			<div className="container transaction-container">
 				<h3>Transactions History</h3>
 				<div className="row col-md-10">
-					<table className="table table-hover table-responsive">
+				<div className="table-responsive table-hover col-md-11">
+					<table className="table">
 						<thead>
 							<tr>
 								<th>Transaction Id</th>
@@ -97,6 +98,7 @@ class TransactionHistory extends React.Component{
 							
 						</tbody>
 					</table>
+					</div>
 				</div>
 			</div>
 			)

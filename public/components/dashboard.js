@@ -20,10 +20,12 @@ class StocksList extends React.Component{
 	constructor(props){
 		super(props);		
 		this.state = {
-			stocks: this.props.stocks
+			stocks: this.props.stocks,
+			marketStatus: this.props.marketStatus,
 		}
 	}	
-	render(){	
+	render(){
+	if(this.state.marketStatus)	
 	return (
 			<marquee className="stocks-list">
 			{	Object.keys(this.state.stocks).map((x)=>{
@@ -53,7 +55,15 @@ class StocksList extends React.Component{
 			})}
 			</marquee>		
 		);
+	else{
+		return (
+			<marquee className="stocks-list">
+				<span>Market Is Closed</span>
+			</marquee>
+			)
 	}
+	}
+
 }
 
 const TransactionPanel = ({userStocks,stocksList}) =>{		
@@ -120,7 +130,7 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 		)
 }
 
-const DashboardNav = ({AllStocksList,userDetails}) => {
+const DashboardNav = ({AllStocksList,userDetails,marketStatus}) => {
 	let stocksList;
 	console.log( AllStocksList,'yahi hu ,oa');
 	console.log( userDetails.cash ,'diufodiodji');
@@ -128,7 +138,7 @@ const DashboardNav = ({AllStocksList,userDetails}) => {
 			    <div className="dash-nav">
 			       <div className="content-main">			 			  		
 					    <div className="banner">					   
-							<StocksList stocks={AllStocksList} />	
+							<StocksList stocks={AllStocksList} marketStatus = {marketStatus} />	
 					    </div>
 					</div>
 
@@ -184,7 +194,9 @@ class Dashboard extends React.Component{
 			userStocks : state.UserStockById,
 			stocksList : state.AllStockById,
 			userDetails : state.User,
-			mortgagedStocks: state.MortgagedStocks,			
+			mortgagedStocks: state.MortgagedStocks,
+			marketStatus : state.MarketOpen,
+			companyProfile: state.CompanyProfile,
 		}
 		console.log(this.state,'pelam banda',props);
 	}	
@@ -192,6 +204,7 @@ class Dashboard extends React.Component{
 		console.log(newProps)
 		this.setState({
 			mortgagedStocks : newProps.state.MortgagedStocks,
+			marketStatus : state.MarketOpen,
 		});
 
 		console.log(newProps.state.MortgagedStocks,'checking')
@@ -201,10 +214,10 @@ class Dashboard extends React.Component{
 			<div className="dash-main">
 			{this.state.userDetails.cash}
 			<div id="page-wrapper" className="gray-bg dashbard-1">				
-				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} />
+				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} marketStatus = {this.state.marketStatus} />
 				<div className="content-top">
 						<TransactionPanel userStocks = {this.state.userStocks} stocksList={this.state.stocksList} />
-						<CompanyPanel stocksList={this.state.stocksList} />
+						<CompanyPanel stocksList={this.state.stocksList} companyProfile = {this.state.companyProfile} />
 						<MortgagePanel stocksList={this.state.stocksList} userStocks={this.state.userStocks} mortgagedStocks = {this.state.mortgagedStocks} />
 				</div>
 			</div>
