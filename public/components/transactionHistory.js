@@ -64,7 +64,7 @@ class TransactionHistory extends React.Component{
 		return (
 			<div className="container transaction-container">
 				<h3>Transactions History</h3>
-				<div className="row col-md-10">
+				<div className="row col-md-12">
 				<div className="table-responsive table-hover col-md-11">
 					<table className="table">
 						<thead>
@@ -127,7 +127,7 @@ class TransactionHistory extends React.Component{
 					{empty}
 					</div>
 				</div>
-				<div className="row">
+				<div className="col-md-12">
 					<ul className="pagination">
 						<li><a onClick={()=>this.updatePageNumber(-1)}>&laquo;</a></li>					
 						<li><a onClick={()=>this.updatePageNumber(1)}>&raquo;</a></li>

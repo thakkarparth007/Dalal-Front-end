@@ -152,13 +152,19 @@ class CompanyProfileContainer extends React.Component{
 	}
 }
 
+								// React.cloneElement(tockExchange, {
+								// 	stocksList: state.AllStocksList,
+								// 	status: state.ExchangeUnderProcess,
+								// 	userStocks: state.UserStockById,
+
+
 class StockExchangeContainer extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = state;
 		state.Listen(this.setState.bind(this));
 	}
-	render(){	
+	render(){			
 		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
@@ -172,7 +178,7 @@ class StockExchangeContainer extends React.Component{
 						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />							
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
-							<StockExchange stocksList = {this.state.AllStockById} status = {this.state.Status.ExchangeUnderProcess} userStocks = {this.state.UserStockById}/>														
+														<StockExchange stocksList = {this.state.AllStockById} status = {this.state.Status.ExchangeUnderProcess} userStocks = {this.state.UserStockById}/>																					
 						</div>								
 					</div>
 					)
@@ -365,11 +371,13 @@ var mainComponent = <Router history={hashHistory}>
     <Route path="/companyProfile" onEnter={requireAuth} component={CompanyProfileContainer}/>
     <Route path="/news" onEnter={requireAuth} component={NewsContainer}/>
     <Route path="/buyAndSell" onEnter={requireAuth} component={BuyAndSellContainer}/>
-    <Route path="/mortgage" onEnter={requireAuth} component={MortgageContainer}/>        
-    <Route path="/transactions" onEnter={requireAuth} component={TransactionsContainer}/>
+    <Route path="/mortgage" onEnter={requireAuth} component={MortgageContainer}/>            
     <Route path="/myOrders" onEnter={requireAuth} component={MyOrdersContainer}/>
+    <Route path="/transactions" onEnter={requireAuth} component={TransactionsContainer}/>
     <Route path="/leaderboard" onEnter={requireAuth} component={LeaderBoardContainer}/>    
 </Router>
+
+
 
 // ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
 ReactDOM.render(

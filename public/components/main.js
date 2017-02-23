@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://10.1.94.138:3000/ws");
+	ws = new WebSocket("ws://172.20.10.11:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -228,17 +228,34 @@ function onLoginResponse(response){
 
 	NetworkService.Requests.GetMyBids({},function(resp){
 		console.log(resp,'mere get my bids aa gaye!!')
-		state.MyOrders.Bids.Open = (resp.result.openBidOrders);
-		state.MyOrders.Bids.Closed = (resp.result.closedBidOrders) || {};
-		state.Status.BidLoaded = true;			
+		state.MyOrders.Bids.Open = {};
+		state.MyOrders.Bids.Closed = {};
+
+		Object.keys(resp.result.openBidOrders).map(id=>{
+			state.MyOrders.Bids.Open[id] = 	resp.result.openBidOrders[id];
+		})	
+
+		Object.keys(resp.result.closedBidOrders).map(id=>{
+			state.MyOrders.Bids.Closed[id] = 	resp.result.closedBidOrders[id];
+		});
+
 		state.NotifyUpdate();
 	});
 
 	NetworkService.Requests.GetMyAsks({},function(resp){
 		console.log(resp,'mere get my asks aa gaye!!')
-		state.MyOrders.Asks.Open = (resp.result.openAskOrders);
-		state.MyOrders.Asks.Closed = (resp.result.closedAskOrders) || {};
-		state.Status.AskLoaded = true;						
+
+		state.MyOrders.Asks.Open = {};
+		state.MyOrders.Asks.Closed = {};
+
+		Object.keys(resp.result.openAskOrders).map(id=>{
+			state.MyOrders.Asks.Open[id] = 	resp.result.openAskOrders[id];
+		})	
+
+		Object.keys(resp.result.closedAskOrders).map(id=>{
+			state.MyOrders.Asks.Closed[id] = 	resp.result.closedAskOrders[id];
+		});
+						
 		state.NotifyUpdate();
 	});				
 	
@@ -269,7 +286,7 @@ function onLoginResponse(response){
 
 	NetworkService.Requests.GetTransactions({},function(resp){
 		console.log(resp.result.transactionsMap,'mere get my transaction aa gaye!!')
-		state.Transactions = resp.result.transactionsMap;
+		state.Transactions = {};
 		Object.keys(resp.result.transactionsMap).map(id=>{
 			state.Transactions[id] = resp.result.transactionsMap[id];
 		})
@@ -335,6 +352,14 @@ function onLoginResponse(response){
 		console.log('transaction update response', update, state.Transactions[update.transaction.id]);		
 		if(!state.Transactions[update.transaction.id]){
 			state.Transactions[update.transaction.id] = update.transaction;
+			// state.Transactions[update.transaction.id] = {};
+			// state.Transactions[update.transaction.id].id = update.transaction.id;
+			// state.Transactions[update.transaction.id].price = update.transaction.price;
+			// state.Transactions[update.transaction.id].stockId = update.transaction.stockId;
+			// state.Transactions[update.transaction.id].stockQuantity = update.transaction.stockQuantity;
+			// state.Transactions[update.transaction.id].total = update.transaction.total;
+			// state.Transactions[update.transaction.id].userId = update.transaction.userId;
+
 			state.User.cash += update.transaction.total;
 			state.UserStockById[update.transaction.stockId] += update.transaction.stockQuantity;
 			state.NotifyUpdate();
@@ -433,7 +458,9 @@ NetworkService = {
 					return;
 				}
 				var transaction = resp.result.transaction;
-				state.User.cash -= transaction.stockQuantity*transaction.price;
+				state.User.stockWorth += transaction.stockQuantity*transaction.price;
+				state.User.cash += transaction.total;
+				state.User.total = state.User.cash + state.User.stockWorth;
 				console.log('sab sahi hia na bhai?',((Object.keys(state.UserStockById).length)+1),parseInt(req.stockId),parseInt(respWrap.buyStocksFromExchangeResponse.result.stockQuantity))
 				if(state.UserStockById[req.stockId]){
 					state.UserStockById[req.stockId] += transaction.stockQuantity;
@@ -493,6 +520,7 @@ NetworkService = {
 				let transaction = respWrap.mortgageStocksResponse.result.transaction;
 				if(respWrap.mortgageStocksResponse.result){					
 					state.User.cash += (transaction.total);
+
 					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
 					state.Transactions[transaction.id] = transaction;
 					state.MortgagedStocks[transaction.stockId] = transaction;
