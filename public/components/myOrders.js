@@ -61,7 +61,10 @@ class MainContainer extends React.Component{
 		// else if(this.state.type == 'closedAsk'){
 		// 	temp = this.state.params.Closed;	
 		// }
-
+		let empty = '';
+		if(Object.keys(temp).length==0){
+			empty = <p className="text-center">You do not have any orders. </p>;
+		}
 		return (
 			<div>
 				<div className="table-responsive table-hover col-md-11">
@@ -87,6 +90,7 @@ class MainContainer extends React.Component{
 								}									
 						</tbody>
 					</table>
+					{empty}
 				</div>
 			</div>			
 			)

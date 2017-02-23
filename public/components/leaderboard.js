@@ -3,23 +3,6 @@ import ReactDOM from 'react-dom';
 var NetworkService = require("./main.js").NetworkService;
 
 
-var leaderboard = [
-	{
-		username: 'Tom',
-		totalAssets: 12000
-	},
-	{
-		username: 'Dick',
-		totalAssets: 100000
-	},
-	{
-		username:'Harry',
-		totalAssets: 19203
-	}
-];
-var count = 1;
-leaderboard.sort((a,b)=>{return (b.totalAssets - a.totalAssets)});
-
 class LeaderBoard extends React.Component{
 	constructor(props){
 		super(props);
@@ -33,6 +16,7 @@ class LeaderBoard extends React.Component{
 	}	
 	render(){
 		return (
+			<div className="leaderboard">
 			<table className="table table-striped table-hover table-responsive">
 				<thead>
 					<tr>
@@ -66,6 +50,12 @@ class LeaderBoard extends React.Component{
 				</tr>
 				</tbody>
 			</table>
+
+				<ul class="pagination">
+					<li><a href="#">&laquo;</a></li>				
+					<li><a href="#">&raquo;</a></li>
+				</ul>
+			</div>
 			);
 	}
 }

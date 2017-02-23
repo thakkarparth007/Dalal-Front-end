@@ -20,8 +20,6 @@ var MyOrders = require('./myOrders.js');
 var LoginComponent = require('./login.js');
 var NetworkService = require('./main.js').NetworkService;
 
-import {observer} from 'mobx-react';
-
 // var currentView = <Dashboard />;
 console.log(state,'wtf is happening?	');
 
@@ -81,7 +79,6 @@ class LoginComponentContainer extends React.Component{
 		state.Listen(state => {			
 			this.setState(state);
 		});
-		console.log(this.state,'yeh tune kya kiya!');
 	}
 	render(){
 		if(!this.state.IsConnected && !this.state.IsLoggedIn) {

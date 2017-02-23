@@ -71,8 +71,7 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 	let empty = '';
 	if(Object.keys(userStocks).length == 0){
 		empty = <p className="text-center"> You do not have any stocks.</p>;
-	}
-	console.log(userStocks,stocksList,'hi dude');
+	}	
 	return (	
 		<div className="table-responsive">          
 		  <table className="table table-hover">
@@ -156,7 +155,7 @@ const DashboardNav = ({AllStocksList,userDetails,marketStatus}) => {
 							<div className="col-md-10 ">
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-2 col-xs-6 col-xs-offset-3">
 									
-									<label><i class="fa fa-inr" aria-hidden="true"></i>{userDetails.cash}</label>
+									<label><i className="fa fa-inr" aria-hidden="true"></i>{userDetails.cash}</label>
 									<p>Total Cash</p>
 									
 																
@@ -165,7 +164,7 @@ const DashboardNav = ({AllStocksList,userDetails,marketStatus}) => {
 
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-3 col-xs-6 col-xs-offset-3">
 									
-									<label><i class="fa fa-inr" aria-hidden="true"></i>{userDetails.stockWorth}</label>
+									<label><i className="fa fa-inr" aria-hidden="true"></i>{userDetails.stockWorth}</label>
 									<p>Stock Worth</p>
 									
 																
@@ -174,7 +173,7 @@ const DashboardNav = ({AllStocksList,userDetails,marketStatus}) => {
 
 								<div className="content-top-1 col-md-3 col-md-offset-1 top-content box-1 col-xs-6 col-xs-offset-3">
 									
-									<label><i class="fa fa-inr" aria-hidden="true"></i>{userDetails.total}</label>
+									<label><i className="fa fa-inr" aria-hidden="true"></i>{userDetails.total}</label>
 									<p>Net Worth</p>
 									
 																
@@ -217,8 +216,7 @@ class Dashboard extends React.Component{
 	}
 	render(){
 		return (
-			<div className="dash-main">
-			{this.state.userDetails.cash}
+			<div className="dash-main">			
 			<div id="page-wrapper" className="gray-bg dashbard-1">				
 				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} marketStatus = {this.state.marketStatus} />
 				<div className="content-top">

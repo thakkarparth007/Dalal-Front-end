@@ -27,7 +27,16 @@ var state = {
 
 	},
 	Transactions:{
-		
+		1: {
+			id: 1,
+			userId: 2,
+			stockId: 3,
+			type: 4,
+			stockQuantity: 5,
+			price: 60,
+			total: 100,
+			createdAt: 'hey'			
+		}
 	},
 	MortgagedStocks: {
 		

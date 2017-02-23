@@ -14,6 +14,8 @@ let MainComponent = require('./body.js');
 let nextConnectAttemptIn = 1;
 let reconnectingIntervalId = null;
 let ws = null;
+let originalUrl = window.location;
+// let wsWaitingForPong = false
 window.ws = ws;
 window.estate = state;
 // const ws = new WebSocket("ws://10.1.94.134:3000/ws");
@@ -54,6 +56,15 @@ function onOpen(event) {
 
 		onLoginResponse(response);
 	});
+
+	// let id = setInterval(function() {
+	// 	if(wsWaitingForPong) {
+	// 		ws.close();
+	// 		clearInterval(id);
+	// 	}
+	// 	ws.send("ping");
+	// 	wsWaitingForPong = true;
+	// }, 10000);
 }
 
 function connect(){
@@ -96,6 +107,13 @@ function onClose() {
 function onMessage(event) {
 	console.log("Got message", event);
 	console.log(event.data);
+
+	// if(typeof event.data === "string") {
+	// 	wsWaitingForPong = false;
+	// 	return;
+	// }
+	// console.log('pong nahi hai');
+	// alert("pong nai hai");
 
 	let arrayBuffer;
 	let temp,DM,data;
@@ -162,8 +180,8 @@ function wrapRWAndSend(reqWrap, cb, dsUpdateCb) {
 function onLoginResponse(response){
 	if(!response.result) {
 		console.log("Not logged in.")
-		let s = window.location.toString().match(/#\/(.+)$/)[1];
-		window.location = window.location.toString().replace(/#\/(.)+$/, "#/"+s);
+		let s = window.location.toString().match(/#\/(.*)$/)[1];
+		window.location = window.location.toString().replace(/#\/(.*)$/, "#/login");
 		return;
 	}
 	//adding subscribe
@@ -239,22 +257,14 @@ function onLoginResponse(response){
 		state.NotifyUpdate();
 	})
 	
-	Object.keys(state.AllStockById).map(id=>{
-		NetworkService.Requests.GetCompanyProfile({
-			stockId: id,
-		},function(resp){
-			console.log(resp,'company ka details',id);
-			if(resp.result){
-				state.CompanyProfile[id] = resp.result.stockHistoryMap;
-			}
-			else{
+	/*Object.keys(state.AllStockById).sort()[0]
 
-			}
-		});	
+	.map(id=>{
+			
 
 		// let s = window.location.toString().match(/#\/(.+)$/)[1];
 		
-	})
+	})*/
 		
 
 	NetworkService.Requests.GetTransactions({},function(resp){
@@ -322,7 +332,7 @@ function onLoginResponse(response){
 	NetworkService.DataStreams.Transactions.Subscribe(function(resp) {
 		console.log(resp, "subscription status of transactions");
 	}, function(update){			
-		console.log('transaction update response', update);
+		console.log('transaction update response', update, state.Transactions[update.transaction.id]);		
 		if(!state.Transactions[update.transaction.id]){
 			state.Transactions[update.transaction.id] = update.transaction;
 			state.User.cash += update.transaction.total;
@@ -390,7 +400,7 @@ function onLoginResponse(response){
 	requestQueue.forEach(ws.send.bind(ws));
 	console.log(state);
 
-	// let s = window.location.toString().match(/#\/(.+)$/)[1];
+	//let s = window.location.toString().match(/#\/(.+)$/)[1];
 	window.location = window.location.toString().replace(/#\/(.)+$/, "#/");
 }
 

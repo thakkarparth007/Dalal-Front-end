@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 var LineChart = require("react-chartjs").Line;
-
+var NetworkService = require('./main.js').NetworkService;
+var state = require('./state.js');
 var marketDepth = [
 	{
 		stockId: 1,
@@ -15,18 +16,18 @@ var marketDepth = [
 	}
 ];
 
-var companyStatistics = [
-	{
-		stockId: 1,
-		stockPrice: [200,250,232,245,280,195,265],
-		createdAt: ['21st','22nd','23rd','24th','25th','26th','27th']
-	},
-	{
-		stockId: 2,
-		stockPrice: [500,550,532,545,580,495,465],
-		createdAt: ['21st','22nd','23rd','24th','25th','26th','27th']
-	}
-];
+// var companyStatistics = [
+// 	{
+// 		stockId: 1,
+// 		stockPrice: [200,250,232,245,280,195,265],
+// 		createdAt: ['21st','22nd','23rd','24th','25th','26th','27th']
+// 	},
+// 	{
+// 		stockId: 2,
+// 		stockPrice: [500,550,532,545,580,495,465],
+// 		createdAt: ['21st','22nd','23rd','24th','25th','26th','27th']
+// 	}
+// ];
 
 var marketEvents = [
 	{
@@ -94,49 +95,89 @@ class CompanyPanel extends React.Component{
 	constructor(props){
 		super(props);		
 		console.log(props,'company props');
-
-
-
 		this.state = {
-			currentCompany: this.props.stocksList[Object.keys(props.stocksList)[0]].fullName,
-			currentCompanyPrice: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
-			currentCompanyNews: this.props.stocksList[Object.keys(props.stocksList)[0]].description,
-			currentCompanyStocks: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
-			currentCompanyStatistics: companyStatistics[Object.keys(props.stocksList)[0]],
+			currentCompany: '',
+			currentCompanyPrice: '',
+			currentCompanyNews: '',
+			currentCompanyStocks: '',
+			currentCompanyStatistics: '',
 			currentMarketDepth: '',
 			stocksList: this.props.stocksList,
 			companyProfile: this.props.companyProfile,
 		}
 		// state.OnLogin(() => {
 		// 	NS.Requests.GetCompanyProfile(resp => {
-
 		// 	});
 		// });
-		console.log(this.state);
+		
+		let firstStockId = Object.keys(this.props.stocksList).sort()[0];
+		NetworkService.Requests.GetCompanyProfile({
+			stockId: firstStockId,
+		},function(resp){
+			console.log(resp,'company ka details');
+			if(resp.result){
+				state.CompanyProfile[firstStockId] = resp.result.stockHistoryMap;
+			}
+			else{
+
+			}
+		});
+
 		this.handleChange = this.handleChange.bind(this);
 	}
 	componentWillReceiveProps(nextProps){		
 		console.log('nextProps', nextProps.stocksList);
-		this.setState({						
-			stocksList : nextProps.stocksList,			
+		this.setState({
 			companyProfile: nextProps.companyProfile,
 		});
 		console.log(this.state, 'hi partha 101');
+		// alert(JSON.stringify(this.state));
 
-		let currentCompanyPrices = [];
-		let createdAt = [];
+		//console.log(this.state,'company ka state',Object.keys(this.state.stocksList).length,Object.keys(this.state.companyProfile).length,this.state.companyProfile);
+		if((Object.keys(this.state.stocksList).length > 0) && (Object.keys(this.state.companyProfile).length > 0)){
+			let id;
+			Object.keys(this.state.companyProfile).map(k1=>{
+				Object.keys(this.state.stocksList).map(k2=>{
+					if(k1 == k2){
+						id = k1;
+					}
+				})
+			});			
+			let currentStats = {};
+			currentStats.stockId = id;
+			currentStats.stockPrice = [];
+			currentStats.createdAt = [];
+			console.log(this.state.companyProfile[id], 'current comp');
+			let keysArray = Object.keys(this.state.companyProfile[id]).sort((a,b)=>{return b-a;});
+			let temp = keysArray.slice(- 15, -1);
+			
+			temp.map(key=>{		
+				(currentStats.stockPrice).push(this.state.companyProfile[id][key].stockPrice);
+				(currentStats.createdAt).push(this.state.companyProfile[id][key].createdAt);
+			});
 
-		Object.keys(this.state.companyProfile[Object.keys(this.state.companyProfile)[0]]).map(id=>{
-			currentCompanyPrices.push((this.state.companyProfile[id]).stockPrice);
-			createdAt.push((this.state.companyProfile[id]).createdAt);
-		})
-		alert('yo')
-		console.log(currentCompanyPrices,createdAt,'statos');
+			console.log(currentStats, 'peheli vaali ka stats');
 
-		currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getHours();
-		alert(currentCompanyStats,'noobing');
+			this.setState({
+				currentCompanyStats: currentStats,
+				currentCompany: this.state.stocksList[id].fullName,
+				currentCompanyPrice: this.state.stocksList[id].currentPrice,
+				currentCompanyStocks: this.state.stocksList[id].stocksInExchange,				
+			})
+		}
+
+		// Object.keys(this.state.companyProfile[Object.keys(this.state.companyProfile)[0]]).map(id=>{
+		// 	currentCompanyPrices.push((this.state.companyProfile[id]).stockPrice);
+		// 	createdAt.push((this.state.companyProfile[id]).createdAt);
+		// })
+		// alert('yo')
+		// console.log(currentCompanyPrices,createdAt,'statos');
+
+		// currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getHours();
+		// alert(currentCompanyStats,'noobing');
 	}	
 	handleChange(event){
+		event.persist();
 		this.setState({currentCompany: event.target.value});
 		let stockId = -1,events;
 		Object.keys(this.state.stocksList).map((x)=>{
@@ -155,11 +196,42 @@ class CompanyPanel extends React.Component{
 			}
 		})
 		
-		companyStatistics.map((e)=>{
-			if(e.stockId == stockId){
-				this.setState({currentCompanyStatistics: e})
-			}
-		})
+		const updateStockHistory = () =>{
+			let currentStats = {};
+			currentStats.stockId = stockId;
+			currentStats.stockPrice = [];
+			currentStats.createdAt = [];		
+			let keysArray = Object.keys(this.state.companyProfile[stockId]).sort((a,b)=>{return b-a;});
+			let temp = keysArray.slice(- 15, -1);
+			
+			temp.map(key=>{
+				(currentStats.stockPrice).push(this.state.companyProfile[stockId][key].stockPrice);
+				let time = new Date(this.state.companyProfile[stockId][key].createdAt);
+				let hours = time.getHours();
+				let minutes = time.getMinutes();
+				time = hours + ':' + minutes;
+				(currentStats.createdAt).push(time);
+			});
+			this.setState({currentCompanyStatistics: currentStats})
+		}
+
+		if(this.state.companyProfile[stockId]) {
+			updateStockHistory();
+		} else {
+			NetworkService.Requests.GetCompanyProfile({
+				stockId: stockId,
+			},(resp)=>{
+				console.log(resp,'company ka details',stockId,this.state);				
+				if(resp.result){
+					state.CompanyProfile[stockId] = resp.result.stockHistoryMap;
+					if(this.state.stocksList[stockId].fullName == event.target.value)
+						updateStockHistory();
+				}
+				else{
+					// error
+				}
+			});
+		}
 
 		marketDepth.map((e)=>{
 			if(e.stockId == stockId){

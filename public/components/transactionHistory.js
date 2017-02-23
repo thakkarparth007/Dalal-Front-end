@@ -11,9 +11,11 @@ class TransactionHistory extends React.Component{
 			history: this.props.transactionHistory,			
 			stocks: this.props.stocksList,
 			transType : NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.TransactionType").values,
+			currentPage: 1,
 		}
 		console.log(this.state,'history 1',props,props.transactionHistory);
-		this.lazyScroll();
+		this.updatePageNumber = this.updatePageNumber.bind(this);
+		
 	}
 	componentWillReceiveProps(nextProps){		
 		console.log('nextProps', nextProps.stocksList);
@@ -22,20 +24,43 @@ class TransactionHistory extends React.Component{
 		});
 		console.log(nextProps,'history 2');
 		
+	}	
+	updatePageNumber(x){
+		if((this.state.currentPage == 1) && (x == -1)){
+			x = 0;
+		}
+		this.setState({
+			currentPage: (currentPage+x),
+		});
 	}
-	lazyScroll(){
-		var win = $(window);
-		var doc = $(doc);
+	render(){		
+		let empty = '',currentPageStart,currentPageEnd,transactionList;
+
+		let temp = Object.keys(this.state.history).sort((a,b)=>{return b-a;});
 		
-		console.log(win,doc,'vim');
-		console.log(win.scroll)
-		win.scroll(function(){
-		    if(doc.height() - win.height() == win.scrollTop()){
-		        console.log('end pahucha');	
-		    }
-		})
-	}
-	render(){
+		if(this.state.currentPage==1){
+			currentPageStart = 0;
+			currentPageEnd = 10;
+		}
+		else{			
+			currentPageEnd = 10*(this.state.currentPage);
+			currentPageStart = currentPageEnd - 10;
+			if(currentPageEnd>temp.length){
+				currentPageEnd = temp.length;
+			}
+			
+		}
+
+		if(temp.length>10){
+			transactionList = temp.slice(currentPageStart,currentPageEnd);
+		}
+		else{
+			transactionList = temp;
+		}
+
+		if(Object.keys(this.state.history).length==0){
+			empty = <p className="text-center">You do not have any transactions. </p>;
+		}
 		return (
 			<div className="container transaction-container">
 				<h3>Transactions History</h3>
@@ -52,8 +77,9 @@ class TransactionHistory extends React.Component{
 								<th>Total</th>								
 							</tr>
 						</thead>
-						<tbody>
-							{Object.keys(this.state.history).sort((a,b)=> b-a).map((temp)=>{
+						<tbody>						
+							{								
+								transactionList.map((temp)=>{
 								let x = (this.state.history)[temp];
 
 								let t,convert,cname;								
@@ -98,7 +124,14 @@ class TransactionHistory extends React.Component{
 							
 						</tbody>
 					</table>
+					{empty}
 					</div>
+				</div>
+				<div className="row">
+					<ul className="pagination">
+						<li><a onClick={()=>this.updatePageNumber(-1)}>&laquo;</a></li>					
+						<li><a onClick={()=>this.updatePageNumber(1)}>&raquo;</a></li>
+					</ul>
 				</div>
 			</div>
 			)
