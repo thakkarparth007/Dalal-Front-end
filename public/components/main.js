@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://172.20.10.11:3000/ws");
+	ws = new WebSocket("ws://192.168.0.29:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -263,13 +263,16 @@ function onLoginResponse(response){
 	NetworkService.Requests.GetLeaderboard({},function(resp){
 		console.log(resp.result,'mera leaderboard!!');
 		state.Leaderboard.myRank = resp.result.myRank;
-		state.Leaderboard.rankList = resp.result.rankList;
+		state.Leaderboard.rankList = resp.result.rankList;		
 		state.NotifyUpdate();
 	})
 
 	NetworkService.Requests.GetMortgageDetails({},function(resp){
 		console.log(resp.result.mortgageMap,'mere mortgagedStocks aa gaye!!');
-		state.MortgagedStocks = resp.result.mortgageMap;
+		state.MortgagedStocks = {};
+		Object.keys(resp.result.mortgageMap).map(id=>{
+			state.MortgagedStocks[id] = resp.result.mortgageMap[id];
+		})
 		console.log(state,'mortgage daala');			
 		state.NotifyUpdate();
 	})
@@ -468,6 +471,7 @@ NetworkService = {
 				else{
 					state.UserStockById[req.stockId] = transaction.stockQuantity;
 				}
+				state.UserStockById[req.stockId] += transaction.stockQuantity;
 				state.AllStockById[req.stockId].stocksInExchange -= transaction.stockQuantity;
 				state.AllStockById[req.stockId].stocksInMarket += transaction.stockQuantity;
 				state.Transactions[transaction.id] = transaction;

@@ -6,9 +6,6 @@ var state = {
 	IsConnected: false,
 	MarketOpen: true,
 	IsLoggedIn: false,
-	FirstExchange: true,
-	FirstBuy:true,
-	FirstSell:true,
 	ClosingString: '',
 	User: {
 		sessionId: '',

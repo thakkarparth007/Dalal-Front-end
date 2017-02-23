@@ -101,13 +101,7 @@
 }
 
 @media(min-width:768px) {
-    .sidebar {
-        z-index: 1;
-        position: absolute;
-        width: 250px;
-        
-    }
-
+    
     .navbar-top-links .dropdown-messages,
     .navbar-top-links .dropdown-tasks,
     .navbar-top-links .dropdown-alerts {
@@ -479,12 +473,7 @@ a{
     margin-top: 50px;
 }
 
-.sidebar ul li a{
-    background: #fff;
-}
-.nav{
-    width: 250px;
-}
+
 
 .home-preloader{    
     min-height: 100vh;
@@ -543,12 +532,7 @@ a{
     padding:0px 20px;
 }
 
-@media(max-width:500px) {
-.dash-main{
-    margin-top: 50px;
-}
-.nav{
-    width: 300px;
+.leaderboard-container{
+    margin-top: 60px;
 }
 
-}

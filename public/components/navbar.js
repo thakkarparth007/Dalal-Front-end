@@ -98,9 +98,7 @@ class NotificationContainer extends React.Component{
 			              			)
 			              			
 			              	})
-			              }
-			              
-			              <li><a href="#" className="view">View all messages</a></li>
+			              }			              			             
 			            </ul>
 			          </li>
 			    <li className="dropdown">
@@ -134,10 +132,15 @@ class Navbar extends React.Component{
 	render(){
 		return (
 			<div>
-			<nav className="navbar-default navbar-fixed-top" role="navigation">
+			<nav className="navbar-default navbar-fixed-top hidden-xs" role="navigation">
 				<NavbarHeader />
 				<NotificationContainer notifications = {this.state.notificationsList}  userDetails = {this.state.userDetails} />
 
+			</nav>
+		
+			<nav className="navbar-default 	navbar-static-top visible-xs" role="navigation">
+				<NavbarHeader />
+				<NotificationContainer notifications = {this.state.notificationsList}  userDetails = {this.state.userDetails} />
 			</nav>
 			<AlertModal id = "logout-success" message="Logout Successfully" />
 			<AlertModal id = "error-modal" message="Bad Request Error" />

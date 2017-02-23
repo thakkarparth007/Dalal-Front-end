@@ -16,7 +16,7 @@ class LeaderBoard extends React.Component{
 	}	
 	render(){
 		return (
-			<div className="leaderboard">
+			<div className="leaderboard-container">
 			<table className="table table-striped table-hover table-responsive">
 				<thead>
 					<tr>
@@ -51,7 +51,7 @@ class LeaderBoard extends React.Component{
 				</tbody>
 			</table>
 
-				<ul class="pagination">
+				<ul className="pagination">
 					<li><a href="#">&laquo;</a></li>				
 					<li><a href="#">&raquo;</a></li>
 				</ul>

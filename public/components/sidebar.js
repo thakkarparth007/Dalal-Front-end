@@ -9,8 +9,9 @@ var link;
 
 const SideBar = () => {
 	return (
-		<div className="navbar-default sidebar" role="navigation">
-			<div className="sidebar-nav-fixed navbar-collapse affix">
+		<div>
+		<div className="navbar-default sidebar hidden-xs" role="navigation">
+			<div className="sidebar-nav-fixed navbar-collapse affix ">
 				<ul className="nav" id="side-menu">
 					{		
 						SideBarList.map((itemName, key) => {							
@@ -30,6 +31,29 @@ const SideBar = () => {
 					}
 				</ul>
 			</div>
+		</div>
+		<div className="navbar-default sidebar visible-xs" role="navigation">
+			<div className="sidebar-nav navbar-collapse ">
+				<ul className="nav" id="side-menu">
+					{		
+						SideBarList.map((itemName, key) => {							
+							if(key==0)
+								link = '/#/';
+							else
+								link = '/#/' + SideBarClass[key];
+							return (
+								<li>
+									<a href={link} key = {key} className={'hvr-bounce-to-right ' + SideBarClass[key]}>
+										<img src={'public/images/icon/' + SideBarLogo[key]} className="img-responsive sidebar-icon" alt="Image" />
+										<span className="nav-label">{itemName}</span>
+									</a>
+								</li>
+							)
+						})
+					}
+				</ul>
+			</div>
+		</div>
 		</div>
 	)
 }

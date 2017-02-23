@@ -45,7 +45,7 @@ class StocksList extends React.Component{
 						</a>
 						<a className="stock-state">
 							{icon}
-							{stock.dayHigh}							
+							{Math.abs(stock.previousDayClose - stock.currentPrice)}							
 						</a>
 						<a className="stock-cost">
 							Rs.{stock.currentPrice}

@@ -18,6 +18,11 @@ function login(e){
 
 $(document).ready(function(){
 
+        if ($(window).width() < 514) {
+                $(".navbar-default").removeClass("navbar-fixed-top").addClass("gallery-mobile");
+        }    
+
+
 $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
@@ -25,4 +30,3 @@ $('.message a').click(function(){
 $("form").on("submit", login);
 
 })
-

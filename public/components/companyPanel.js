@@ -251,8 +251,7 @@ class CompanyPanel extends React.Component{
 		
 
 	}
-	render(){	
-		
+	render(){			
 		return (
 			<div className="container companyPanel">
 				<h3 className="dash-head">Company Panel</h3>
