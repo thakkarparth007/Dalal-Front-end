@@ -109,7 +109,7 @@ class StockExchangeItem extends React.Component{
 						</td>
 						<td>{this.state.stock.stocksInMarket}</td>
 						<td>{this.state.stock.stocksInExchange}</td>
-						<td>{this.state.stockQuantityOwned}</td>
+						<td>{(!this.state.stockQuantityOwned)? '-' :this.state.stockQuantityOwned}</td>
 						<td>
 							<input type="number" name="trade-stock" className="form-control"  step="1" required="required" title="trade-stock" min="1" max="99999" />
 						</td>

@@ -20,6 +20,7 @@ window.estate = state;
 // const ws = new WebSocket("ws://192.168.43.79:3000/ws");
 // const ws = new WebSocket("ws://10.1.12.143:3000/ws");
 // const ws = new WebSocket("ws://192.168.0.48:3000/ws");
+$('.connecting').hide();
 let NetworkService;
 const callbacks = {
 	actions: {},
@@ -38,6 +39,7 @@ function onOpen(event) {
 
 	console.log("Connected!");
 	console.log(NetworkService);
+
 	// var email = prompt("Enter email");
 	// var password = prompt("Enter password");
 
@@ -45,13 +47,18 @@ function onOpen(event) {
 		email: '',
 		password: ''
 	}, function(response) {
+		$('.connecting').hide('slow');
+		console.log('response ns',response)
+		state.IsConnected = true;
+		state.NotifyUpdate();
+
 		onLoginResponse(response);
 	});
 }
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://172.20.10.11:3000/ws");
+	ws = new WebSocket("ws://10.1.94.138:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -66,9 +73,18 @@ function onClose() {
 	state.NotifyUpdate();
 
 	var counter = nextConnectAttemptIn;
+	
 	reconnectingIntervalId = setInterval(function() {
-		console.log("Connecting in " + counter + " seconds");
 		counter--;
+		$('.connecting').show('slow');
+		$('.connecting').text("Reconnecting in " + counter + " seconds");
+		if(counter==0){
+			$('.connecting').text("Reconnecting now ...");
+		}
+		else{
+			$('.connecting').text("Reconnecting in " + counter + " seconds");
+		}
+		console.log("Connecting in " + counter + " seconds");
 		if(counter <= 0) {
 			clearInterval(reconnectingIntervalId);
 			connect();
@@ -146,7 +162,9 @@ function wrapRWAndSend(reqWrap, cb, dsUpdateCb) {
 function onLoginResponse(response){
 	if(!response.result) {
 		console.log("Not logged in.")
-		// redirect to login page			
+		let s = window.location.toString().match(/#\/(.+)$/)[1];
+		window.location = window.location.toString().replace(/#\/(.)+$/, "#/"+s);
+		return;
 	}
 	//adding subscribe
 	//let Streams = NetworkService.ProtoRoot.lookup("dalalstreet.socketapi.models.DataStreamType").values;
@@ -156,16 +174,14 @@ function onLoginResponse(response){
 	Object.assign(state.AllStockById, response.result.stockList);
 	Object.assign(state.UserStockById, response.result.stocksOwned);		
 	Object.assign(state.Constants, response.result.constants);		
-	state.IsConnected = true;
-	state.IsLoggedIn = true;
+	state.IsLoggedIn = true;	
 	state.ClosingString = response.result.closingString;
 	// state.MarketOpen = response.result.isMarketOpen;
 
 	// Object.assign(state.MortgagedStocks, response.result.mortgagedStocks);
 	console.log("kaun hai tu", state);
 	// extendObservable(state.UserStockById, response.result.UserStockById);
-	state.NotifyUpdate();
-
+	state.NotifyUpdate();	
 	let stockWorth = 0;
 	Object.keys(state.UserStockById).map(id=>{
 		stockWorth += state.UserStockById[id]*(state.AllStockById[id].currentPrice);
@@ -234,7 +250,10 @@ function onLoginResponse(response){
 			else{
 
 			}
-		});		
+		});	
+
+		// let s = window.location.toString().match(/#\/(.+)$/)[1];
+		
 	})
 		
 
@@ -258,6 +277,43 @@ function onLoginResponse(response){
 			state.AllStockById[id].stocksInExchange = update.stocksInExchange[id].stocksInExchange;
 			state.AllStockById[id].stocksInMarket = update.stocksInExchange[id].stocksInMarket;
 		})
+		state.NotifyUpdate();
+	});				
+
+	NetworkService.DataStreams.MyOrders.Subscribe(function(resp) {
+		console.log(resp, "subscription status");
+	}, function(update){
+		if(update.myOrderUpdate.isAsk){
+			ask = state.MyOrders.Asks[update.myOrderUpdate.id];
+			if((update.myOrderUpdate.isClosed)){
+				state.MyOrders.Asks.Closed[ask.id] = ask;
+				delete state.MyOrders.Asks.Open[ask.id];
+
+				ask.isClosed = true;
+				if(update.myOrderUpdate.tradeQuantity) {
+					ask.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+				}
+			}
+			else{
+				ask.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+			}
+		}
+		else{
+			bid = state.MyOrders.Bids[update.myOrderUpdate.id];
+			if((update.myOrderUpdate.isClosed)){
+				state.MyOrders.Bids.Closed[bid.id] = bid;
+				delete state.MyOrders.Bids.Open[bid.id];
+
+				bid.isClosed = true;
+				if(update.myOrderUpdate.tradeQuantity) {
+					bid.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+				}
+			}
+			else{
+				bid.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+			}
+		}
+		
 		state.NotifyUpdate();
 	});				
 
@@ -333,6 +389,9 @@ function onLoginResponse(response){
 	
 	requestQueue.forEach(ws.send.bind(ws));
 	console.log(state);
+
+	// let s = window.location.toString().match(/#\/(.+)$/)[1];
+	window.location = window.location.toString().replace(/#\/(.)+$/, "#/");
 }
 
 function getUpdateCbName(dataStreamType, dataStreamId) {
@@ -727,9 +786,33 @@ NetworkService = {
 	   			});
 	   		},
 	    },
+	   	MyOrders: {
+	   		Subscribe(subscribeCb, updateCb) {
+	   			let subscribeReq = SubscribeRequest.create();
+	   			subscribeReq.dataStreamType = DataStreamType.MY_ORDERS;	   			
+
+	   			let subscribeReqWrap = RequestWrapper.create();
+	   			subscribeReqWrap.subscribeRequest = subscribeReq;
+	   			wrapRWAndSend(subscribeReqWrap, function(respWrap) {
+	   				subscribeCb(respWrap.subscribeResponse);
+	   			}, function(updateWrap) {
+	   				updateCb(updateWrap.myOrderUpdate);
+	   			});
+	   		},
+	   		Unsubscribe(unsubscribeCb) {
+	   			let unsubscribeReq = SubscribeRequest.create();
+	   			unsubscribeReq.dataStreamType = DataStreamType.MY_ORDERS;
+
+	   			let unsubscribeReqWrap = RequestWrapper.create();
+	   			unsubscribeReqWrap.unsubscribeRequest = unsubscribeReq;
+	   			wrapRWAndSend(unsubscribeReqWrap, function(respWrap) {
+	   				cb(respWrap.unsubscribeResponse);
+	   			});
+	   		},
+	   	}
 	}
 }
 
 console.log('yoososo',NetworkService);
 
-module.exports = {NetworkService, state};
+module.exports = {NetworkService, state, onLoginResponse};

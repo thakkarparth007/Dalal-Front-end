@@ -56,7 +56,7 @@ class Home extends React.Component{
 		console.log(this.state,'kya problme hai?')
 	}
 	render(){		
-			if(!this.state.IsConnected){
+			if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -65,7 +65,8 @@ class Home extends React.Component{
 			}	
 			else			
 				return (
-						<div>									
+						<div>		
+							<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />							
 							<Dashboard state={this.state} />				
 						</div>		
 					)
@@ -74,13 +75,27 @@ class Home extends React.Component{
 }
 
 class LoginComponentContainer extends React.Component{
-	constructor(props){
+	constructor(props){		
 		super(props);
+		this.state = state;
+		state.Listen(state => {			
+			this.setState(state);
+		});
+		console.log(this.state,'yeh tune kya kiya!');
 	}
 	render(){
-		return (
-			<LoginComponent />
-			)
+		if(!this.state.IsConnected && !this.state.IsLoggedIn) {
+				return (
+						<div className="home-preloader">
+							      <ThreeBounce size={15} color='blue' />	
+						</div>
+					)
+			}	
+			else{
+				return (
+					<LoginComponent />
+					)
+			}
 	}
 }
 
@@ -92,7 +107,7 @@ class LeaderBoardContainer extends React.Component{
 		console.log(this.state,'yeh tune kya kiya!');
 	}
 	render(){	
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -102,8 +117,8 @@ class LeaderBoardContainer extends React.Component{
 			else			
 				return (
 						<div>
-							
-							<div id="page-wrapper" className="gray-bg dashbard-1">				
+							<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />							
+							<div id="page-wrapper" className="gray-bg dashbard-1">												
 								<LeaderBoard leaderboardDetails = {this.state.Leaderboard} userDetails = {this.state.User} />
 							</div>								
 						</div>
@@ -119,7 +134,7 @@ class CompanyProfileContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -128,7 +143,8 @@ class CompanyProfileContainer extends React.Component{
 			}	
 			else					
 				return (
-					<div>				
+					<div>		
+						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />									
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<CompanyPanel stocksList={this.state.AllStockById} companyProfile = {this.state.CompanyProfile} />														
@@ -146,7 +162,7 @@ class StockExchangeContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){	
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -156,6 +172,7 @@ class StockExchangeContainer extends React.Component{
 			else			
 				return (
 					<div>			
+						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />							
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<StockExchange stocksList = {this.state.AllStockById} status = {this.state.Status.ExchangeUnderProcess} userStocks = {this.state.UserStockById}/>														
@@ -173,7 +190,7 @@ class NewsContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -183,7 +200,7 @@ class NewsContainer extends React.Component{
 			else						
 				return (
 					<div>
-						
+						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />							
 						<div id="page-wrapper" className="gray-bg dashbard-1">									
 							<News marketEvents={this.state.MarketEvents} />														
 						</div>								
@@ -200,7 +217,7 @@ class BuyAndSellContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -210,7 +227,7 @@ class BuyAndSellContainer extends React.Component{
 			else						
 				return (
 					<div>
-						
+						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />							
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<BuyAndSell stocksList={this.state.AllStockById} status = {this.state.Status.BidOrAskUnderProcess} />														
@@ -228,7 +245,7 @@ class MyOrdersContainer extends React.Component{
 		state.Listen(this.setState.bind(this));	
 	}	
 	render(){			
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">									
 								      <ThreeBounce size={15} color='blue' />	
@@ -238,7 +255,7 @@ class MyOrdersContainer extends React.Component{
 			else			
 				return (
 					<div>
-						hey						
+						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />											
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<MyOrders orders={this.state.MyOrders} />														
@@ -257,7 +274,7 @@ class MortgageContainer extends React.Component{
 		console.log(this.state,'pelam banda')
 	}
 	render(){
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -266,7 +283,8 @@ class MortgageContainer extends React.Component{
 			}	
 		else				
 			return (
-				<div>				
+				<div>		
+					<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />									
 					<div id="page-wrapper" className="gray-bg dashbard-1">				
 						<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 						<Mortgage stocksList={this.state.AllStockById} userStocks={this.state.UserStockById} mortgagedStocks = {this.state.MortgagedStocks} />														
@@ -284,7 +302,7 @@ class TransactionsContainer extends React.Component{
 		state.Listen(this.setState.bind(this));
 	}
 	render(){	
-		if(!this.state.IsConnected){
+		if(!this.state.IsConnected && !this.state.IsLoggedIn){
 					return (
 							<div className="home-preloader">
 								      <ThreeBounce size={15} color='blue' />	
@@ -293,7 +311,8 @@ class TransactionsContainer extends React.Component{
 			}	
 			else			
 				return (
-					<div>				
+					<div>	
+						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />										
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
 							<TransactionHistory stocksList={this.state.AllStockById} transactionHistory = {this.state.Transactions} />														
@@ -320,22 +339,47 @@ buy sell stock option
 </div>
 */
 
-class NavbarContainer extends React.Component{
-	constructor(props){
-		super(props);
-		this.state = state;
-		state.Listen(this.setState.bind(this));
-	}
-	render(){
+// class NavbarContainer extends React.Component{
+// 	constructor(props){
+// 		super(props);
+// 		this.state = state;
+// 		state.Listen(this.setState.bind(this));
+// 	}
+// 	render(){
 
-		return (
-			<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />
-			)
+// 		return (
+// 			<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />
+// 			)
+// 	}
+// }
+
+function requireAuth(nextState, replace) {
+	if(!state.IsLoggedIn) {
+		replace({
+			pathname: "/login"
+		})
 	}
 }
 
+var mainComponent = <Router history={hashHistory}>	
+    <Route path="/login" component={LoginComponentContainer}></Route>
+    <Route path="/" onEnter={requireAuth} component={Home} />
+    <Route path="/stockExchange" onEnter={requireAuth} component={StockExchangeContainer}/>
+    <Route path="/companyProfile" onEnter={requireAuth} component={CompanyProfileContainer}/>
+    <Route path="/news" onEnter={requireAuth} component={NewsContainer}/>
+    <Route path="/buyAndSell" onEnter={requireAuth} component={BuyAndSellContainer}/>
+    <Route path="/mortgage" onEnter={requireAuth} component={MortgageContainer}/>        
+    <Route path="/transactions" onEnter={requireAuth} component={TransactionsContainer}/>
+    <Route path="/myOrders" onEnter={requireAuth} component={MyOrdersContainer}/>
+    <Route path="/leaderboard" onEnter={requireAuth} component={LeaderBoardContainer}/>    
+</Router>
 
-if(state.IsLoggedIn)
+// ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
+ReactDOM.render(
+			mainComponent
+			,document.getElementById('inner-content'))
+
+/*if(state.IsLoggedIn)
 	{ReactDOM.render(<NavbarContainer />, document.getElementById('wrapper'));
 		var mainComponent = <Router history={hashHistory}>	
 		        <Route path="/" component={Home}  />
@@ -358,7 +402,7 @@ else
 			document.getElementById('inner-content')
 			);
 	}
-
+*/
 
 window.Home = Home;
 window.mainComponent = mainComponent

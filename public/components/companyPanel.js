@@ -121,11 +121,20 @@ class CompanyPanel extends React.Component{
 			stocksList : nextProps.stocksList,			
 			companyProfile: nextProps.companyProfile,
 		});
-		console.log(this.state, 'hi partha');
+		console.log(this.state, 'hi partha 101');
 
-		let currentCompanyStats;
-		currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getMinutes();
-		console.log(currentCompanyStats,'noobing');
+		let currentCompanyPrices = [];
+		let createdAt = [];
+
+		Object.keys(this.state.companyProfile[Object.keys(this.state.companyProfile)[0]]).map(id=>{
+			currentCompanyPrices.push((this.state.companyProfile[id]).stockPrice);
+			createdAt.push((this.state.companyProfile[id]).createdAt);
+		})
+		alert('yo')
+		console.log(currentCompanyPrices,createdAt,'statos');
+
+		currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getHours();
+		alert(currentCompanyStats,'noobing');
 	}	
 	handleChange(event){
 		this.setState({currentCompany: event.target.value});

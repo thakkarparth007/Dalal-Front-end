@@ -492,6 +492,29 @@ a{
     padding-top: 300px;
     text-align: center;
 }
+.connecting{
+    position: absolute;
+    z-index: 4;
+    background: rgba(0,0,0,0.9);
+    text-align: center;
+    margin: 0 auto;  
+    left: 50%;
+    color: #fff;
+    padding: 10px 0px;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 50px;
+    font-size: 14px;
+    font-family: 'Roboto';
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    box-shadow: 2px 2px 1px #888888;
+}
+
+.login-preloader{         
+    padding-top: 100px;
+    text-align: center;
+}
 
 .dummy-spinner{
     visibility: hidden;    

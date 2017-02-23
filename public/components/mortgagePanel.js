@@ -98,6 +98,10 @@ class GetMortgagedStocks extends React.Component{
 		});
 	}
 	render(){
+		let empty = '';
+		if(Object.keys(this.state.mortgageStockList).length == 0){
+			empty = <p className="text-center"> You do not have any Mortgage Stocks. </p>;
+		}
 		return (
 			<div>
 				<div className="table-responsive table-hover col-md-11">
@@ -126,6 +130,7 @@ class GetMortgagedStocks extends React.Component{
 							}											
 						</tbody>
 					</table>
+					{empty}
 				</div>
 			</div>
 			)
@@ -203,6 +208,10 @@ class PutMortgageStocks extends React.Component{
 		})		
 	}
 	render(){
+		let empty = '';
+		if(Object.keys(this.state.userStockList).length == 0){
+			empty = <p className="text-center"> You do not have any stocks.</p>;
+		}
 		return (
 			<div>			
 				<div className="table-responsive table-hover col-md-11">
@@ -228,6 +237,7 @@ class PutMortgageStocks extends React.Component{
 							}
 						</tbody>
 					</table>
+					{empty}
 				</div>
 			</div>
 			)	

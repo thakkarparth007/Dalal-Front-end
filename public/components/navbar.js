@@ -60,8 +60,8 @@ class NotificationContainer extends React.Component{
 			console.log('resp logout',resp);
 			if(resp.result){
 				$('#logout-success').modal('show');
-				//redirect to login page
-				
+				window.location = window.location.toString().replace(/#\/.*$/, "#/login");
+				location.reload();
 			}
 			else if(resp.badRequestError){
 				$('#error-modal').modal('show');

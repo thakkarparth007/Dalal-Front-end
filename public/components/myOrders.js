@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 var NetworkService = require("./main.js").NetworkService;
 var state = require("./state.js");
-console.log('I am state',state.AllStockById[1].fullName);
+
 
 //make request for mortgaged stocks
 

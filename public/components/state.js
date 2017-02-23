@@ -4,8 +4,8 @@ var listeners = [];
 
 var state = {
 	IsConnected: false,
-	MarketOpen: false,
-	IsLoggedIn: true,
+	MarketOpen: true,
+	IsLoggedIn: false,
 	ClosingString: '',
 	User: {
 		sessionId: '',
@@ -18,47 +18,16 @@ var state = {
 
 	},	
 	UserStockById:{
-		1: 100,		
+		
 	},
 	AllStockById: {
-		1: {
-			id: 1,
-			shortName: 'Pragyan',
-			fullName: 'Pragyan',
-		 	description: "The Avatar The Avatar The AvatarThe AvatarTheThe AvatarThe AvatarThe AvatarThe Avatar",
-			currentPrice: 100,
-			dayHigh: 109,
-			dayLow: 90,
-			allTimeHigh: 120,
-			allTimeLow: 76,
-			stocksInExchange: 10,
-			stocksInMarket: 150,
-			upOrDown: true,
-			previousDayClose: 50,
-			createdAt: Date('YYYY-MM-DDT11:22:63'),
-			updatedAt: Date('YYYY-MM-DDT13:22:44')
-		},
+		
 	},
 	MarketEvents: {
 
 	},
 	Transactions:{
-		1: {
-			id: 1,			
-			stockId: 1,
-			type: 1,
-			stockQuantity: 100,
-			price: 230,
-			total: 1000,			
-		},
-		2: {
-			id: 1,			
-			stockId: 1,
-			type: 2,
-			stockQuantity: 50,
-			price: 210,
-			total: -50,			
-		},
+		
 	},
 	MortgagedStocks: {
 		
@@ -66,58 +35,18 @@ var state = {
 	MyOrders: {
 			Bids: {
 				Open:{
-					1:{
-						id : 1,						
-						stockId : 1,
-						price : 100,
-						orderType : 'Fill',
-						stockQuantity : '10',
-						stockQuantityFulfilled : '20',
-						isClosed : false,
-						createdAt :'' ,
-						updatedAt : '' ,
-					}
+					
 					},
 				Closed:{
-					1:{
-						id : 1,						
-						stockId : 1,
-						price : 100,
-						orderType : 'Market',
-						stockQuantity : '20',
-						stockQuantityFulfilled : '30',
-						isClosed : true,
-						createdAt :'' ,
-						updatedAt : '' ,
-					}
+					
 				},
 			},
 			Asks:{
 				Open:{
-					1:{
-						id : 1,						
-						stockId : 1,
-						price : 100,
-						orderType : 'fill',
-						stockQuantity : '40',
-						stockQuantityFulfilled : '50',
-						isClosed : false,
-						createdAt :'' ,
-						updatedAt : '' ,
-					}
+					
 				},
 				Closed:{
-					1:{
-						id : 1,						
-						stockId : 1,
-						price : 100,
-						orderType : 'market',
-						stockQuantity : '60',
-						stockQuantityFulfilled : '70',
-						isClosed : true,
-						createdAt :'' ,
-						updatedAt : '' ,
-					}
+					
 				},
 			},
 	},

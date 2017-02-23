@@ -68,6 +68,10 @@ class StocksList extends React.Component{
 
 const TransactionPanel = ({userStocks,stocksList}) =>{		
 	let counter = 1;
+	let empty = '';
+	if(Object.keys(userStocks).length == 0){
+		empty = <p className="text-center"> You do not have any stocks.</p>;
+	}
 	console.log(userStocks,stocksList,'hi dude');
 	return (	
 		<div className="table-responsive">          
@@ -125,7 +129,9 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 		    		}		
 		      
 		    </tbody>
+
 		  </table>
+		  {empty}		  
 		  </div>
 		)
 }
