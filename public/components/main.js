@@ -417,8 +417,19 @@ function onLoginResponse(response){
 			new PNotify({
 			    title: state.Notifications[update.notification.id].id,
 			    text: state.Notifications[update.notification.id].text,			    
+			    icon: 'fa fa-envelope-o',
 			    addclass: 'custom-notify',
-			});
+		        buttons: {
+			        closer: false,
+			        sticker: false
+			    },
+			}).get().click(function() {
+    				this.remove();
+			});;
+			// new PNotify({
+			    
+			//     addclass: 'custom-notify',
+			// });
 		}
 		state.NotifyUpdate();			
 	});				
