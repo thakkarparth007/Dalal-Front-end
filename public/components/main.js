@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://192.168.0.15:3000/ws");
+	ws = new WebSocket("ws://192.168.0.05:9020/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -541,14 +541,19 @@ NetworkService = {
 			let mortgageStocksReqWrap = RequestWrapper.create();
 			mortgageStocksReqWrap.mortgageStocksRequest = req;
 			wrapRWAndSend(mortgageStocksReqWrap, function(respWrap) {
-				console.log(respWrap, 'hey im mortagge hi');
+				console.log(respWrap, 'hey im mortagge hi',respWrap.mortgageStocksResponse.result,respWrap.mortgageStocksResponse.result.transaction);
 				if(respWrap.mortgageStocksResponse.result){					
 					let transaction = respWrap.mortgageStocksResponse.result.transaction;
 					state.User.cash += (transaction.total);
-
+					console.log(transaction,'mortagge ka transaction');
 					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
 					state.Transactions[transaction.id] = transaction;
-					state.MortgagedStocks[transaction.stockId] = transaction;
+					if(state.MortgagedStocks[transaction.stockId]) {
+						state.MortgagedStocks[transaction.stockId].numStocksInBank -= transaction.stockQuantity;
+					}
+					else
+						state.MortgagedStocks[transaction.stockId].numStocksInBank = -transaction.stockQuantity;
+
 					state.NotifyUpdate();			
 				}
 				cb(respWrap.mortgageStocksResponse)

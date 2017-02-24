@@ -48,6 +48,7 @@ class GetMortgageStocksItem extends React.Component{
 			stock: newProps.stock,			
 			stockQuantityOwned: newProps.stockQuantityOwned,
 		})
+		console.log(this.state,'yo mera');
 	}
 	updateStockQuantity(e) {
 		this.setState({
@@ -172,13 +173,13 @@ class PutMortgageStocksItem extends React.Component{
 			stock: this.props.stock,
 			stockQuantityToMortgage: 0,
 			stockQuantityOwned: this.props.stockQuantityOwned
-		}		
+		}				
 	}	
 	componentWillReceiveProps(newProps){
 		this.setState ({
 			stock: newProps.stock,			
 			stockQuantityOwned: newProps.stockQuantityOwned,
-		})
+		})		
 	}
 	updateStockQuantity(e) {
 		this.setState({
@@ -190,9 +191,10 @@ class PutMortgageStocksItem extends React.Component{
 			stockId: this.state.stock.id,
 			stockQuantity: this.state.stockQuantityToMortgage,
 		},function(resp){
-			console.log(resp,'mortgagedStocks mai bhejne ka response')
+			console.log(resp,'mortgagedStocks mai bhejne ka response')			
 			if(resp.result){
 				$('#alert-modal').modal('show');
+				$('.btn-1').click();
 			}
 			else if(resp.notEnoughStocksError){
 				$('#error-modal .modal-body').text("You do not have enough stocks to mortgage.");
@@ -242,7 +244,7 @@ class PutMortgageStocks extends React.Component{
 		this.setState({
 				userStockList: newProps.params,
 				stocksList : newProps.stocksList,			
-		})		
+		})				
 	}
 	render(){
 		let empty = '';
@@ -285,6 +287,7 @@ class PutMortgageStocks extends React.Component{
 const MortgageContainer = ({stocksList,params,type}) =>{
 	console.log(type,'ki and ka returns',params, stocksList);
 	if(type == 'getFromMortgage'){
+		console.log(type,'ki and ka returns',params, stocksList);
 		return (
 			<GetMortgagedStocks stocksList={stocksList} params = {params} />
 			)
@@ -327,9 +330,7 @@ class MortgagePanel extends React.Component{
 			userStocks: nextProps.userStocks,
 			params : nextProps.mortgagedStocks,
 			type: 'getFromMortgage'		
-		});
-
-		
+		});		
 
 		console.log(this.state, 'hi partho');
 	}	
@@ -353,7 +354,7 @@ class MortgagePanel extends React.Component{
 		console.log((this.state.stocksList).length);		
 		return (
 			<div className = "container mortgagePanel">
-				<h3 className="dash-head">Morgage Panel</h3>
+				<h3 className="dash-head">Mortgage Panel</h3>
 				<div className="row">
 					<div id="button-1" className="btn-1 active-btn col-md-2 col-md-offset-3" onClick={()=>this.changeState(1)}>
 						Your Mortgaged Stocks 

@@ -7,16 +7,48 @@ class LeaderBoard extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			leaderboardDetails: props.leaderboardDetails,
-			userDetails: props.userDetails,
+			//leaderboardDetails: props.leaderboardDetails,
+			//userDetails: props.userDetails,
+			lastUpdate: 0,
+			isFetching: false,
 		}
 
 		console.log(props,'leader porpos');
-
-	}	
+	}
+	componentWillMount() {
+		if(this.state.isFetching) return;
+		var nextUpdateIn = 2*60*1000 - (new Date() - this.state.lastUpdate);
+		if(nextUpdateIn < 0) {
+			nextUpdateIn = 0;
+		}
+		setTimeout(() => {
+			this.updateIntervalId = setInterval(() => {
+				this.isFetching = true;
+				NetworkService.Requests.GetLeaderboard({}, (resp) => {
+					this.isFetching = false;
+					console.log(resp.result,'mera leaderboard!!');
+					this.setState({
+						myRank: resp.result.myRank,
+						rankList: resp.result.rankList,
+						lastUpdate: new Date(),
+						userDetails: resp.result.rankList.filter(row => row.userId == state.User.id),
+					});
+				})
+			}, 2*60*1000);
+		}, nextUpdateIn);
+	}
+	componentWillUnmount() {
+		clearInterval(this.updateIntervalId);
+	}
 	render(){
+		let fetch = '';
+		if(this.state.isFetching)
+			fetch = "Updating LeaderBoard";
+		else
+			fetch = "LeaderBoard data updated " + (new Date() - this.state.lastUpdate)/1000 + "seconds ago. Cash and stock worth shown is not the latest ones.";
 		return (
-			<div className="leaderboard-container">
+			<div className="leaderboard-container">			
+			{fetch}
 			<table className="table table-striped table-hover table-responsive">
 				<thead>
 					<tr>

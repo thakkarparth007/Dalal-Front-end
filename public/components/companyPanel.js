@@ -101,6 +101,7 @@ class CompanyPanel extends React.Component{
 			currentMarketDepth: '',
 			stocksList: this.props.stocksList,
 			companyProfile: this.props.companyProfile,
+			userStocks: this.props.userStocks,
 			marketEvents: '',
 		}
 		// state.OnLogin(() => {
@@ -153,7 +154,9 @@ class CompanyPanel extends React.Component{
 			currentStats.stockPrice = [];
 			currentStats.createdAt = [];
 			console.log(this.state.companyProfile[id], 'current comp');
-			let keysArray = Object.keys(this.state.companyProfile[id]).sort((a,b)=>{return b-a;});
+			/*let keysArray = Object.keys(this.state.companyProfile[id])
+									.sort((a,b) => new Date(b) < new Date(a));
+			// alert(keysArray);
 			let temp = keysArray.slice(- 15, -1);
 			
 			temp.map(key=>{		
@@ -161,13 +164,15 @@ class CompanyPanel extends React.Component{
 				(currentStats.createdAt).push(this.state.companyProfile[id][key].createdAt);
 			});
 
-			console.log(currentStats, 'peheli vaali ka stats');
+			console.log(currentStats, 'peheli vaali ka stats');*/
+
+			this.updateStockHistory(id);
 
 			this.setState({
 				currentCompanyStats: currentStats,
 				currentCompany: this.state.stocksList[id].fullName,
 				currentCompanyPrice: this.state.stocksList[id].currentPrice,
-				currentCompanyStocks: this.state.stocksList[id].stocksInExchange,				
+				currentCompanyStocks: this.state.userStocks[id],				
 			})
 		}
 
@@ -185,8 +190,9 @@ class CompanyPanel extends React.Component{
 		let currentStats = {};
 		currentStats.stockId = stockId;
 		currentStats.stockPrice = [];
-		currentStats.createdAt = [];		
-		let keysArray = Object.keys(this.state.companyProfile[stockId]).sort((a,b)=>{return b<a;});
+		currentStats.createdAt = [];	
+		let keysArray = Object.keys(this.state.companyProfile[stockId])
+									.sort((a,b) => new Date(a) - new Date(b));
 		let temp = keysArray.slice(- 15, -1);
 		
 		temp.map(key=>{
@@ -207,7 +213,7 @@ class CompanyPanel extends React.Component{
 			let e = (this.state.stocksList)[x];
 
 			if(e.fullName == event.target.value){
-				this.setState({currentCompanyPrice: e.currentPrice, currentCompanyStocks: e.stockQuantity});
+				this.setState({currentCompanyPrice: e.currentPrice, currentCompanyStocks: this.state.userStocks[x]});
 				stockId = e.id;
 			}
 		});

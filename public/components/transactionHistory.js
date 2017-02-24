@@ -82,12 +82,11 @@ class TransactionHistory extends React.Component{
 			empty = <p className="text-center">You do not have any transactions. </p>;
 		}		
 		
-		let sort = (Object.keys(this.state.history)).sort((a,b) => {
-			+a < +b
-		});
+		alert((Object.keys(this.state.history)));
+		let sort = (Object.keys(this.state.history)).map(x => +x).sort((a,b) => a-b);
 		console.log(this.state,sort,'sored')
-		// alert(sort);
-		let sliced = (sort).slice(this.state.currentPageStart ,this.state.currentPageEnd);		
+		alert(sort);
+		
 		return (
 			<div className="container transaction-container">
 				<h3>Transactions History</h3>
@@ -106,7 +105,7 @@ class TransactionHistory extends React.Component{
 						</thead>
 						<tbody>													
 							{
-								(sliced).reverse().map(k=>{
+								(sort).reverse().map(k=>{
 									let x = (this.state.history)[k];
 									// alert(sliced.reverse());
 									let t,convert,cname;								

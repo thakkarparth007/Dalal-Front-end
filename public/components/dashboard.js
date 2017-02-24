@@ -239,7 +239,7 @@ class Dashboard extends React.Component{
 				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} marketStatus = {this.state.marketStatus} />
 				<div className="content-top">
 						<TransactionPanel userStocks = {this.state.userStocks} stocksList={this.state.stocksList} />
-						<CompanyPanel stocksList={this.state.stocksList} companyProfile = {this.state.companyProfile} />
+						<CompanyPanel stocksList={this.state.stocksList} companyProfile = {this.state.companyProfile} userStocks = {this.state.userStocks} />
 						<MortgagePanel stocksList={this.state.stocksList} userStocks={this.state.userStocks} mortgagedStocks = {this.state.mortgagedStocks} />
 				</div>
 			</div>
