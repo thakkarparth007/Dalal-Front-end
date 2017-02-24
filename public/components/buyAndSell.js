@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 var NetworkService = require('./main.js').NetworkService;
+var state = require('./state.js');
 console.log(NetworkService,'lolejed');
 var key = 0;
 
@@ -69,8 +70,11 @@ class BuyAndSell extends React.Component{
 		var orderPrice = $(".stockPrice").val();		
 
 		var OrderType = PR.lookup("dalalstreet.socketapi.models.OrderType").values;
-
-		if(!orderStockQuantity || !orderPrice){
+		// alert(OrderType[orderType]);
+		if((!orderStockQuantity || !orderPrice) && (OrderType[orderType]!=1)){
+			$('#fill-modal').modal('show');
+		}
+		else if((!orderStockQuantity) && (OrderType[orderType]==1)){
 			$('#fill-modal').modal('show');
 		}
 		else{
@@ -79,18 +83,23 @@ class BuyAndSell extends React.Component{
 				orderType: OrderType[orderType],
 				stockQuantity: orderStockQuantity,
 				stockId: orderStockId,
-				price: orderPrice,
+				price: orderPrice || 0,
 			}, function(response){				
 				console.log(response,'plisss');
 				if(response.result){
 					$('#alert-modal').modal('show');
 				}
 				else if(response.bidLimitExceededError){
-					$('#exceed-modal').modal('show');
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You cannot place buy order of more than '+ state.Constants.BID_LIMIT + 'stocks.' );
+					$('#alert-modal').modal('show');
 				}
 				else if(response.notEnoughCashError){
 					$('#error-modal').modal('show');
 				}
+				else if(response.marketClosedError) {
+					$('#stock-modal .modal-dialog .modal-content .modal-body').text('Sorry, cannot place order. Market is closed.');
+					$('#stock-modal').modal('show');
+				}				
 				console.log(response.result);
 			});
 		}
@@ -105,11 +114,20 @@ class BuyAndSell extends React.Component{
 				if(response.result){
 					$('#alert-modal').modal('show');
 				}
-				else if(response.bidLimitExceededError){
-					$('#exceed-modal').modal('show');
+				else if(response.askLimitExceededError){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You cannot place sell order of more than '+ state.Constants.ASK_LIMIT + 'stocks.' );
+					$('#alert-modal').modal('show');
 				}
 				else if(response.notEnoughCashError){
 					$('#error-modal').modal('show');
+				}
+				else if(response.notEnoughStocksError){
+					$('#stock-modal .modal-dialog .modal-content .modal-body').text(response.notEnoughStocksError.reason);
+					$('#stock-modal').modal('show');
+				}
+				else if(response.marketClosedError) {
+					$('#stock-modal .modal-dialog .modal-content .modal-body').text('Sorry, cannot place order. Market is closed.');
+					$('#stock-modal').modal('show');
 				}
 				console.log(response.result);
 			});
@@ -236,9 +254,9 @@ class BuyAndSell extends React.Component{
 					</div>	
 					</div>
 					<AlertModal id = "alert-modal" message="Order Placed Successfully" />
-					<AlertModal id = "error-modal" message="Not Enough Cash Available" />
-					<AlertModal id = "exceed-modal" message="Max Order Quota Exceeded" />
-					<AlertModal id = "fill-modal" message="Kindly Fill all the fields!" />
+					<AlertModal id = "error-modal" message="Not Enough Cash Available" />					
+					<AlertModal id = "fill-modal" message="Kindly fill all the fields!" />
+					<AlertModal id = "stock-modal" message="" />
 				</div>
 			</div>
 			)

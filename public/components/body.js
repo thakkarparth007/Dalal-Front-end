@@ -357,7 +357,7 @@ buy sell stock option
 // }
 
 function requireAuth(nextState, replace) {
-	if(!state.IsLoggedIn) {
+	if(state.IsConnected && !state.IsLoggedIn) {
 		replace({
 			pathname: "/login"
 		})

@@ -101,7 +101,13 @@
 }
 
 @media(min-width:768px) {
-    
+    .sidebar {
+        z-index: 1;
+        position: absolute;
+        width: 250px;
+        
+    }
+
     .navbar-top-links .dropdown-messages,
     .navbar-top-links .dropdown-tasks,
     .navbar-top-links .dropdown-alerts {
@@ -483,7 +489,7 @@ a{
 }
 .connecting{
     position: absolute;
-    z-index: 4;
+    z-index: 9999;
     background: rgba(0,0,0,0.9);
     text-align: center;
     margin: 0 auto;  
@@ -535,4 +541,33 @@ a{
 .leaderboard-container{
     margin-top: 60px;
 }
+.trial{
+    font-size: 12px;
+}
 
+.forum{
+    color: #fff !important;
+    background: #d95459;    
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+.forum:hover{
+    color: #000 !important;
+    background: #d95459 !important;   
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+}
+
+.custom-notify{    
+    opacity: 0.6 !important;
+    background: #1a237e;
+    color: #fff;
+    border-radius: 1px;
+}
+.ui-pnotify-title{    
+    color: #fff;
+}
+.ui-pnotify-text{
+    font-family: 'Roboto';
+    color: #fff;
+}

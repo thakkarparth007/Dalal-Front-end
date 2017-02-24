@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://192.168.0.29:3000/ws");
+	ws = new WebSocket("ws://192.168.0.15:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -192,8 +192,10 @@ function onLoginResponse(response){
 	Object.assign(state.AllStockById, response.result.stockList);
 	Object.assign(state.UserStockById, response.result.stocksOwned);		
 	Object.assign(state.Constants, response.result.constants);		
-	state.IsLoggedIn = true;	
-	state.ClosingString = response.result.closingString;
+	state.IsLoggedIn = true;
+	state.marketIsClosedHackyNotif = response.result.marketIsClosedHackyNotif;
+	state.marketIsOpenHackyNotif = response.result.marketIsOpenHackyNotif;
+	state.MarketOpen = response.result.isMarketOpen;
 	// state.MarketOpen = response.result.isMarketOpen;
 
 	// Object.assign(state.MortgagedStocks, response.result.mortgagedStocks);
@@ -221,7 +223,8 @@ function onLoginResponse(response){
 		console.log(resp.result.notifications,'mera notification!!');
 		Object.keys(resp.result.notifications).map(id=>{
 			let n = (resp.result.notifications)[id];
-			state.Notifications[id] = n;
+			state.Notifications[id] = n;			
+			
 		})
 		state.NotifyUpdate();
 	})
@@ -311,36 +314,37 @@ function onLoginResponse(response){
 	});				
 
 	NetworkService.DataStreams.MyOrders.Subscribe(function(resp) {
-		console.log(resp, "subscription status");
+		console.log(resp, "subscription myOrders status");
 	}, function(update){
-		if(update.myOrderUpdate.isAsk){
-			ask = state.MyOrders.Asks[update.myOrderUpdate.id];
-			if((update.myOrderUpdate.isClosed)){
+		alert(alert);
+		if(update.isAsk){
+			let ask = state.MyOrders.Asks.Open[update.id];
+			if((update.isClosed)){
 				state.MyOrders.Asks.Closed[ask.id] = ask;
 				delete state.MyOrders.Asks.Open[ask.id];
 
 				ask.isClosed = true;
-				if(update.myOrderUpdate.tradeQuantity) {
-					ask.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+				if(update.tradeQuantity) {
+					ask.stockQuantityFulfilled += update.tradeQuantity;
 				}
 			}
 			else{
-				ask.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+				ask.stockQuantityFulfilled += update.tradeQuantity;
 			}
 		}
 		else{
-			bid = state.MyOrders.Bids[update.myOrderUpdate.id];
-			if((update.myOrderUpdate.isClosed)){
+			let bid = state.MyOrders.Bids.Open[update.id];
+			if((update.isClosed)){
 				state.MyOrders.Bids.Closed[bid.id] = bid;
 				delete state.MyOrders.Bids.Open[bid.id];
 
 				bid.isClosed = true;
-				if(update.myOrderUpdate.tradeQuantity) {
-					bid.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+				if(update.tradeQuantity) {
+					bid.stockQuantityFulfilled += update.tradeQuantity;
 				}
 			}
 			else{
-				bid.stockQuantityFulfilled += update.myOrderUpdate.tradeQuantity;
+				bid.stockQuantityFulfilled += update.tradeQuantity;
 			}
 		}
 		
@@ -396,17 +400,30 @@ function onLoginResponse(response){
 		state.NotifyUpdate();
 	});				
 
+
 	//notifications subscribe
 	NetworkService.DataStreams.Notifications.Subscribe(function(resp) {
 		console.log(resp, "subscription status of Notifications");
 	}, function(update){
 		console.log(update,'yololol');
 		// update.id,update.text;
-		if(update.notification.text == state.ClosingString){
+		if(update.notification.text == state.marketIsClosedHackyNotif){
+			console.log(update.notification.text,state.marketIsClosedHackyNotif,'checker')
+			alert('check');
 			state.MarketOpen = false;
 		}
-		state.Notifications[update.notification.id] = {
-			text: update.notification.text,
+		else if(update.notification.text == state.marketIsOpenHackyNotif){
+			state.MarketOpen = true;
+		}
+		else{
+			state.Notifications[update.notification.id] = {
+				text: update.notification.text,
+			}
+			new PNotify({
+			    title: state.Notifications[update.notification.id].id,
+			    text: state.Notifications[update.notification.id].text,			    
+			    addclass: 'custom-notify',
+			});
 		}
 		state.NotifyUpdate();			
 	});				
@@ -429,7 +446,10 @@ function onLoginResponse(response){
 	console.log(state);
 
 	//let s = window.location.toString().match(/#\/(.+)$/)[1];
-	window.location = window.location.toString().replace(/#\/(.)+$/, "#/");
+	if(/#\/login/.test(originalUrl)) {
+		originalUrl = window.location.toString().replace(/#.*$/, "#/");
+	}
+	window.location = originalUrl;
 }
 
 function getUpdateCbName(dataStreamType, dataStreamId) {
@@ -465,13 +485,14 @@ NetworkService = {
 				state.User.cash += transaction.total;
 				state.User.total = state.User.cash + state.User.stockWorth;
 				console.log('sab sahi hia na bhai?',((Object.keys(state.UserStockById).length)+1),parseInt(req.stockId),parseInt(respWrap.buyStocksFromExchangeResponse.result.stockQuantity))
+
 				if(state.UserStockById[req.stockId]){
 					state.UserStockById[req.stockId] += transaction.stockQuantity;
 				}
 				else{
 					state.UserStockById[req.stockId] = transaction.stockQuantity;
-				}
-				state.UserStockById[req.stockId] += transaction.stockQuantity;
+				}				
+
 				state.AllStockById[req.stockId].stocksInExchange -= transaction.stockQuantity;
 				state.AllStockById[req.stockId].stocksInMarket += transaction.stockQuantity;
 				state.Transactions[transaction.id] = transaction;
@@ -521,8 +542,8 @@ NetworkService = {
 			mortgageStocksReqWrap.mortgageStocksRequest = req;
 			wrapRWAndSend(mortgageStocksReqWrap, function(respWrap) {
 				console.log(respWrap, 'hey im mortagge hi');
-				let transaction = respWrap.mortgageStocksResponse.result.transaction;
 				if(respWrap.mortgageStocksResponse.result){					
+					let transaction = respWrap.mortgageStocksResponse.result.transaction;
 					state.User.cash += (transaction.total);
 
 					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
@@ -530,7 +551,7 @@ NetworkService = {
 					state.MortgagedStocks[transaction.stockId] = transaction;
 					state.NotifyUpdate();			
 				}
-				cb(respWrap.mortgageStocksResponse.result)
+				cb(respWrap.mortgageStocksResponse)
 			});
 		},
 
@@ -596,6 +617,15 @@ NetworkService = {
 			let retrieveMortgageStocksReqWrap = RequestWrapper.create();
 			retrieveMortgageStocksReqWrap.retrieveMortgageStocksRequest = req;
 			wrapRWAndSend(retrieveMortgageStocksReqWrap, function(respWrap) {
+				if(respWrap.retrieveMortgageStocksResponse.result){					
+					let transaction = respWrap.retrieveMortgageStocksResponse.result.transaction;
+					state.User.cash += (transaction.total);
+
+					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
+					state.Transactions[transaction.id] = transaction;
+					state.MortgagedStocks[transaction.stockId] = transaction;
+					state.NotifyUpdate();			
+				}
 				cb(respWrap.retrieveMortgageStocksResponse)
 			});
 		},
@@ -676,7 +706,6 @@ NetworkService = {
 			let getLeaderboardReqWrap = RequestWrapper.create();
 			getLeaderboardReqWrap.getLeaderboardRequest = req;
 			wrapRWAndSend(getLeaderboardReqWrap, function(respWrap) {
-
 				cb(respWrap.getLeaderboardResponse)
 			});
 		},

@@ -29,22 +29,19 @@ var marketDepth = [
 // 	}
 // ];
 
-var marketEvents = [
-	{
-		id: 1,
-		stockId: 1,
-		text: ['Market Crash', 'lol news is here'],
-		emotionScore: 50,
-		createdAt: '22-11-3'
-	},
-	{
-		id: 2,
-		stockId: 2,
-		text: ['Is Market Crashed?', 'lol news is here'],
-		emotionScore: 80,
-		createdAt: '22-11-3'
-	}
-];
+
+// var MarketEvents = {
+// 1: {
+//     id : 1;
+//     stockId : 2;
+//     headline : 'Aaj tak';
+//     text : 'news hai';
+//     emotion_score : 5;
+//     isGlobal : 7;
+//     createdAt : 6;
+// 	}
+// }
+
 	
 
 
@@ -98,30 +95,38 @@ class CompanyPanel extends React.Component{
 		this.state = {
 			currentCompany: '',
 			currentCompanyPrice: '',
-			currentCompanyNews: '',
+			currentCompanyNews: '' ,
 			currentCompanyStocks: '',
 			currentCompanyStatistics: '',
 			currentMarketDepth: '',
 			stocksList: this.props.stocksList,
 			companyProfile: this.props.companyProfile,
+			marketEvents: '',
 		}
 		// state.OnLogin(() => {
 		// 	NS.Requests.GetCompanyProfile(resp => {
 		// 	});
 		// });
 		
-		let firstStockId = Object.keys(this.props.stocksList).sort()[0];
-		NetworkService.Requests.GetCompanyProfile({
-			stockId: firstStockId,
-		},function(resp){
-			console.log(resp,'company ka details');
-			if(resp.result){
-				state.CompanyProfile[firstStockId] = resp.result.stockHistoryMap;
-			}
-			else{
+		//alert("yo " + firstStockId);
+		state.Listen((state) => {
+			if(!Object.keys(this.props.stocksList).length)
+				return;
+			
+			let firstStockId = Object.keys(this.props.stocksList).sort()[0];
+			NetworkService.Requests.GetCompanyProfile({
+				stockId: firstStockId,
+			}, resp => {
+				console.log(resp,'company ka details');
+				if(resp.result){
+					state.CompanyProfile[firstStockId] = resp.result.stockHistoryMap;
+					this.updateStockHistory(firstStockId);
+				}
+				else{
 
-			}
-		});
+				}
+			})
+		})
 
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -175,7 +180,25 @@ class CompanyPanel extends React.Component{
 
 		// currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getHours();
 		// alert(currentCompanyStats,'noobing');
-	}	
+	}
+	updateStockHistory(stockId) {
+		let currentStats = {};
+		currentStats.stockId = stockId;
+		currentStats.stockPrice = [];
+		currentStats.createdAt = [];		
+		let keysArray = Object.keys(this.state.companyProfile[stockId]).sort((a,b)=>{return b<a;});
+		let temp = keysArray.slice(- 15, -1);
+		
+		temp.map(key=>{
+			(currentStats.stockPrice).push(this.state.companyProfile[stockId][key].stockPrice);
+			let time = new Date(this.state.companyProfile[stockId][key].createdAt);
+			let hours = time.getHours();
+			let minutes = time.getMinutes();
+			time = hours + ':' + minutes;
+			(currentStats.createdAt).push(time);
+		});
+		this.setState({currentCompanyStatistics: currentStats})
+	}
 	handleChange(event){
 		event.persist();
 		this.setState({currentCompany: event.target.value});
@@ -190,33 +213,15 @@ class CompanyPanel extends React.Component{
 		});
 		console.log(event.target.value);
 
-		marketEvents.map((e)=>{
-			if(e.stockId == stockId){
+		Object.keys(this.state.marketEvents).map((k)=>{
+			let e = (this.state.marketEvents)[k];
+			if(e.stockId == stockId || e.isGlobal == 0){
 				this.setState({currentCompanyNews: e.text});		
 			}
 		})
 		
-		const updateStockHistory = () =>{
-			let currentStats = {};
-			currentStats.stockId = stockId;
-			currentStats.stockPrice = [];
-			currentStats.createdAt = [];		
-			let keysArray = Object.keys(this.state.companyProfile[stockId]).sort((a,b)=>{return b-a;});
-			let temp = keysArray.slice(- 15, -1);
-			
-			temp.map(key=>{
-				(currentStats.stockPrice).push(this.state.companyProfile[stockId][key].stockPrice);
-				let time = new Date(this.state.companyProfile[stockId][key].createdAt);
-				let hours = time.getHours();
-				let minutes = time.getMinutes();
-				time = hours + ':' + minutes;
-				(currentStats.createdAt).push(time);
-			});
-			this.setState({currentCompanyStatistics: currentStats})
-		}
-
 		if(this.state.companyProfile[stockId]) {
-			updateStockHistory();
+			this.updateStockHistory(stockId);
 		} else {
 			NetworkService.Requests.GetCompanyProfile({
 				stockId: stockId,
@@ -225,7 +230,7 @@ class CompanyPanel extends React.Component{
 				if(resp.result){
 					state.CompanyProfile[stockId] = resp.result.stockHistoryMap;
 					if(this.state.stocksList[stockId].fullName == event.target.value)
-						updateStockHistory();
+						this.updateStockHistory(stockId);
 				}
 				else{
 					// error

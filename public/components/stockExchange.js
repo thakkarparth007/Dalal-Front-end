@@ -68,9 +68,21 @@ class StockExchangeItem extends React.Component{
 					$('#exceed-modal').modal('show');			
 				else if(response.notEnoughStocksError)	
 					$('#error-modal').modal('show');
-				else
+				else if(response.internalServerError){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Sorry, we are facing some errors on the server. Please try after some time.');
 					$('#alert-modal').modal('show');
-				//will get trading price as the response			
+					}				
+				else if(response.notEnoughCashError) {
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You do not have enough cash to buy these stocks.');
+					$('#alert-modal').modal('show');
+				}
+				else if(response.marketClosedError) {
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Sorry, cannot place order. Market is closed.');
+					$('#alert-modal').modal('show');
+				}
+				else if(response.result){
+					$('#alert-modal').modal('show');
+				}
 				this.setState({
 					status: false,
 				})

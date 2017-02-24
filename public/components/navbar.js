@@ -24,7 +24,7 @@ const NavbarHeader = () => {
 		              <span className="icon-bar"></span>
 		              <span className="icon-bar"></span>
 		          </button>
-		         <h1> <a className="navbar-brand" href="index.html">Dalal</a></h1>         
+		         <h1> <a className="navbar-brand" href="index.html">Dalal<sub className="trial">Trial</sub></a></h1>         		         
 		   </div>			         
 		)
 }
@@ -77,11 +77,7 @@ class NotificationContainer extends React.Component{
 			    <div className="full-left">
 			      <section className="full-top">
 			  <button id="toggle"><i className="fa fa-arrows-alt"></i></button> 
-			</section>
-			<form className=" navbar-left-right">
-			        <input type="text"  placeholder="Search..."  />
-			        <input type="submit" value="" className="fa fa-search" />
-			      </form>
+			</section>			
 			      <div className="clearfix"> </div>
 			     </div>			   
 
@@ -91,7 +87,7 @@ class NotificationContainer extends React.Component{
 			      <li className="dropdown at-drop">
 			            <a href="#" className="dropdown-toggle dropdown-at " data-toggle="dropdown"><i className="fa fa-globe"></i> <span className="number">{Object.keys(this.state.notifications).length}</span></a>
 			            <ul className="dropdown-menu menu1 notificationsList" role="menu">			              
-			              {Object.keys(this.state.notifications).map((id)=>{
+			              {Object.keys(this.state.notifications).sort((a,b)=>b-a).map((id)=>{
 			              		console.log(id);
 			              		return (
 			              				<Notification id={id} title={this.state.notifications[id].text} />

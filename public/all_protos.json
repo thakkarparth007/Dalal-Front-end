@@ -327,7 +327,8 @@
                         "buyLimitExceededError",
                         "badRequestError",
                         "internalServerError",
-                        "notEnoughStocksError"
+                        "notEnoughStocksError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -355,6 +356,10 @@
                     "notEnoughStocksError": {
                       "type": "NotEnoughStocksError",
                       "id": 6
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 7
                     }
                   },
                   "nested": {
@@ -411,7 +416,8 @@
                         "result",
                         "invalidAskIdError",
                         "badRequestError",
-                        "internalServerError"
+                        "internalServerError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -431,6 +437,10 @@
                     "internalServerError": {
                       "type": "errors.InternalServerError",
                       "id": 4
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 5
                     }
                   },
                   "nested": {
@@ -471,7 +481,8 @@
                         "result",
                         "invalidBidIdError",
                         "badRequestError",
-                        "internalServerError"
+                        "internalServerError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -491,6 +502,10 @@
                     "internalServerError": {
                       "type": "errors.InternalServerError",
                       "id": 4
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 5
                     }
                   },
                   "nested": {
@@ -578,6 +593,18 @@
                           "keyType": "string",
                           "type": "int32",
                           "id": 5
+                        },
+                        "marketIsOpenHackyNotif": {
+                          "type": "string",
+                          "id": 6
+                        },
+                        "marketIsClosedHackyNotif": {
+                          "type": "string",
+                          "id": 7
+                        },
+                        "isMarketOpen": {
+                          "type": "bool",
+                          "id": 8
                         }
                       }
                     },
@@ -657,7 +684,8 @@
                         "result",
                         "notEnoughStocksError",
                         "badRequestError",
-                        "internalServerError"
+                        "internalServerError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -677,6 +705,10 @@
                     "internalServerError": {
                       "type": "errors.InternalServerError",
                       "id": 4
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 5
                     }
                   },
                   "nested": {
@@ -726,7 +758,8 @@
                         "askLimitExceededError",
                         "notEnoughStocksError",
                         "badRequestError",
-                        "internalServerError"
+                        "internalServerError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -750,6 +783,10 @@
                     "internalServerError": {
                       "type": "errors.InternalServerError",
                       "id": 5
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 6
                     }
                   },
                   "nested": {
@@ -807,7 +844,8 @@
                         "bidLimitExceededError",
                         "notEnoughCashError",
                         "badRequestError",
-                        "internalServerError"
+                        "internalServerError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -831,6 +869,10 @@
                     "internalServerError": {
                       "type": "errors.InternalServerError",
                       "id": 5
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 6
                     }
                   },
                   "nested": {
@@ -880,7 +922,8 @@
                         "notEnoughStocksError",
                         "notEnoughCashError",
                         "badRequestError",
-                        "internalServerError"
+                        "internalServerError",
+                        "marketClosedError"
                       ]
                     }
                   },
@@ -904,6 +947,10 @@
                     "internalServerError": {
                       "type": "errors.InternalServerError",
                       "id": 5
+                    },
+                    "marketClosedError": {
+                      "type": "errors.MarketClosedError",
+                      "id": 6
                     }
                   },
                   "nested": {
@@ -1605,6 +1652,9 @@
                       "id": 1
                     }
                   }
+                },
+                "MarketClosedError": {
+                  "fields": {}
                 }
               }
             },
@@ -1830,7 +1880,8 @@
                   "values": {
                     "LIMIT": 0,
                     "MARKET": 1,
-                    "STOPLOSS": 2
+                    "STOPLOSS": 2,
+                    "STOPLOSSACTIVE": 3
                   }
                 },
                 "Stock": {

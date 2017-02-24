@@ -16,6 +16,18 @@ var state = require('./state.js');
 
 //stock state needs to be changed later
 
+jQuery.fn.extend({
+    disable: function(state) {
+        return this.each(function() {
+            var $this = $(this);
+            if($this.is('input, button, textarea, select'))
+              this.disabled = state;
+            else
+              $this.toggleClass('disabled', state);
+        });
+    }
+});
+
 class StocksList extends React.Component{
 	constructor(props){
 		super(props);		
@@ -23,16 +35,27 @@ class StocksList extends React.Component{
 			stocks: this.props.stocks,
 			marketStatus: this.props.marketStatus,
 		}
+	}
+	componentWillReceiveProps(newProps){
+		console.log(newProps)
+		this.setState({
+			stocks : newProps.stocks,
+			marketStatus : newProps.marketStatus,
+		});
+		$("*").disable(!newProps.marketStatus);
 	}	
 	render(){
-	if(this.state.marketStatus)	
+	let market = '';
+	if(!this.state.marketStatus){
+		market = <span>Market Is Closed</span>;
+	}	
 	return (
 			<marquee className="stocks-list">
 			{	Object.keys(this.state.stocks).map((x)=>{
 				let stock = (this.state.stocks)[x];
 
 				let icon;
-				if(stock.upOrDown){
+				if((stock.currentPrice - stock.previousDayClose)>=0){
 					icon = <i className="fa fa-sort-asc" aria-hidden="true"></i>;
 				}
 				else{
@@ -45,7 +68,7 @@ class StocksList extends React.Component{
 						</a>
 						<a className="stock-state">
 							{icon}
-							{Math.abs(stock.previousDayClose - stock.currentPrice)}							
+							{Math.abs(stock.currentPrice - stock.previousDayClose)}							
 						</a>
 						<a className="stock-cost">
 							Rs.{stock.currentPrice}
@@ -53,15 +76,10 @@ class StocksList extends React.Component{
 					</span>
 					)
 			})}
+			{market}
 			</marquee>		
-		);
-	else{
-		return (
-			<marquee className="stocks-list">
-				<span>Market Is Closed</span>
-			</marquee>
-			)
-	}
+		)
+	
 	}
 
 }
@@ -85,7 +103,7 @@ const TransactionPanel = ({userStocks,stocksList}) =>{
 		        <th>Today's High</th>
 		        <th>Price</th>
 		        <th>Stocks In Market</th>
-		        <th>Stocks Brought</th>
+		        <th>Stocks Bought</th>
 		        <th>Total Stock Price</th>
 		      </tr>
 		    </thead>

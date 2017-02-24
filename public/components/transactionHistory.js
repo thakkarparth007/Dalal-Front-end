@@ -87,8 +87,7 @@ class TransactionHistory extends React.Component{
 		});
 		console.log(this.state,sort,'sored')
 		// alert(sort);
-		let sliced = (sort).slice(this.state.currentPageStart ,this.state.currentPageEnd);
-		// alert(sliced);
+		let sliced = (sort).slice(this.state.currentPageStart ,this.state.currentPageEnd);		
 		return (
 			<div className="container transaction-container">
 				<h3>Transactions History</h3>
@@ -107,9 +106,9 @@ class TransactionHistory extends React.Component{
 						</thead>
 						<tbody>													
 							{
-								sliced.map(k=>{
+								(sliced).reverse().map(k=>{
 									let x = (this.state.history)[k];
-
+									// alert(sliced.reverse());
 									let t,convert,cname;								
 									Object.keys(this.state.stocks).map((z)=>{
 										let y = (this.state.stocks)[z];
@@ -154,12 +153,7 @@ class TransactionHistory extends React.Component{
 					{empty}
 					</div>
 				</div>
-				<div className="col-md-12">
-					<ul className="pagination">
-						<li><a onClick={()=>this.updatePageNumber(-1)}>&laquo;</a></li>					
-						<li><a onClick={()=>this.updatePageNumber(1)}>&raquo;</a></li>
-					</ul>
-				</div>
+				
 			</div>
 			)
 	}

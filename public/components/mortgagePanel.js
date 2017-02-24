@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 var NetworkService = require("./main.js").NetworkService;
+var state = require("./state.js");
 
 //make request for mortgaged stocks
 var mortgagedStocks = {
@@ -38,7 +39,7 @@ class GetMortgageStocksItem extends React.Component{
 		super(props);
 		this.state = {
 			stock: this.props.stock,
-			stockQuantityToMortgage: 0,
+			stockQuantityToRetrieve: 0,
 			stockQuantityOwned: this.props.stockQuantityOwned
 		}
 	}
@@ -50,7 +51,34 @@ class GetMortgageStocksItem extends React.Component{
 	}
 	updateStockQuantity(e) {
 		this.setState({
-			stockQuantityToMortgage: e.target.value
+			stockQuantityToRetrieve: e.target.value
+		})
+	}
+	getMortgagedStocks(e) {
+		NetworkService.Requests.RetrieveMortgageStocks({
+			stockId: this.state.stock.id,
+			stockQuantity: this.state.stockQuantityToRetrieve,
+		},function(resp){
+			console.log(resp,'retrieveMortgagedStocks mai bhejne ka response')
+			if(resp.result){
+				$('#alert-modal').modal('show');
+			}
+			else if(resp.notEnoughStocksError){
+				$('#error-modal .modal-body').text("You do not have enough stocks in mortgage to retrieve.");
+				$('#error-modal').modal('show');
+			}
+			else if(resp.notEnoughCashError){
+				$('#error-modal .modal-body').text("You do not have enough cash to retrieve your stocks.");
+				$('#error-modal').modal('show');
+			}
+			else if(resp.marketClosedError) {
+				$('#error-modal .modal-body').text("Market is closed. Please try once the market reopens.");
+				$('#error-modal').modal('show');
+			}
+			else /*if(resp.internalServerError) */ {
+				$('#error-modal .modal-body').text("Sorry, we are facing some issues at the moment. Please try again later.");
+				$('#error-modal').modal('show');
+			}
 		})
 	}
 	render() {
@@ -63,10 +91,10 @@ class GetMortgageStocksItem extends React.Component{
 					<input type="number" className="form-control" min="0" max={this.state.stockQuantityOwned} onChange={this.updateStockQuantity.bind(this)} />
 				</td>
 				<td>
-					<p>{this.state.stockQuantityToMortgage * this.state.stock.currentPrice}</p>
+					<p>{this.state.stockQuantityToRetrieve * this.state.stock.currentPrice * state.Constants.MORTGAGE_RETRIEVE_RATE/100}</p>
 				</td>
 				<td>
-					<button type="button" className="btn btn-success">Mortgage</button>
+					<button type="button" className="btn btn-success" onClick={this.getMortgagedStocks.bind(this)}>Mortgage</button>
 				</td>
 			</tr>
 		)
@@ -163,10 +191,19 @@ class PutMortgageStocksItem extends React.Component{
 			stockQuantity: this.state.stockQuantityToMortgage,
 		},function(resp){
 			console.log(resp,'mortgagedStocks mai bhejne ka response')
-			if(resp.transaction){
+			if(resp.result){
 				$('#alert-modal').modal('show');
 			}
-			else{
+			else if(resp.notEnoughStocksError){
+				$('#error-modal .modal-body').text("You do not have enough stocks to mortgage.");
+				$('#error-modal').modal('show');
+			}
+			else if(resp.marketClosedError) {
+				$('#error-modal .modal-body').text("Market is closed. Please try once the market reopens.");
+				$('#error-modal').modal('show');
+			}
+			else /*if(resp.internalServerError) */ {
+				$('#error-modal .modal-body').text("Sorry, we are facing some issues at the moment. Please try again later.");
 				$('#error-modal').modal('show');
 			}
 		})
@@ -181,7 +218,7 @@ class PutMortgageStocksItem extends React.Component{
 					<input type="number" className="form-control" min="0" max={this.state.stockQuantityOwned} onChange={this.updateStockQuantity.bind(this)} />
 				</td>
 				<td>
-					<p>{this.state.stockQuantityToMortgage * this.state.stock.currentPrice}</p>
+					<p>{this.state.stockQuantityToMortgage * this.state.stock.currentPrice * state.Constants.MORTGAGE_DEPOSIT_RATE/100}</p>
 				</td>
 				<td>
 					<button type="button" className="btn btn-success" onClick={this.putStockInMortgage.bind(this)}>Mortgage</button>

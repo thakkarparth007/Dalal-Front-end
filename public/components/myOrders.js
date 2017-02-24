@@ -36,6 +36,7 @@ class MainContainer extends React.Component{
 		this.state = {
 			type : props.type,
 			params: props.params,
+			bidOrAsk: props.bidOrAsk,
 		}
 	}
 	componentWillReceiveProps(nextProps){				
@@ -47,7 +48,7 @@ class MainContainer extends React.Component{
 	}
 	render(){
 		console.log('hey boss',this.state.params,'dekh mujhe yeh aaya');
-		console.log(this.state.params,this.state.type,'bakchodi krega?')
+		
 		let temp = this.state.params;
 		// if(this.state.type=='openBid'){
 		// 	temp = this.state.params.BidOrders.Open;
@@ -71,7 +72,7 @@ class MainContainer extends React.Component{
 					<table className="table table-hover">
 						<thead>
 							<tr>
-								<th>Bid Id</th>
+								<th>{this.state.bidOrAsk} Id</th>
 								<th>Stock Name</th>
 								<th>Price</th>
 								<th>Stock Quantity</th>
@@ -138,7 +139,7 @@ class MyAskOrders extends React.Component{
 					</div>
 				</div>
 				<div className="row">	
-					<MainContainer type = {this.state.type} params = {this.state.params} />
+					<MainContainer type = {this.state.type} params = {this.state.params} bidOrAsk="Ask" />
 				</div>
 			</div>
 			)
@@ -195,7 +196,7 @@ class MyBidOrders extends React.Component{
 					</div>
 				</div>
 				<div className="row">						
-					<MainContainer type = {this.state.type} params = {this.state.params} />
+					<MainContainer type = {this.state.type} params = {this.state.params} bidOrAsk="Bid" />
 				</div>
 			</div>
 			)

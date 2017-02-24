@@ -9,7 +9,7 @@ import { ThreeBounce } from 'better-react-spinkit';
 
 class LoginComponent extends React.Component{
 	constructor(props){
-		super(props);
+		super(props);		
 		this.state = {
 			loaded: true
 		}
@@ -58,7 +58,7 @@ class LoginComponent extends React.Component{
 	}
 	render(){		
 		let invalid = <span> Please enter your Pragyan credentials. If not registered click <a target="_blank" href="https://www.pragyan.org" >Here</a> </span>;
-	if(this.state.loaded){		
+	if(this.state.loaded ){		
 		return(
 			<div className="body-login">
 			<div className="login-page">
