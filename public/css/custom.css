@@ -466,7 +466,21 @@ a{
 }
 
 .user-rank{
+    background-color: #a5d6a7 !important;
     font-weight: 600;   
+     -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-rank:hover{
+    background-color: #81c784 !important;
+    font-weight: 700;      
+     -moz-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 .notificationsList{
@@ -540,6 +554,7 @@ a{
 
 .leaderboard-container{
     margin-top: 60px;
+    padding: 20px;
 }
 .trial{
     font-size: 12px;
@@ -570,4 +585,10 @@ a{
 .ui-pnotify-text{
     font-family: 'Roboto';
     color: #fff;
+}
+.leaderboard-fetch{
+    font-family: 'Roboto';
+    font-size: 14px;
+    padding: 20px;
+    text-align: center;
 }

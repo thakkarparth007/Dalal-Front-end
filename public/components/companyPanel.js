@@ -102,7 +102,7 @@ class CompanyPanel extends React.Component{
 			stocksList: this.props.stocksList,
 			companyProfile: this.props.companyProfile,
 			userStocks: this.props.userStocks,
-			marketEvents: '',
+			marketEvents: this.props.marketEvents,			
 		}
 		// state.OnLogin(() => {
 		// 	NS.Requests.GetCompanyProfile(resp => {

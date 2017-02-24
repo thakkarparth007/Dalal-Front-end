@@ -1,18 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 var NetworkService = require("./main.js").NetworkService;
+var state = require("./state.js");
 
 
 class LeaderBoard extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			//leaderboardDetails: props.leaderboardDetails,
-			//userDetails: props.userDetails,
+			myRank: '',
+			rankList: '',
+			userDetails: '',
 			lastUpdate: 0,
-			isFetching: false,
+			isFetching: false,	
+			time: 0,			
 		}
-
+		setTimeout(()=>{
+			this.setState({
+				time: (new Date() - this.state.lastUpdate),
+			});
+		},1000);
 		console.log(props,'leader porpos');
 	}
 	componentWillMount() {
@@ -21,20 +28,27 @@ class LeaderBoard extends React.Component{
 		if(nextUpdateIn < 0) {
 			nextUpdateIn = 0;
 		}
+		var realWork = () => {
+			this.isFetching = true;			
+			NetworkService.Requests.GetLeaderboard({}, (resp) => {
+				this.isFetching = false;
+				console.log(resp.result,'mera leaderboard!!');
+				var userDetailsRowId = Object.keys(resp.result.rankList)
+										.filter(rowId => {
+											return resp.result.rankList[rowId].userId == state.User.id
+										});
+				this.setState({
+					myRank: resp.result.myRank,
+					rankList: resp.result.rankList,
+					lastUpdate: new Date(),
+					userDetails: resp.result.rankList[userDetailsRowId],
+				});
+				console.log(resp.result.rankList[userDetailsRowId],'mera details');
+			})
+		}
 		setTimeout(() => {
-			this.updateIntervalId = setInterval(() => {
-				this.isFetching = true;
-				NetworkService.Requests.GetLeaderboard({}, (resp) => {
-					this.isFetching = false;
-					console.log(resp.result,'mera leaderboard!!');
-					this.setState({
-						myRank: resp.result.myRank,
-						rankList: resp.result.rankList,
-						lastUpdate: new Date(),
-						userDetails: resp.result.rankList.filter(row => row.userId == state.User.id),
-					});
-				})
-			}, 2*60*1000);
+			realWork();
+			this.updateIntervalId = setInterval(realWork, 2*60*1000);
 		}, nextUpdateIn);
 	}
 	componentWillUnmount() {
@@ -45,10 +59,11 @@ class LeaderBoard extends React.Component{
 		if(this.state.isFetching)
 			fetch = "Updating LeaderBoard";
 		else
-			fetch = "LeaderBoard data updated " + (new Date() - this.state.lastUpdate)/1000 + "seconds ago. Cash and stock worth shown is not the latest ones.";
+			fetch = "LeaderBoard data updated " + (this.state.time)/1000 + "seconds ago. Cash and stock worth shown is not the latest ones.";
 		return (
-			<div className="leaderboard-container">			
-			{fetch}
+			<div className="container">
+			<div className="leaderboard-container row col-md-10">			
+			<p className="leaderboard-fetch">{fetch}</p>
 			<table className="table table-striped table-hover table-responsive">
 				<thead>
 					<tr>
@@ -61,8 +76,8 @@ class LeaderBoard extends React.Component{
 				<tbody>
 				{
 				
-				Object.keys(this.state.leaderboardDetails.rankList).map((y)=>{
-					let x = (this.state.leaderboardDetails.rankList)[y];
+				Object.keys(this.state.rankList).map((y)=>{
+					let x = (this.state.rankList)[y];
 					return (
 							<tr>
 								<td>{x.rank}</td>
@@ -75,18 +90,14 @@ class LeaderBoard extends React.Component{
 
 			}				
 				<tr className="user-rank">
-					<td>{this.state.leaderboardDetails.myRank}</td>
+					<td>{this.state.myRank}</td>
 					<td>Your Rank</td>
 					<td>{this.state.userDetails.cash}</td>
-					<td>{this.state.userDetails.total}</td>
+					<td>{this.state.userDetails.totalWorth}</td>
 				</tr>
 				</tbody>
-			</table>
-
-				<ul className="pagination">
-					<li><a href="#">&laquo;</a></li>				
-					<li><a href="#">&raquo;</a></li>
-				</ul>
+			</table>			
+			</div>
 			</div>
 			);
 	}

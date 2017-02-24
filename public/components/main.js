@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://192.168.0.05:9020/ws");
+	ws = new WebSocket("ws://172.20.10.11:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -263,12 +263,7 @@ function onLoginResponse(response){
 	});				
 	
 
-	NetworkService.Requests.GetLeaderboard({},function(resp){
-		console.log(resp.result,'mera leaderboard!!');
-		state.Leaderboard.myRank = resp.result.myRank;
-		state.Leaderboard.rankList = resp.result.rankList;		
-		state.NotifyUpdate();
-	})
+	
 
 	NetworkService.Requests.GetMortgageDetails({},function(resp){
 		console.log(resp.result.mortgageMap,'mere mortgagedStocks aa gaye!!');
@@ -316,7 +311,7 @@ function onLoginResponse(response){
 	NetworkService.DataStreams.MyOrders.Subscribe(function(resp) {
 		console.log(resp, "subscription myOrders status");
 	}, function(update){
-		alert(alert);
+		
 		if(update.isAsk){
 			let ask = state.MyOrders.Asks.Open[update.id];
 			if((update.isClosed)){
@@ -409,7 +404,7 @@ function onLoginResponse(response){
 		// update.id,update.text;
 		if(update.notification.text == state.marketIsClosedHackyNotif){
 			console.log(update.notification.text,state.marketIsClosedHackyNotif,'checker')
-			alert('check');
+			
 			state.MarketOpen = false;
 		}
 		else if(update.notification.text == state.marketIsOpenHackyNotif){

@@ -80,12 +80,9 @@ class TransactionHistory extends React.Component{
 
 		if(Object.keys(this.state.history).length==0){
 			empty = <p className="text-center">You do not have any transactions. </p>;
-		}		
-		
-		alert((Object.keys(this.state.history)));
+		}					
 		let sort = (Object.keys(this.state.history)).map(x => +x).sort((a,b) => a-b);
-		console.log(this.state,sort,'sored')
-		alert(sort);
+		console.log(this.state,sort,'sored')		
 		
 		return (
 			<div className="container transaction-container">
