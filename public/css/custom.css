@@ -592,3 +592,15 @@ a{
     padding: 20px;
     text-align: center;
 }
+.market-main{
+    text-align: center;
+    font-size: 18px;
+}
+.market-head{
+    font-family: 'Roboto';
+    font-size: 16px;
+}
+.market-text{
+    font-family: 'Roboto';
+    font-size: 14px;
+}

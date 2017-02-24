@@ -302,9 +302,19 @@ class CompanyPanel extends React.Component{
 						</div>
 					</div>
 					<div className="col-md-4 col-md-offset-1 newsContainer">	
-						<p>Company News</p>						
+						<p className="market-main">Company News</p>						
 						<ul>					
-							{this.state.currentCompanyNews}
+							{
+								Object.keys(this.state.marketEvents).map(id=>{
+									let x = (this.state.marketEvents)[id];
+									return (
+											<li className="market-list">
+													<p className="market-head">{x.headline}</p>
+													<p className="market-text">{x.text}</p>
+											</li>
+										)
+								})
+							}
 						</ul>
 					</div>
 					
