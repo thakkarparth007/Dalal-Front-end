@@ -22,8 +22,8 @@ jQuery.fn.extend({
             var $this = $(this);
             if($this.is('input, button, textarea, select'))
               this.disabled = state;
-            else
-              $this.toggleClass('disabled', state);
+            //else
+            //  $this.toggleClass('disabled', state);
         });
     }
 });
@@ -42,7 +42,7 @@ class StocksList extends React.Component{
 			stocks : newProps.stocks,
 			marketStatus : newProps.marketStatus,
 		});
-		$("*").disable(!newProps.marketStatus);
+		//$("*").disable(!newProps.marketStatus);
 	}	
 	render(){
 	let market = '';

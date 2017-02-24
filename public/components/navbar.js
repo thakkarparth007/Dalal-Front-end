@@ -85,7 +85,8 @@ class NotificationContainer extends React.Component{
 			  <div className="drop-men" >
 			      <ul className=" nav_1">			         
 			      <li className="dropdown at-drop">
-			            <a href="#" className="dropdown-toggle dropdown-at " data-toggle="dropdown"><i className="fa fa-globe"></i> <span className="number">{Object.keys(this.state.notifications).length}</span></a>
+			            <a href="#" className="dropdown-toggle dropdown-at " data-toggle="dropdown"><i className="fa fa-globe"></i> 
+			            <span className="number">{Object.keys(this.state.notifications).length}</span></a>
 			            <ul className="dropdown-menu menu1 notificationsList" role="menu">			              
 			              {Object.keys(this.state.notifications).sort((a,b)=>b-a).map((id)=>{
 			              		console.log(id);
