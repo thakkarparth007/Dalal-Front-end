@@ -22,7 +22,7 @@ const SideBar = () => {
 							else
 								link = '/#/' + SideBarClass[key];
 							if(itemName == 'Dalal Street Forum'){
-								link = 'https://www.pragyan.org';
+								link = 'https://www.pragyan.org/forum';
 								target = '_blank'
 							}
 							return (
