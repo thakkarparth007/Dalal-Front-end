@@ -90,12 +90,12 @@ const Chart = ({statistics}) =>{
 
 class CompanyPanel extends React.Component{
 	constructor(props){
-		super(props);		
+		super(props);			
 		console.log(props,'company props');
 		this.state = {
 			currentCompany: '',
 			currentCompanyPrice: '',
-			currentCompanyNews: '' ,
+			currentCompanyNews: '-' ,
 			currentCompanyStocks: '',
 			currentCompanyStatistics: '',
 			currentMarketDepth: '',
@@ -172,7 +172,8 @@ class CompanyPanel extends React.Component{
 				currentCompanyStats: currentStats,
 				currentCompany: this.state.stocksList[id].fullName,
 				currentCompanyPrice: this.state.stocksList[id].currentPrice,
-				currentCompanyStocks: this.state.userStocks[id],				
+				currentCompanyStocks: this.state.userStocks[id],
+				currentCompanyNews: this.state.stocksList[id].description,
 			})
 		}
 
@@ -218,13 +219,8 @@ class CompanyPanel extends React.Component{
 			}
 		});
 		console.log(event.target.value);
-
-		Object.keys(this.state.marketEvents).map((k)=>{
-			let e = (this.state.marketEvents)[k];
-			if(e.stockId == stockId || e.isGlobal == 0){
-				this.setState({currentCompanyNews: e.text});		
-			}
-		})
+		// alert(this.state.userStocks[stockId].description);
+		this.setState({currentCompanyNews: this.state.stocksList[stockId].description});		
 		
 		if(this.state.companyProfile[stockId]) {
 			this.updateStockHistory(stockId);
@@ -254,7 +250,7 @@ class CompanyPanel extends React.Component{
 			this.setState({
 			currentCompany: this.props.stocksList[Object.keys(props.stocksList)[0]].fullName,
 			currentCompanyPrice: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
-			currentCompanyNews: this.props.stocksList[Object.keys(props.stocksList)[0]].description,
+			currentCompanyNews: '-',
 			currentCompanyStocks: this.props.stocksList[Object.keys(props.stocksList)[0]].currentPrice,
 			currentCompanyStatistics: companyStatistics[Object.keys(props.stocksList)[0]],			
 			})
@@ -302,19 +298,9 @@ class CompanyPanel extends React.Component{
 						</div>
 					</div>
 					<div className="col-md-4 col-md-offset-1 newsContainer">	
-						<p className="market-main">Company News</p>						
-						<ul>					
-							{
-								Object.keys(this.state.marketEvents).map(id=>{
-									let x = (this.state.marketEvents)[id];
-									return (
-											<li className="market-list">
-													<p className="market-head">{x.headline}</p>
-													<p className="market-text">{x.text}</p>
-											</li>
-										)
-								})
-							}
+						<p className="market-main">Company Description</p>						
+						<ul>
+								<p className="market-head">{this.state.currentCompanyNews}</p>							
 						</ul>
 					</div>
 					

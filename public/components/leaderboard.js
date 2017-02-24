@@ -9,11 +9,11 @@ class LeaderBoard extends React.Component{
 		super(props);
 		this.state = {
 			myRank: '',
-			rankList: '',
-			userDetails: '',
+			rankList: '',			
 			lastUpdate: 0,
-			isFetching: false,	
-			time: 0,			
+			isFetching: false,
+			time: 0,	
+			userDetails: props.userDetails,
 		}
 		setTimeout(()=>{
 			this.setState({
@@ -40,8 +40,7 @@ class LeaderBoard extends React.Component{
 				this.setState({
 					myRank: resp.result.myRank,
 					rankList: resp.result.rankList,
-					lastUpdate: new Date(),
-					userDetails: resp.result.rankList[userDetailsRowId],
+					lastUpdate: new Date(),					
 				});
 				console.log(resp.result.rankList[userDetailsRowId],'mera details');
 			})
@@ -93,7 +92,7 @@ class LeaderBoard extends React.Component{
 					<td>{this.state.myRank}</td>
 					<td>Your Rank</td>
 					<td>{this.state.userDetails.cash}</td>
-					<td>{this.state.userDetails.totalWorth}</td>
+					<td>{this.state.userDetails.total}</td>
 				</tr>
 				</tbody>
 			</table>			
