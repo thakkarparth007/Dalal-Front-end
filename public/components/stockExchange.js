@@ -81,6 +81,7 @@ class StockExchangeItem extends React.Component{
 					$('#alert-modal').modal('show');
 				}
 				else if(response.result){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Order placed Successfully.');
 					$('#alert-modal').modal('show');
 				}
 				this.setState({

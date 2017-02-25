@@ -24,8 +24,7 @@ class LeaderBoard extends React.Component{
 				time: temp,
 			});
 		},1000);
-		console.log(props,'leader porpos');
-		this.changePage = this.changePage.bind(this);
+		console.log(props,'leader porpos');		
 	}	
 	fetchPage(currPage) {
 		this.isFetching = true;			
@@ -63,28 +62,8 @@ class LeaderBoard extends React.Component{
 	}
 	componentWillUnmount() {
 		clearInterval(this.updateIntervalId);
-		clearInterval(leaderboardTimer);
-	}
-	changePage(p){
-		let currPage = this.state.currentPage;
-		if(p == -1){
-			if(currPage == 0){
-				// dont fetch
-			}
-			else{
-				this.fetchPage(currPage - 1);
-				this.setState({
-					currentPage: (currPage - 1),
-				})
-			}
-		}
-		else{			
-			this.fetchPage(currPage + 1);
-			this.setState({
-				currentPage: (currPage + 1),
-			})
-		}
-	}
+		clearInterval(this.leaderboardTimer);
+	}	
 	render(){
 		let fetch = '';
 		if(this.state.isFetching)
@@ -149,7 +128,7 @@ class LeaderBoard extends React.Component{
 								end = Math.min(tp, cp + buttonsPerFrame - 1);
 							}
 							for (let i = start; i <= end; i++) {
-								buttons.push(<li><a onClick = {()=>{ alert(i); this.fetchPage(i)}}>{i+1}</a></li>);
+								buttons.push(<li><a onClick = {()=>{ this.fetchPage(i)}}>{i+1}</a></li>);
 								// buttons.push(<li><a onClick = {()=>{}}>{i+1}</a></li>);
 							}
 							return buttons;

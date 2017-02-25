@@ -76,9 +76,10 @@ class NotificationContainer extends React.Component{
 			 <div className=" border-bottom">
 			    <div className="full-left">
 			      <section className="full-top">
-			  <button id="toggle"><i className="fa fa-arrows-alt"></i></button> 
+			  <button id="toggle"><i className="fa fa-arrows-alt"></i></button> 			  
 			</section>			
 			      <div className="clearfix"> </div>
+
 			     </div>			   
 
 

@@ -67,7 +67,7 @@ class LoginComponent extends React.Component{
 			  		<div className="under"></div>
 			  		<h3>Login</h3>		    
 			    <form className="login-form"  onsubmit = ' return false;'>
-			      <input type="email" placeholder="Username" className="user" />
+			      <input type="email" placeholder="Email" className="user" />
 			      <input type="password" placeholder="password" className="pass"/>
 			      <button onClick = {this.login.bind(this)}>login</button>
 			      <p className="message">Not registered? <a href="https://www.pragyan.org" target="_blank">Click here</a></p>

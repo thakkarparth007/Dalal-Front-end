@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 var NetworkService = require("./main.js").NetworkService;
 var state = require("./state.js");
-
+import { CubeGrid } from 'better-react-spinkit'
 //make request for mortgaged stocks
 var mortgagedStocks = {
 	1: {
@@ -40,7 +40,8 @@ class GetMortgageStocksItem extends React.Component{
 		this.state = {
 			stock: this.props.stock,
 			stockQuantityToRetrieve: 0,
-			stockQuantityOwned: this.props.stockQuantityOwned
+			stockQuantityOwned: this.props.stockQuantityOwned,
+			status: false,
 		}
 	}
 	componentWillReceiveProps(newProps){
@@ -56,10 +57,16 @@ class GetMortgageStocksItem extends React.Component{
 		})
 	}
 	getMortgagedStocks(e) {
+		this.setState({
+			status: true,
+		})
 		NetworkService.Requests.RetrieveMortgageStocks({
 			stockId: this.state.stock.id,
 			stockQuantity: this.state.stockQuantityToRetrieve,
 		},function(resp){
+			this.setState({
+				status: false,
+			})
 			console.log(resp,'retrieveMortgagedStocks mai bhejne ka response')
 			if(resp.result){
 				$('#alert-modal').modal('show');
@@ -83,6 +90,21 @@ class GetMortgageStocksItem extends React.Component{
 		})
 	}
 	render() {
+		let spinner;
+			if(this.state.status){
+				 spinner = (
+					<td className="spinner">
+						<CubeGrid size={15} color='blue' />					
+					</td>
+					)
+			}
+			else{
+				spinner = (
+					<td className="dummy-spinner">
+						<CubeGrid size={15} color='blue' />					
+					</td>
+					)	
+			}
 		return (
 			<tr>
 				<td>{this.state.stock.fullName}</td>
@@ -95,8 +117,9 @@ class GetMortgageStocksItem extends React.Component{
 					<p>{this.state.stockQuantityToRetrieve * this.state.stock.currentPrice * state.Constants.MORTGAGE_RETRIEVE_RATE/100}</p>
 				</td>
 				<td>
-					<button type="button" className="btn btn-success" onClick={this.getMortgagedStocks.bind(this)}>Mortgage</button>
+					<button type="button" className="btn btn-success" onClick={this.getMortgagedStocks.bind(this)}>Retrieve Mortgage</button>
 				</td>
+				{spinner}
 			</tr>
 		)
 	}
@@ -172,7 +195,8 @@ class PutMortgageStocksItem extends React.Component{
 		this.state = {
 			stock: this.props.stock,
 			stockQuantityToMortgage: 0,
-			stockQuantityOwned: this.props.stockQuantityOwned
+			stockQuantityOwned: this.props.stockQuantityOwned,
+			status: false,
 		}				
 	}	
 	componentWillReceiveProps(newProps){
@@ -187,10 +211,16 @@ class PutMortgageStocksItem extends React.Component{
 		})
 	}
 	putStockInMortgage(){		
+		this.setState({
+			status: true,
+		});
 		NetworkService.Requests.MortgageStocks({
 			stockId: this.state.stock.id,
 			stockQuantity: this.state.stockQuantityToMortgage,
 		},function(resp){
+			this.setState({
+				status: false,
+			});
 			console.log(resp,'mortgagedStocks mai bhejne ka response')			
 			if(resp.result){
 				$('#alert-modal').modal('show');
@@ -211,6 +241,21 @@ class PutMortgageStocksItem extends React.Component{
 		})
 	}
 	render() {
+		let spinner;
+			if(this.state.status){
+				 spinner = (
+					<td className="spinner">
+						<CubeGrid size={15} color='blue' />					
+					</td>
+					)
+			}
+			else{
+				spinner = (
+					<td className="dummy-spinner">
+						<CubeGrid size={15} color='blue' />					
+					</td>
+					)	
+			}
 		return (
 			<tr>
 				<td>{this.state.stock.fullName}</td>
@@ -225,6 +270,7 @@ class PutMortgageStocksItem extends React.Component{
 				<td>
 					<button type="button" className="btn btn-success" onClick={this.putStockInMortgage.bind(this)}>Mortgage</button>
 				</td>
+				{spinner}
 			</tr>
 		)
 	}

@@ -184,8 +184,7 @@ class BuyAndSell extends React.Component{
 										<div className="col-md-8 col-md-offset-2">
 											<p className="modal-label">Type of Order</p>
 											<select name="" id="input" className="form-control orderType" required onChange={this.checkOrderType.bind(this)}>												
-												<option value="LIMIT">Limit</option>
-												<option value="STOPLOSS">Stoploss</option>
+												<option value="LIMIT">Limit</option>												
 												<option value="MARKET">Market</option>
 											</select>
 										</div>

@@ -12,11 +12,14 @@ const MainContainerItem = ({item}) =>{
 	if(item.orderType == 0){
 		temp = 'Limit';
 	}
-	else if(item.orderType == 1){
+	else if(item.orderType == 2){
 		temp = 'Stoploss';
 	}
-	else{
+	else if(item.orderType == 1){
 		temp = 'Market';
+	}
+	else{
+		temp = 'Stoploss (Active)'
 	}
 	return (
 		<tr>
@@ -101,14 +104,20 @@ class MainContainer extends React.Component{
 class MyAskOrders extends React.Component{
 	constructor(props){
 		super(props);			
-
 		this.state = {
 			AskOrders: props.AskOrders,			
 			params: props.AskOrders.Open,
 			type: 'openAsk',			
 		}		
 		this.changeState = this.changeState.bind(this);
-		console.log(this.state,'mere initial ask orders')
+		console.log(this.state,'mere initial ask orders')		
+	}
+	componentWillReceiveProps(nextProps){
+		this.setState({
+			AskOrders: nextProps.AskOrders,
+			params: nextProps.AskOrders.Open,
+		});
+		console.log('updated props');
 	}
 	changeState(p){
 		console.log('p hu mai..', p, this.state.mortgagedStocks,this.state);
@@ -157,7 +166,7 @@ class MyBidOrders extends React.Component{
 			type: 'openBid',			
 		}		
 		console.log(this.state,'child state',props);
-		this.changeState = this.changeState.bind(this);
+		this.changeState = this.changeState.bind(this);		
 	}
 	componentWillReceiveProps(nextProps){
 		this.setState({

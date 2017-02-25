@@ -285,14 +285,7 @@ function onLoginResponse(response){
 	})*/
 		
 
-	NetworkService.Requests.GetTransactions({},function(resp){
-		console.log(resp.result.transactionsMap,'mere get my transaction aa gaye!!')
-		state.Transactions = {};
-		Object.keys(resp.result.transactionsMap).map(id=>{
-			state.Transactions[id] = resp.result.transactionsMap[id];
-		})
-		state.NotifyUpdate();
-	})		
+	
 
 	console.log(state,'mera state aa gaya');
 
@@ -345,7 +338,14 @@ function onLoginResponse(response){
 		
 		state.NotifyUpdate();
 	});				
-
+	NetworkService.Requests.GetTransactions({},function(resp){
+			console.log(resp.result.transactionsMap,'mere get my transaction aa gaye!!')
+			state.Transactions = {};
+			Object.keys(resp.result.transactionsMap).map(id=>{
+				state.Transactions[id] = resp.result.transactionsMap[id];
+			})
+			state.NotifyUpdate();
+		})	
 	//subscribe transaction
 	//test krna hai ek baar
 	NetworkService.DataStreams.Transactions.Subscribe(function(resp) {
