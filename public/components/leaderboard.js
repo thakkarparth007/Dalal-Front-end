@@ -91,7 +91,7 @@ class LeaderBoard extends React.Component{
 					let x = (this.state.rankList)[y];
 					return (
 							<tr>
-								<td>{x.id}</td>
+								<td>{x.rank}</td>
 								<td>{x.userName}</td>
 								<td>{x.cash}</td>
 								<td>{x.totalWorth}</td>

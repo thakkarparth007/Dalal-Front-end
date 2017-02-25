@@ -24,16 +24,16 @@ const NavbarHeader = () => {
 		              <span className="icon-bar"></span>
 		              <span className="icon-bar"></span>
 		          </button>
-		         <h1> <a className="navbar-brand" href="index.html">Dalal<sub className="trial">Trial</sub></a></h1>         		         
+		         <h1> <a className="navbar-brand" href="index.html">Dalal</a></h1>         		         
 		   </div>			         
 		)
 }
 
 const Notification = ({id,title}) =>{
 	return (
-			<li><a href="#">			
+			<li className="notif-item"><a href="#">			
 			  <div className="user-new">
-			  <p>{title}</p>
+			  <p className="notif-title">{title}</p>
 			  <span>{id}</span>
 			  </div>
 			  <div className="user-new-left">

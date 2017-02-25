@@ -604,3 +604,15 @@ a{
     font-family: 'Roboto';
     font-size: 14px;
 }
+
+.market-list{
+    list-style-type: none;
+}
+
+.top-content label{
+    font-size: 36px;
+}
+
+.notif-title{
+    word-wrap: break-word;
+}
