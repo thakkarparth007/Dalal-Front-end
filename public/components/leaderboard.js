@@ -4,6 +4,7 @@ var NetworkService = require("./main.js").NetworkService;
 var state = require("./state.js");
 
 
+
 class LeaderBoard extends React.Component{
 	constructor(props){
 		super(props);
@@ -14,13 +15,40 @@ class LeaderBoard extends React.Component{
 			isFetching: false,
 			time: 0,	
 			userDetails: props.userDetails,
+			totalUsers: 0,
+			currentPage: 0,
 		}
-		setTimeout(()=>{
+		var leaderboardTimer = setInterval(()=>{
+			let temp = (new Date() - this.state.lastUpdate);			
 			this.setState({
-				time: (new Date() - this.state.lastUpdate),
+				time: temp,
 			});
 		},1000);
 		console.log(props,'leader porpos');
+		this.changePage = this.changePage.bind(this);
+	}	
+	fetchPage(currPage) {
+		this.isFetching = true;			
+		NetworkService.Requests.GetLeaderboard({
+			startingId: currPage*10,
+			count: 10,
+		}, (resp) => {
+			this.isFetching = false;
+			console.log(resp.result,'mera leaderboard!!');
+			var userDetailsRowId = Object.keys(resp.result.rankList)
+									.filter(rowId => {
+										return resp.result.rankList[rowId].userId == state.User.id
+									});									
+			this.setState({
+				currentPage: currPage,
+				myRank: resp.result.myRank,
+				rankList: resp.result.rankList,
+				lastUpdate: new Date(),
+				totalUsers: resp.result.totalUsers,
+				isFetching: false,
+			});
+			console.log(resp.result.rankList[userDetailsRowId],'mera details');
+		})
 	}
 	componentWillMount() {
 		if(this.state.isFetching) return;
@@ -28,37 +56,42 @@ class LeaderBoard extends React.Component{
 		if(nextUpdateIn < 0) {
 			nextUpdateIn = 0;
 		}
-		var realWork = () => {
-			this.isFetching = true;			
-			NetworkService.Requests.GetLeaderboard({}, (resp) => {
-				this.isFetching = false;
-				console.log(resp.result,'mera leaderboard!!');
-				var userDetailsRowId = Object.keys(resp.result.rankList)
-										.filter(rowId => {
-											return resp.result.rankList[rowId].userId == state.User.id
-										});
-				this.setState({
-					myRank: resp.result.myRank,
-					rankList: resp.result.rankList,
-					lastUpdate: new Date(),					
-				});
-				console.log(resp.result.rankList[userDetailsRowId],'mera details');
-			})
-		}
 		setTimeout(() => {
-			realWork();
-			this.updateIntervalId = setInterval(realWork, 2*60*1000);
+			this.fetchPage(this.state.currentPage);
+			this.updateIntervalId = setInterval(()=>(this.fetchPage(this.state.currentPage)), 2*60*1000);
 		}, nextUpdateIn);
 	}
 	componentWillUnmount() {
 		clearInterval(this.updateIntervalId);
+		clearInterval(leaderboardTimer);
+	}
+	changePage(p){
+		let currPage = this.state.currentPage;
+		if(p == -1){
+			if(currPage == 0){
+				// dont fetch
+			}
+			else{
+				this.fetchPage(currPage - 1);
+				this.setState({
+					currentPage: (currPage - 1),
+				})
+			}
+		}
+		else{			
+			this.fetchPage(currPage + 1);
+			this.setState({
+				currentPage: (currPage + 1),
+			})
+		}
 	}
 	render(){
 		let fetch = '';
 		if(this.state.isFetching)
 			fetch = "Updating LeaderBoard";
 		else
-			fetch = "LeaderBoard data updated " + (this.state.time)/1000 + "seconds ago. Cash and stock worth shown is not the latest ones.";
+			fetch = "LeaderBoard data will be updated in " + (120 - Math.floor(this.state.time/1000)) + " seconds. Current data corresponds to last update.";				
+		
 		return (
 			<div className="container">
 			<div className="leaderboard-container row col-md-10">			
@@ -79,7 +112,7 @@ class LeaderBoard extends React.Component{
 					let x = (this.state.rankList)[y];
 					return (
 							<tr>
-								<td>{x.rank}</td>
+								<td>{x.id}</td>
 								<td>{x.userName}</td>
 								<td>{x.cash}</td>
 								<td>{x.totalWorth}</td>
@@ -90,12 +123,41 @@ class LeaderBoard extends React.Component{
 			}				
 				<tr className="user-rank">
 					<td>{this.state.myRank}</td>
-					<td>Your Rank</td>
+					<td>{this.state.userDetails.name}</td>
 					<td>{this.state.userDetails.cash}</td>
 					<td>{this.state.userDetails.total}</td>
 				</tr>
 				</tbody>
-			</table>			
+			</table>
+			<div className="text-center">
+				<ul className="pagination">
+					<li><a onClick = {()=>this.fetchPage(0)} className="active">&laquo;</a></li>		
+					{
+						function() {
+							let buttonsPerFrame = 3;
+							let buttons = [];
+							let cp = this.state.currentPage;
+							let tp = Math.ceil(this.state.totalUsers/10);
+							if(cp > tp - buttonsPerFrame + 1) {
+								cp = tp - buttonsPerFrame + 1;
+							}
+							// let tp = 10;
+							let start = Math.max(0, cp - Math.floor(buttonsPerFrame/2));
+							//let startOffset = cp-2;
+							let end = Math.min(tp,cp+Math.floor(buttonsPerFrame/2));
+							if(start == 0 && cp != Math.floor(buttonsPerFrame/2)) {
+								end = Math.min(tp, cp + buttonsPerFrame - 1);
+							}
+							for (let i = start; i <= end; i++) {
+								buttons.push(<li><a onClick = {()=>{ alert(i); this.fetchPage(i)}}>{i+1}</a></li>);
+								// buttons.push(<li><a onClick = {()=>{}}>{i+1}</a></li>);
+							}
+							return buttons;
+						}.bind(this)()
+					}		
+					<li><a onClick = {()=>this.fetchPage(this.state.totalUsers%10 == 0 ? (Math.ceil(this.state.totalUsers/10)) : (Math.ceil(this.state.totalUsers/10)) - 1)} >&raquo;</a></li>
+				</ul>
+			</div>
 			</div>
 			</div>
 			);
