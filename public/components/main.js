@@ -363,6 +363,7 @@ function onLoginResponse(response){
 			// state.Transactions[update.transaction.id].userId = update.transaction.userId;
 
 			state.User.cash += update.transaction.total;
+			state.UserStockById[update.transaction.stockId] = state.UserStockById[update.transaction.stockId] || 0;
 			state.UserStockById[update.transaction.stockId] += update.transaction.stockQuantity;
 			state.NotifyUpdate();
 		}
