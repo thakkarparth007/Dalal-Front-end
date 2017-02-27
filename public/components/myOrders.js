@@ -2,35 +2,94 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 var NetworkService = require("./main.js").NetworkService;
 var state = require("./state.js");
-
+var AlertModal = require('./stockExchange.js').AlertModal;
 
 //make request for mortgaged stocks
 
-const MainContainerItem = ({item}) =>{
-	console.log(item,'mera stock id')
-	let temp;
-	if(item.orderType == 0){
-		temp = 'Limit';
+class MainContainerItem extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			item: this.props.item,
+			type: this.props.type,
+		}
 	}
-	else if(item.orderType == 2){
-		temp = 'Stoploss';
+	componentWillReceiveProps(newProps){
+		this.setState({
+			item: newProps.item,
+			type: newProps.type,	
+		});
 	}
-	else if(item.orderType == 1){
-		temp = 'Market';
+	cancelOrder(type){
+		console.log(this.state.item);
+		let cancel = {};
+		cancel.stockId = this.state.item.stockId;
+		
+		if(type == 'openAsk'){
+			cancel.askId = this.state.item.id;
+			NetworkService.Requests.CancelAskOrder(cancel,function(resp){
+				if(resp.marketClosedError){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Cannot cancel order, Market is closed.' );
+					$('#alert-modal').modal('show');
+				}
+				else if(resp.internalServerError){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Internal Server Error.' );
+					$('#alert-modal').modal('show');
+				}
+				else if(resp.result){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Order cancelled successfully.' );
+					$('#alert-modal').modal('show');	
+				}
+			});
+		}
+		else{
+			cancel.bidId = this.state.item.id;	
+			NetworkService.Requests.CancelBidOrder(cancel,function(resp){
+				if(resp.marketClosedError){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Cannot cancel order, Market is closed.' );
+					$('#alert-modal').modal('show');
+				}
+				else if(resp.internalServerError){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Internal Server Error.' );
+					$('#alert-modal').modal('show');
+				}
+				else if(resp.result){
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('Order cancelled successfully.' );
+					$('#alert-modal').modal('show');	
+				}
+			});
+		}
 	}
-	else{
-		temp = 'Stoploss (Active)'
+	render(){		
+		let temp;
+		if(this.state.item.orderType == 0){
+			temp = 'Limit';
+		}
+		else if(this.state.item.orderType == 2){
+			temp = 'Stoploss';
+		}
+		else if(this.state.item.orderType == 1){
+			temp = 'Market';
+		}
+		else{
+			temp = 'Stoploss (Active)'
+		}	
+		let cancelButton = '';	
+		if((this.state.type == 'openAsk') || (this.state.type == 'openBid')){
+			cancelButton = <button type="button" className="btn btn-danger" onClick= {()=>this.cancelOrder(this.state.type)} >Cancel</button>;			
+		}
+		return (
+			<tr>
+				<td>{this.state.item.id}</td>
+				<td>{state.AllStockById[(this.state.item.stockId)].fullName}</td>
+				<td>{this.state.item.price}</td>
+				<td>{this.state.item.stockQuantity}</td>
+				<td>{this.state.item.stockQuantityFulfilled}</td>
+				<td>{temp}</td>
+				<td>{cancelButton}</td>
+			</tr>
+			)
 	}
-	return (
-		<tr>
-			<td>{item.id}</td>
-			<td>{state.AllStockById[(item.stockId)].fullName}</td>
-			<td>{item.price}</td>
-			<td>{item.stockQuantity}</td>
-			<td>{item.stockQuantityFulfilled}</td>
-			<td>{temp}</td>
-		</tr>
-		)
 }
 
 class MainContainer extends React.Component{
@@ -65,6 +124,13 @@ class MainContainer extends React.Component{
 		// else if(this.state.type == 'closedAsk'){
 		// 	temp = this.state.params.Closed;	
 		// }
+		
+		let cancelAction = '';
+		if((this.state.type == 'openAsk') || (this.state.type == 'openBid')){			
+			cancelAction = 'Cancel Order';
+		}
+
+		
 		let empty = '';
 		if(Object.keys(temp).length==0){
 			empty = <p className="text-center">You do not have any orders. </p>;
@@ -80,7 +146,8 @@ class MainContainer extends React.Component{
 								<th>Price</th>
 								<th>Stock Quantity</th>
 								<th>Stock Quantity Fullfilled</th>
-								<th>Type of Order</th>								
+								<th>Type of Order</th>
+								<th>{cancelAction}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -88,7 +155,7 @@ class MainContainer extends React.Component{
 									(Object.keys(temp)).sort((a,b)=> b-a).map(id=>{
 										let object = (temp)[id];
 										return (
-											<MainContainerItem item = {object} />
+											<MainContainerItem item = {object} type = {this.state.type} />
 											)
 									})
 								}									
@@ -231,6 +298,7 @@ class MyOrders extends React.Component{
 				<div className="row">
 					<MyAskOrders AskOrders = {this.state.AskOrders} />
 				</div>
+				<AlertModal id = "alert-modal" message="Order Placed Successfully" />
 			</div>
 			)
 	}

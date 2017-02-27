@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://dalalstreet.pragyan.org:9020/ws");
+	ws = new WebSocket("ws://10.1.10.44:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -556,6 +556,15 @@ NetworkService = {
 			let cancelAskOrderReqWrap = RequestWrapper.create();
 			cancelAskOrderReqWrap.cancelAskOrderRequest = req;
 			wrapRWAndSend(cancelAskOrderReqWrap, function(respWrap) {
+				console.log(respWrap,'cancelled boss');
+
+				if(respWrap.cancelAskOrderResponse.result){
+					state.MyOrders.Asks.Closed[req.askId] = state.MyOrders.Asks.Open[req.askId];
+					state.MyOrders.Asks.Closed[req.askId].isClosed = true;
+					delete state.MyOrders.Asks.Open[req.askId];
+					state.NotifyUpdate();
+				}
+
 				cb(respWrap.cancelAskOrderResponse)
 			});
 		},
@@ -564,6 +573,15 @@ NetworkService = {
 			let cancelBidOrderReqWrap = RequestWrapper.create();
 			cancelBidOrderReqWrap.cancelBidOrderRequest = req;
 			wrapRWAndSend(cancelBidOrderReqWrap, function(respWrap) {
+				console.log(respWrap,'cancelled boss');
+
+				if(respWrap.cancelBidOrderResponse.result){
+					state.MyOrders.Bids.Closed[req.bidId] = state.MyOrders.Bids.Open[req.bidId];
+					state.MyOrders.Bids.Closed[req.bidId].isClosed = true;
+					delete state.MyOrders.Bids.Open[req.bidId];
+					state.NotifyUpdate();
+				}
+
 				cb(respWrap.cancelBidOrderResponse)
 			});
 		},
