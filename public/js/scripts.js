@@ -4,9 +4,6 @@
     // custom scrollbar
 
     
-        if ($(window).width() < 514) {
-                $(".navbar-default").removeClass("navbar-fixed-top").addClass("gallery-mobile");
-        }    
 
     $("html").niceScroll({styler:"fb",cursorcolor:"#1ABC9C", cursorwidth: '6', cursorborderradius: '10px', background: '#424f63', spacebarenabled:false, cursorborder: '0',  zindex: '1000'});
 

@@ -579,6 +579,19 @@ a{
     color: #fff;
     border-radius: 1px;
 }
+.market-notify{    
+    opacity: 0.6 !important;
+    background: #ef5350;
+    color: #fff;
+    border-radius: 1px;
+}
+.transaction-notify{    
+    opacity: 0.6 !important;
+    background: #8bc34a ;
+    color: #fff;
+    border-radius: 1px;
+}
+
 .ui-pnotify-title{    
     color: #fff;
 }
@@ -615,4 +628,8 @@ a{
 
 .notif-title{
     word-wrap: break-word;
+}
+
+.ui-pnotify-icon{
+    margin: 10px;
 }

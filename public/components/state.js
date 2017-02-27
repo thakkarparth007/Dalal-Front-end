@@ -32,6 +32,9 @@ var state = {
 	MortgagedStocks: {
 		
 	},
+	MarketDepth:{
+
+	},
 	MyOrders: {
 			Bids: {
 				Open:{

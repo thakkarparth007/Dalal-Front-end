@@ -102,7 +102,8 @@ class CompanyPanel extends React.Component{
 			stocksList: this.props.stocksList,
 			companyProfile: this.props.companyProfile,
 			userStocks: this.props.userStocks,
-			marketEvents: this.props.marketEvents,			
+			marketEvents: this.props.marketEvents,
+			marketDepth: this.props.marketDepth,
 		}
 		// state.OnLogin(() => {
 		// 	NS.Requests.GetCompanyProfile(resp => {
@@ -206,6 +207,9 @@ class CompanyPanel extends React.Component{
 		});
 		this.setState({currentCompanyStatistics: currentStats})
 	}
+	updateMarketDepth(){
+
+	}
 	handleChange(event){
 		event.persist();
 		this.setState({currentCompany: event.target.value});
@@ -240,11 +244,17 @@ class CompanyPanel extends React.Component{
 			});
 		}
 
-		marketDepth.map((e)=>{
-			if(e.stockId == stockId){
-				this.setState({currentMarketDepth: e})
-			}	
-		})
+		if(this.state.marketDepth[stockId]){
+			//exists
+		}
+		else{
+			NetworkService.DataStreams.MarketDepth.Subscribe(stockId ,function(resp) {
+				console.log(resp, "subscription status of marketDepth");
+			}, function(update){
+				console.log('market depth update response', update);
+					
+			});			
+		}
 
 		if(stockId == -1){
 			this.setState({

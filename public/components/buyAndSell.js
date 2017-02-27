@@ -68,7 +68,11 @@ class BuyAndSell extends React.Component{
 		var orderStockQuantity = $('.stockQuantity').val();
 		var orderStockId = $("tr[value="+this.state.key+"]").attr('data-stockId');
 		var orderPrice = $(".stockPrice").val();		
-
+		if((orderPrice % 1 != 0) && (orderStockQuantity % 1 != 0) ){
+			$('#alert-modal .modal-dialog .modal-content .modal-body').text('Please enter an intergral value for number of stocks to be purchased.');
+			$('#alert-modal').modal('show');
+			return false;
+		}
 		var OrderType = PR.lookup("dalalstreet.socketapi.models.OrderType").values;
 		// alert(OrderType[orderType]);
 		if((!orderStockQuantity || !orderPrice) && (OrderType[orderType]!=1)){
@@ -143,6 +147,9 @@ class BuyAndSell extends React.Component{
 		console.log(e.target.value);
 		if(e.target.value=='MARKET'){
 			$('.stockPriceContainer').hide('slow');
+		}
+		else{
+			$('.stockPriceContainer').show('slow');	
 		}
 	}
 	orderParams(e){

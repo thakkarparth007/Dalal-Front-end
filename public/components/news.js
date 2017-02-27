@@ -18,7 +18,7 @@ class News extends React.Component{
 		return(
 			<div className="container NewsContainer">
 				<h2>News List</h2>
-				{Object.keys(this.state.events).map((t)=>{
+				{Object.keys(this.state.events).reverse().map((t)=>{
 					let e = (this.state.events)[t];
 					
 					return (

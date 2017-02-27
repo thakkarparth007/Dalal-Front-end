@@ -221,6 +221,7 @@ class Dashboard extends React.Component{
 			marketStatus : state.MarketOpen,
 			companyProfile: state.CompanyProfile,
 			marketEvents: state.MarketEvents,
+			marketDepth: state.MarketDepth,
 		}
 		console.log(this.state,'pelam banda',props);
 	}	
@@ -240,7 +241,7 @@ class Dashboard extends React.Component{
 				<DashboardNav AllStocksList={this.state.stocksList} userDetails = {this.state.userDetails} marketStatus = {this.state.marketStatus} />
 				<div className="content-top">
 						<TransactionPanel userStocks = {this.state.userStocks} stocksList={this.state.stocksList} />
-						<CompanyPanel stocksList={this.state.stocksList} companyProfile = {this.state.companyProfile} userStocks = {this.state.userStocks} marketEvents = {this.state.marketEvents} />
+						<CompanyPanel stocksList={this.state.stocksList} companyProfile = {this.state.companyProfile} userStocks = {this.state.userStocks} marketEvents = {this.state.marketEvents} marketDepth = {this.state.marketDepth} />
 						<MortgagePanel stocksList={this.state.stocksList} userStocks={this.state.userStocks} mortgagedStocks = {this.state.mortgagedStocks} />
 				</div>
 			</div>

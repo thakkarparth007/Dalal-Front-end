@@ -55,6 +55,11 @@ class StockExchangeItem extends React.Component{
 		var stock = {};
 		stock.stockId = $("tr[value="+e+"]").attr('data-stockId');
 		stock.stockQuantity = $("tr[value="+e+"] td input").val() || 0; 
+		if(stock.stockQuantity % 1 != 0){
+			$('#alert-modal .modal-dialog .modal-content .modal-body').text('Please enter an intergral value for number of stocks to be purchased.');
+			$('#alert-modal').modal('show');
+			return false;
+		}
 		if(stock.stockQuantity != 0){
 			console.log('stock obj is ', stock);		
 			this.setState({

@@ -227,7 +227,18 @@ function onLoginResponse(response){
 			
 		})
 		state.NotifyUpdate();
-	})
+	});
+
+	NetworkService.Requests.GetNotifications({},function(resp){
+		console.log(resp.result.notifications,'mera notification!!');
+		Object.keys(resp.result.notifications).map(id=>{
+			let n = (resp.result.notifications)[id];
+			state.Notifications[id] = n;			
+			
+		})
+		state.NotifyUpdate();
+	});
+
 
 	NetworkService.Requests.GetMyBids({},function(resp){
 		console.log(resp,'mere get my bids aa gaye!!')
@@ -353,18 +364,38 @@ function onLoginResponse(response){
 	}, function(update){			
 		console.log('transaction update response', update, state.Transactions[update.transaction.id]);		
 		if(!state.Transactions[update.transaction.id]){
-			state.Transactions[update.transaction.id] = update.transaction;
-			// state.Transactions[update.transaction.id] = {};
-			// state.Transactions[update.transaction.id].id = update.transaction.id;
-			// state.Transactions[update.transaction.id].price = update.transaction.price;
-			// state.Transactions[update.transaction.id].stockId = update.transaction.stockId;
-			// state.Transactions[update.transaction.id].stockQuantity = update.transaction.stockQuantity;
-			// state.Transactions[update.transaction.id].total = update.transaction.total;
-			// state.Transactions[update.transaction.id].userId = update.transaction.userId;
-
+			state.Transactions[update.transaction.id] = update.transaction;			
 			state.User.cash += update.transaction.total;
 			state.UserStockById[update.transaction.stockId] = state.UserStockById[update.transaction.stockId] || 0;
 			state.UserStockById[update.transaction.stockId] += update.transaction.stockQuantity;
+
+			if(update.transaction.type == 0){
+				let msg = 'You bought '+ update.transaction.stockQuantity +' of '+ state.AllStockById[update.transaction.stockId].fullName +' for a total of '+  update.transaction.total;
+			}
+			else if(update.transaction.type == 1){
+				if( update.transaction.total>0){
+					let msg = 'You sold '+ update.transaction.stockQuantity +' of '+ state.AllStockById[update.transaction.stockId].fullName +' for a total of '+  update.transaction.total;
+				}
+				else{
+					let msg = 'You bought '+ update.transaction.stockQuantity +' of '+ state.AllStockById[update.transaction.stockId].fullName +' for a total of '+  update.transaction.total;
+				}
+			}
+			else if(update.transaction.type == 2){
+				let msg = 'You mortgaged '+ update.transaction.stockQuantity +' of '+ state.AllStockById[update.transaction.stockId].fullName +' for a total of '+  update.transaction.total;	
+			}
+			new PNotify({
+			    title: state.Transactions[update.transaction.id].id,
+			    text: msg,			    
+			    icon: 'fa fa-envelope-o',
+			    addclass: 'transaction-notify',
+		        buttons: {
+			        closer: false,
+			        sticker: false
+			    },
+			}).get().click(function() {
+    				this.remove();
+			});;
+
 			state.NotifyUpdate();
 		}
 
@@ -393,6 +424,17 @@ function onLoginResponse(response){
 		console.log(resp, "subscription status of market events");
 	}, function(update){
 		state.MarketEvents[update.marketEvent.id] = update.marketEvent;
+		new PNotify({			   	
+			    text: state.MarketEvents[update.marketEvent.id].headline,			    
+			    icon: 'fa fa-envelope-o',
+			    addclass: 'market-notify',
+		        buttons: {
+			        closer: false,
+			        sticker: false
+			    },
+			}).get().click(function() {
+    				this.remove();
+			});;
 		state.NotifyUpdate();
 	});				
 
@@ -548,18 +590,22 @@ NetworkService = {
 			let mortgageStocksReqWrap = RequestWrapper.create();
 			mortgageStocksReqWrap.mortgageStocksRequest = req;
 			wrapRWAndSend(mortgageStocksReqWrap, function(respWrap) {
-				console.log(respWrap, 'hey im mortagge hi',respWrap.mortgageStocksResponse.result,respWrap.mortgageStocksResponse.result.transaction);
+
 				if(respWrap.mortgageStocksResponse.result){					
 					let transaction = respWrap.mortgageStocksResponse.result.transaction;
 					state.User.cash += (transaction.total);
 					console.log(transaction,'mortagge ka transaction');
+					
 					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
 					state.Transactions[transaction.id] = transaction;
 					if(state.MortgagedStocks[transaction.stockId]) {
 						state.MortgagedStocks[transaction.stockId].numStocksInBank -= transaction.stockQuantity;
 					}
-					else
+					else{
+						state.MortgagedStocks[transaction.stockId] = {};
+						state.MortgagedStocks[transaction.stockId].stockId = transaction.stockId;
 						state.MortgagedStocks[transaction.stockId].numStocksInBank = -transaction.stockQuantity;
+					}
 
 					state.NotifyUpdate();			
 				}
@@ -635,7 +681,14 @@ NetworkService = {
 
 					state.UserStockById[transaction.stockId] += transaction.stockQuantity;					
 					state.Transactions[transaction.id] = transaction;
-					state.MortgagedStocks[transaction.stockId] = transaction;
+					if(state.MortgagedStocks[transaction.stockId]) {
+						state.MortgagedStocks[transaction.stockId].numStocksInBank -= transaction.stockQuantity;
+					}
+					else{
+						state.MortgagedStocks[transaction.stockId] = {};
+						state.MortgagedStocks[transaction.stockId].stockId = transaction.stockId;
+						state.MortgagedStocks[transaction.stockId].numStocksInBank = -transaction.stockQuantity;
+					}
 					state.NotifyUpdate();			
 				}
 				cb(respWrap.retrieveMortgageStocksResponse)
@@ -704,7 +757,7 @@ NetworkService = {
 			wrapRWAndSend(getTransactionsReqWrap, function(respWrap) {
 				cb(respWrap.getTransactionsResponse)
 			});
-		},
+		},		
 
 		GetMortgageDetails: function(req, cb) {
 			let getMortgageDetailsReqWrap = RequestWrapper.create();

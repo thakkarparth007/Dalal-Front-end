@@ -1540,18 +1540,33 @@
                     },
                     "askDepth": {
                       "keyType": "uint32",
-                      "type": "uint32",
+                      "type": "int32",
                       "id": 2
                     },
                     "bidDepth": {
                       "keyType": "uint32",
-                      "type": "uint32",
+                      "type": "int32",
                       "id": 3
                     },
-                    "latestTrades": {
+                    "askDepthDiff": {
                       "keyType": "uint32",
-                      "type": "Trade",
+                      "type": "int32",
                       "id": 4
+                    },
+                    "bidDepthDiff": {
+                      "keyType": "uint32",
+                      "type": "int32",
+                      "id": 5
+                    },
+                    "latestTrades": {
+                      "rule": "repeated",
+                      "type": "Trade",
+                      "id": 6
+                    },
+                    "latestTradesDiff": {
+                      "rule": "repeated",
+                      "type": "Trade",
+                      "id": 7
                     }
                   }
                 },

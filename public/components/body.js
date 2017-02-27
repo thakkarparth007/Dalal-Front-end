@@ -144,7 +144,7 @@ class CompanyProfileContainer extends React.Component{
 						<Navbar notifications = {this.state.Notifications} userDetails = {this.state.User} />									
 						<div id="page-wrapper" className="gray-bg dashbard-1">				
 							<DashboardNav AllStocksList={this.state.AllStockById} userDetails = {this.state.User} marketStatus = {this.state.MarketOpen} />
-							<CompanyPanel stocksList={this.state.AllStockById} companyProfile = {this.state.CompanyProfile} userStocks = {this.state.UserStockById} marketEvents = {this.state.MarketEvents} />														
+							<CompanyPanel stocksList={this.state.AllStockById} companyProfile = {this.state.CompanyProfile} userStocks = {this.state.UserStockById} marketEvents = {this.state.MarketEvents} marketDepth = {this.state.MarketDepth} />														
 						</div>								
 					</div>
 					)

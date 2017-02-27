@@ -52,6 +52,11 @@ class GetMortgageStocksItem extends React.Component{
 		console.log(this.state,'yo mera');
 	}
 	updateStockQuantity(e) {
+		if(e.target.value % 1 != 0){
+			$('#alert-modal .modal-dialog .modal-content .modal-body').text('Please enter an intergral value for number of stocks to be purchased.');
+			$('#alert-modal').modal('show');
+			return false;
+		}
 		this.setState({
 			stockQuantityToRetrieve: e.target.value
 		})
@@ -63,7 +68,7 @@ class GetMortgageStocksItem extends React.Component{
 		NetworkService.Requests.RetrieveMortgageStocks({
 			stockId: this.state.stock.id,
 			stockQuantity: this.state.stockQuantityToRetrieve,
-		},function(resp){
+		},(resp)=>{
 			this.setState({
 				status: false,
 			})
@@ -206,6 +211,11 @@ class PutMortgageStocksItem extends React.Component{
 		})		
 	}
 	updateStockQuantity(e) {
+		if(e.target.value % 1 != 0){
+			$('#alert-modal .modal-dialog .modal-content .modal-body').text('Please enter an intergral value for number of stocks to be purchased.');
+			$('#alert-modal').modal('show');
+			return false;
+		}
 		this.setState({
 			stockQuantityToMortgage: e.target.value
 		})
@@ -217,7 +227,7 @@ class PutMortgageStocksItem extends React.Component{
 		NetworkService.Requests.MortgageStocks({
 			stockId: this.state.stock.id,
 			stockQuantity: this.state.stockQuantityToMortgage,
-		},function(resp){
+		},(resp)=>{
 			this.setState({
 				status: false,
 			});
