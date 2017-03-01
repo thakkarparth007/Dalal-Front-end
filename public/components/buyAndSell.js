@@ -94,7 +94,7 @@ class BuyAndSell extends React.Component{
 					$('#alert-modal').modal('show');
 				}
 				else if(response.bidLimitExceededError){
-					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You cannot place buy order of more than '+ state.Constants.BID_LIMIT + 'stocks.' );
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You cannot place buy order of more than '+ state.Constants.BID_LIMIT + ' stocks and also cannot place an order of value within the margin of 20% of current price.' );
 					$('#alert-modal').modal('show');
 				}
 				else if(response.notEnoughCashError){
@@ -119,7 +119,7 @@ class BuyAndSell extends React.Component{
 					$('#alert-modal').modal('show');
 				}
 				else if(response.askLimitExceededError){
-					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You cannot place sell order of more than '+ state.Constants.ASK_LIMIT + 'stocks.' );
+					$('#alert-modal .modal-dialog .modal-content .modal-body').text('You cannot place buy order of more than '+ state.Constants.BID_LIMIT + ' stocks and also cannot place an order of value within the margin of 20% of current price.' );
 					$('#alert-modal').modal('show');
 				}
 				else if(response.notEnoughCashError){
@@ -232,6 +232,7 @@ class BuyAndSell extends React.Component{
 								<th>Day Low</th>
 								<th>Day High</th>
 								<th>Stocks in Market</th>								
+								<th>Current Price</th>								
 								<th>Place order</th>
 							</tr>
 						</thead>
@@ -248,6 +249,7 @@ class BuyAndSell extends React.Component{
 										<td>{x.dayLow}</td>
 										<td>{x.dayHigh}</td>										
 										<td>{x.stocksInMarket}</td>										
+										<td>{x.currentPrice}</td>										
 										<td>
 											<a className="btn btn-success" href="#modal-id" data-toggle="modal" onClick={this.orderParams.bind(this, x.id)}>Order</a>											
 										</td>

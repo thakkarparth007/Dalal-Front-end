@@ -37,7 +37,9 @@ class LeaderBoard extends React.Component{
 			var userDetailsRowId = Object.keys(resp.result.rankList)
 									.filter(rowId => {
 										return resp.result.rankList[rowId].userId == state.User.id
-									});									
+									});		
+			console.log(resp);
+			resp.result.totalUsers = 300;
 			this.setState({
 				currentPage: currPage,
 				myRank: resp.result.myRank,
@@ -69,8 +71,7 @@ class LeaderBoard extends React.Component{
 		if(this.state.isFetching)
 			fetch = "Updating LeaderBoard";
 		else
-			fetch = "LeaderBoard data will be updated in " + (120 - Math.floor(this.state.time/1000)) + " seconds. Current data corresponds to last update.";				
-		
+			fetch = "LeaderBoard data will be updated in " + (120 - Math.floor(this.state.time/1000)) + " seconds. Current data corresponds to last update.";						
 		return (
 			<div className="container">
 			<div className="leaderboard-container row col-md-10">			

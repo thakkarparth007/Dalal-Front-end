@@ -187,7 +187,8 @@ class CompanyPanel extends React.Component{
 
 		// currentCompanyStats = (new Date((nextProps.companyProfile[1])[Object.keys(nextProps.companyProfile[1])[0]].createdAt)).getHours();
 		// alert(currentCompanyStats,'noobing');
-	}
+	}	
+
 	updateStockHistory(stockId) {
 		let currentStats = {};
 		currentStats.stockId = stockId;
@@ -207,9 +208,30 @@ class CompanyPanel extends React.Component{
 		});
 		this.setState({currentCompanyStatistics: currentStats})
 	}
-	updateMarketDepth(){
+	// updateMarketDepth(stockId){
+	// 	let currentDepth = {};
+	// 	currentDepth.stockId = stockId;
+	// 	currentDepth.askDepth = {};
+	// 	currentDepth.bidDepth = {};	
+	// 	currentDepth.askDepthDiff = {};
+	// 	currentDepth.bidDepthDiff = {};
+	// 	currentDepth.latestTrades = [];
+	// 	currentDepth.latestTradesDiff = [];
 
-	}
+	// 	let keysArray = Object.keys(this.state.currentDepth[stockId])
+	// 								.sort((a,b) => new Date(a) - new Date(b));
+	// 	let temp = keysArray.slice(- 15, -1);
+		
+	// 	temp.map(key=>{
+	// 		(currentDepth.stockPrice).push(this.state.currentDepth[stockId][key].stockPrice);
+	// 		let time = new Date(this.state.currentDepth[stockId][key].createdAt);
+	// 		let hours = time.getHours();
+	// 		let minutes = time.getMinutes();
+	// 		time = hours + ':' + minutes;
+	// 		(currentDepth.createdAt).push(time);
+	// 	});
+	// 	this.setState({currentCompanyDepth: currentDepth})	
+	// }
 	handleChange(event){
 		event.persist();
 		this.setState({currentCompany: event.target.value});
@@ -244,17 +266,30 @@ class CompanyPanel extends React.Component{
 			});
 		}
 
-		if(this.state.marketDepth[stockId]){
-			//exists
+		if(this.state.marketDepth[stockId]) {
+			this.updateMarketDepth(stockId);
+		} else {				
+			NetworkService.DataStreams.MarketDepth.Subscribe({
+				stockId: stockId,
+			},(resp)=>{
+				console.log('market depth',resp);
+			},(update)=>{
+				//update goes here
+				console.log('market depth ka update',resp);
+			});
 		}
-		else{
-			NetworkService.DataStreams.MarketDepth.Subscribe(stockId ,function(resp) {
-				console.log(resp, "subscription status of marketDepth");
-			}, function(update){
-				console.log('market depth update response', update);
+
+		// if(this.state.marketDepth[stockId]){
+		// 	//exists
+		// }
+		// else{
+		// 	NetworkService.DataStreams.MarketDepth.Subscribe(stockId ,function(resp) {
+		// 		console.log(resp, "subscription status of marketDepth");
+		// 	}, function(update){
+		// 		console.log('market depth update response', update);
 					
-			});			
-		}
+		// 	});			
+		// }
 
 		if(stockId == -1){
 			this.setState({

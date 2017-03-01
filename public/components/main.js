@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://10.1.10.44:3000/ws");
+	ws = new WebSocket("ws://192.168.0.30:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -218,16 +218,7 @@ function onLoginResponse(response){
 		});
 		state.NotifyUpdate();
 	})		
-
-	NetworkService.Requests.GetNotifications({},function(resp){
-		console.log(resp.result.notifications,'mera notification!!');
-		Object.keys(resp.result.notifications).map(id=>{
-			let n = (resp.result.notifications)[id];
-			state.Notifications[id] = n;			
-			
-		})
-		state.NotifyUpdate();
-	});
+	
 
 	NetworkService.Requests.GetNotifications({},function(resp){
 		console.log(resp.result.notifications,'mera notification!!');
@@ -436,8 +427,7 @@ function onLoginResponse(response){
     				this.remove();
 			});;
 		state.NotifyUpdate();
-	});				
-
+	});
 
 	//notifications subscribe
 	NetworkService.DataStreams.Notifications.Subscribe(function(resp) {
