@@ -98,7 +98,7 @@ class CompanyPanel extends React.Component{
 			currentCompanyNews: '-' ,
 			currentCompanyStocks: '',
 			currentCompanyStatistics: '',
-			currentMarketDepth: '',
+			currentMarketDepth: {},
 			stocksList: this.props.stocksList,
 			companyProfile: this.props.companyProfile,
 			userStocks: this.props.userStocks,
@@ -208,30 +208,87 @@ class CompanyPanel extends React.Component{
 		});
 		this.setState({currentCompanyStatistics: currentStats})
 	}
-	// updateMarketDepth(stockId){
-	// 	let currentDepth = {};
-	// 	currentDepth.stockId = stockId;
-	// 	currentDepth.askDepth = {};
-	// 	currentDepth.bidDepth = {};	
-	// 	currentDepth.askDepthDiff = {};
-	// 	currentDepth.bidDepthDiff = {};
-	// 	currentDepth.latestTrades = [];
-	// 	currentDepth.latestTradesDiff = [];
+	updateMarketDepth(stockId,update){
+		alert("ye kya hua " + JSON.stringify(state.MarketDepth))
+		state.MarketDepth[stockId] = state.MarketDepth[stockId] || {};
+		let currentDepth = state.MarketDepth[stockId];
 
-	// 	let keysArray = Object.keys(this.state.currentDepth[stockId])
-	// 								.sort((a,b) => new Date(a) - new Date(b));
-	// 	let temp = keysArray.slice(- 15, -1);
+		alert("noob u 2")
+		alert("ye kya hua 2 " + JSON.stringify(state.MarketDepth));
+		currentDepth.askDepth = Object.assign(currentDepth.askDepth || {}, update.askDepth);
+		currentDepth.bidDepth = Object.assign(currentDepth.bidDepth || {}, update.bidDepth);
+		currentDepth.latestTrades = (update.latestTrades || []);
 		
-	// 	temp.map(key=>{
-	// 		(currentDepth.stockPrice).push(this.state.currentDepth[stockId][key].stockPrice);
-	// 		let time = new Date(this.state.currentDepth[stockId][key].createdAt);
-	// 		let hours = time.getHours();
-	// 		let minutes = time.getMinutes();
-	// 		time = hours + ':' + minutes;
-	// 		(currentDepth.createdAt).push(time);
-	// 	});
-	// 	this.setState({currentCompanyDepth: currentDepth})	
-	// }
+		update.bidDepthDiff = update.bidDepthDiff || {};
+		update.askDepthDiff = update.askDepthDiff || {};
+
+		var newAskDepth = JSON.parse(JSON.stringify(currentDepth.askDepth));
+		alert("Copy of ask: " + JSON.stringify(newAskDepth));
+		Object.keys(update.askDepthDiff).map(price=>{
+			if(!newAskDepth[price]) {
+				newAskDepth[price] = 0;
+			}
+			newAskDepth[price] += update.askDepthDiff[price];
+			if (newAskDepth[price] == 0) {
+				delete newAskDepth[price];
+			}
+		});
+		alert("Copy of ask2: " + JSON.stringify(newAskDepth));
+		currentDepth.askDepth = newAskDepth;
+
+		var newLatestTrades = currentDepth.latestTrades;
+		(update.latestTradesDiff).map(id=>{
+			(newLatestTrades).push(update.latestTradesDiff[id]);
+		})
+		currentDepth.latestTrades = newLatestTrades;
+
+		var newBidDepth = JSON.parse(JSON.stringify(currentDepth.bidDepth));
+		alert("Copy of bid: " + JSON.stringify(newBidDepth));
+		Object.keys(update.bidDepthDiff).map(price=>{
+			if(!newBidDepth[price]) {
+				newBidDepth[price] = 0;
+			}
+			newBidDepth[price] += update.bidDepthDiff[price];
+			if (newBidDepth[price] == 0) {
+				delete newBidDepth[price];
+			}
+		});
+		alert("Copy of bid: " + JSON.stringify(newBidDepth));
+		currentDepth.bidDepth = newBidDepth;
+
+		if((currentDepth.latestTrades).length > 10){
+			(currentDepth.latestTrades).slice(-10, -1);
+		}
+		if(Object.keys(currentDepth.askDepth).length > 10){
+			currentDepth.askDepth = (Object.keys(currentDepth.askDepth).sort((a,b)=>a-b)).slice(-10,-1);
+		}
+		if(Object.keys(currentDepth.bidDepth).length > 10){
+			currentDepth.bidDepth = (Object.keys(currentDepth.bidDepth).sort((a,b)=>b-a)).slice(-10,-1);
+		}
+
+		alert(JSON.stringify(state.MarketDepth) + 'lol yoed' + JSON.stringify(currentDepth)+'update yaha se chalu'+JSON.stringify(update));
+		console.log(state.MarketDepth[stockId],'pehla vaala 1')
+		console.log(state.MarketDepth[stockId],'pehla vaala 2')
+		alert(JSON.stringify(state.MarketDepth));
+		this.setState({
+			currentMarketDepth: state.MarketDepth[stockId],			
+		});
+		state.NotifyUpdate();
+
+		// let keysArray = Object.keys(this.state.currentDepth[stockId])
+		// 							.sort((a,b) => new Date(a) - new Date(b));
+		// let temp = keysArray.slice(- 15, -1);
+		
+		// temp.map(key=>{
+		// 	(currentDepth.stockPrice).push(this.state.currentDepth[stockId][key].stockPrice);
+		// 	let time = new Date(this.state.currentDepth[stockId][key].createdAt);
+		// 	let hours = time.getHours();
+		// 	let minutes = time.getMinutes();
+		// 	time = hours + ':' + minutes;
+		// 	(currentDepth.createdAt).push(time);
+		// });
+		// this.setState({currentCompanyDepth: currentDepth})	
+	}
 	handleChange(event){
 		event.persist();
 		this.setState({currentCompany: event.target.value});
@@ -266,30 +323,25 @@ class CompanyPanel extends React.Component{
 			});
 		}
 
-		if(this.state.marketDepth[stockId]) {
-			this.updateMarketDepth(stockId);
-		} else {				
-			NetworkService.DataStreams.MarketDepth.Subscribe({
-				stockId: stockId,
-			},(resp)=>{
-				console.log('market depth',resp);
-			},(update)=>{
-				//update goes here
-				console.log('market depth ka update',resp);
+
+		if(this.state.marketDepth[stockId]){
+			//exists
+			alert(JSON.stringify(this.state.marketDepth[stockId])+'aa gye :P')
+			this.setState({
+				currentMarketDepth: this.state.marketDepth[stockId],			
 			});
 		}
-
-		// if(this.state.marketDepth[stockId]){
-		// 	//exists
-		// }
-		// else{
-		// 	NetworkService.DataStreams.MarketDepth.Subscribe(stockId ,function(resp) {
-		// 		console.log(resp, "subscription status of marketDepth");
-		// 	}, function(update){
-		// 		console.log('market depth update response', update);
-					
-		// 	});			
-		// }
+		else{
+			NetworkService.DataStreams.MarketDepth.Subscribe(stockId ,(resp)=> {
+				console.log(resp, "subscription status of marketDepth");
+			}, (update)=>{
+				console.log('market depth update response', update);
+				if(this.state.stocksList[stockId].fullName == event.target.value){
+					console.log('market depth update response pella', update);
+					this.updateMarketDepth(stockId, update);
+				}
+			});			
+		}
 
 		if(stockId == -1){
 			this.setState({
@@ -303,7 +355,8 @@ class CompanyPanel extends React.Component{
 		
 
 	}
-	render(){			
+	render(){	
+		console.log(this.state.currentMarketDepth,'lol pliss')
 		return (
 			<div className="container companyPanel">
 				<h3 className="dash-head">Company Panel</h3>
@@ -338,8 +391,94 @@ class CompanyPanel extends React.Component{
 						</div>
 
 						<div className="col-md-12 marketDepth" >
-							<h4>Market Depth:</h4>
-							<Chart statistics = {this.state.currentMarketDepth} />
+							<h4 className="marketdepth-head">Market Depth:</h4>
+							<div className="container">
+								<div className="row">
+									<div className="col-md-3">
+										<h5 className="text-center">Ask Depth</h5>
+										<table className="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>No of Stocks</th>
+													<th>Price</th>
+												</tr>
+											</thead>
+											<tbody>
+												{
+											Object.keys(this.state.currentMarketDepth.askDepth || {}).sort((a,b)=>a-b).map(price=>{
+
+												return (
+														<tr>
+															<td>{this.state.currentMarketDepth.askDepth[price]}</td>
+															<td>{price}</td>
+														</tr>
+													);
+											})
+												}
+												<tr><td>More..</td></tr>									
+											</tbody>
+										</table>
+									</div>
+									<div className="col-md-3">
+										<h5 className="text-center">Bid Depth</h5>
+										<table className="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>No of Stocks</th>
+													<th>Price</th>
+												</tr>
+											</thead>
+											<tbody>
+												{
+											Object.keys(this.state.currentMarketDepth.bidDepth || {}).sort((a,b)=>b-a).map(price=>{
+
+												return (
+														<tr>
+															<td>{this.state.currentMarketDepth.bidDepth[price]}</td>
+															<td>{price}</td>
+														</tr>
+													);
+											})
+												}
+												<tr><td>More..</td></tr>																		
+											</tbody>
+										</table>
+									</div>
+
+									<div className="col-md-4 col-md-offset-1">
+										<h5 className="text-center">Last 10 Trades</h5>
+										<table className="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>Trade Price</th>
+													<th>Quantity</th>
+													<th>Timestamp</th>
+												</tr>
+											</thead>
+											<tbody>
+												{
+											(this.state.currentMarketDepth.latestTrades || []).map(trade=>{
+
+												return (
+														<tr>
+															<td>{trade.tradePrice}</td>
+															<td>{trade.tradeQuantity}</td>
+															<td>{trade.tradeTime}</td>															
+														</tr>
+													);
+											})
+												}	
+
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+							</div>
+							
+							{
+								
+							}
 						</div>
 					</div>
 					<div className="col-md-4 col-md-offset-1 newsContainer">	

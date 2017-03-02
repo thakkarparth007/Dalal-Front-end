@@ -529,10 +529,9 @@ a{
     visibility: hidden;    
 }
 
-.marketDepth{
-    display: none;
+.marketdepth-head{
+    padding: 20px;
 }
-
 .NewsContainer{
     margin-top: 60px;
 }

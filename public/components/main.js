@@ -69,7 +69,7 @@ function onOpen(event) {
 
 function connect(){
 	console.log("In connect()");
-	ws = new WebSocket("ws://192.168.0.30:3000/ws");
+	ws = new WebSocket("ws://192.168.3.168:3000/ws");
 	window.ws = ws;
 	ws.onopen = onOpen;
 	ws.onclose = onClose;
@@ -788,13 +788,15 @@ NetworkService = {
 			Subscribe(stockId, subscribeCb, updateCb) {
 				let subscribeReq = SubscribeRequest.create();
 				subscribeReq.dataStreamType = DataStreamType.MARKET_DEPTH;
-				subscribeReq.dataStreamId = stockId;
+				subscribeReq.dataStreamId = stockId + "";
 
 				let subscribeReqWrap = RequestWrapper.create();
 				subscribeReqWrap.subscribeRequest = subscribeReq;
 				wrapRWAndSend(subscribeReqWrap, function(respWrap) {
 					subscribeCb(respWrap.subscribeResponse);
 				}, function(updateWrap) {
+					alert("karan arjun aa gaye");
+					console.log("karan arjun aa gaye", updateWrap.marketDepthUpdate);
 					updateCb(updateWrap.marketDepthUpdate);
 				});
 			},
